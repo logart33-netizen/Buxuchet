@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Блок 1 · Пункт 2 — Основы бухучёта</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Golos Text', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* Top nav */
+  .topnav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 40px;
+    border-bottom: 1px solid var(--line);
+    background: var(--card-bg);
+  }
+  .topnav a {
+    font-size: 13px;
+    color: var(--ink3);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color .15s;
+  }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  /* Hero */
+  .hero {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 80px 40px 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '2';
+    position: absolute;
+    right: -10px;
+    top: -20px;
+    font-size: 320px;
+    font-family: 'Playfair Display', serif;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .hero-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: rgba(247,244,238,0.45);
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 4vw, 48px);
+    font-weight: 700;
+    line-height: 1.15;
+    max-width: 640px;
+    margin-bottom: 24px;
+  }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(247,244,238,0.6);
+    max-width: 500px;
+    line-height: 1.7;
+  }
+
+  /* Main layout */
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 56px 40px 80px;
+  }
+
+  /* Section */
+  .section { margin-bottom: 56px; }
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .section-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--bg);
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+
+  p {
+    font-size: 16px;
+    color: var(--ink2);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  p:last-child { margin-bottom: 0; }
+
+  /* Highlight boxes */
+  .highlight {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-light);
+    border-radius: 0 8px 8px 0;
+    padding: 20px 24px;
+    margin: 24px 0;
+  }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  /* Callout */
+  .callout {
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin: 24px 0;
+  }
+  .callout-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 10px;
+  }
+  .callout p { color: var(--ink2); margin: 0; font-size: 15px; }
+
+  /* Numbered reasons */
+  .reasons { margin: 20px 0; display: flex; flex-direction: column; gap: 12px; }
+  .reason {
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .reason-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--tag-bg);
+    color: var(--ink);
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .reason-body { flex: 1; }
+  .reason-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .reason-text { font-size: 14px; color: var(--ink2); line-height: 1.65; margin: 0; }
+
+  /* Four elements grid */
+  .elements-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  @media (max-width: 560px) { .elements-grid { grid-template-columns: 1fr; } }
+  .element-card {
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .element-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 6px;
+  }
+  .element-name { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .element-desc { font-size: 13px; color: var(--ink2); line-height: 1.55; }
+
+  /* Consequences list */
+  .consequences { margin: 20px 0; display: flex; flex-direction: column; gap: 10px; }
+  .consequence {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 16px 18px;
+    border-radius: 10px;
+    background: var(--accent2-light);
+    border: 1px solid rgba(139,74,28,0.15);
+  }
+  .consequence-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .consequence-body { flex: 1; }
+  .consequence-title { font-size: 14px; font-weight: 600; color: var(--accent2); margin-bottom: 3px; }
+  .consequence-text { font-size: 13px; color: var(--ink2); line-height: 1.6; margin: 0; }
+
+  /* Documents table */
+  .doc-list { margin: 16px 0; display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .doc-row {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .doc-row:last-child { border-bottom: none; }
+  .doc-name {
+    width: 240px;
+    flex-shrink: 0;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--card-bg);
+    border-right: 1px solid var(--line);
+  }
+  .doc-desc {
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--ink2);
+    line-height: 1.55;
+    background: var(--bg);
+  }
+  @media (max-width: 560px) {
+    .doc-row { flex-direction: column; }
+    .doc-name { width: 100%; border-right: none; border-bottom: 1px solid var(--line); }
+  }
+
+  /* Big quote */
+  .bigquote {
+    text-align: center;
+    padding: 48px 24px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin: 48px 0;
+  }
+  .bigquote p {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 3vw, 26px);
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.5;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* Footer nav */
+  .foot-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 40px;
+    border-top: 1px solid var(--line);
+    background: var(--card-bg);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--bg);
+    background: var(--ink);
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: opacity .15s;
+  }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary {
+    background: transparent;
+    color: var(--ink2);
+    border: 1px solid var(--line);
+  }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt1.html">← Пункт 1</a>
+  <span class="topnav-center">День 1 · Блок 1 · Пункт 2 из 9</span>
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt3.html">Пункт 3 →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 1 · Блок 1 · Пункт 2 из 9</div>
+  <h1>Любое движение ценностей → <em>должно быть записано</em></h1>
+  <p class="hero-sub">Не «желательно», не «было бы хорошо». Это абсолютное правило бухгалтерии — и сейчас объясним почему.</p>
+</div>
+
+<div class="container">
+
+  <!-- 1. Что такое движение ценностей -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Что такое «движение ценностей»</div>
+    </div>
+    <p>Для начала разберём само слово «ценности» в бухгалтерском смысле. Ценности — это не только деньги. Это всё, что имеет стоимость для бизнеса: деньги (наличные и на счету), товары на складе, оборудование и техника, долги клиентов перед тобой, сырьё и материалы, оплаченная вперёд аренда.</p>
+    <p>«Движение» — это когда что-то из этого списка появляется, исчезает, переходит из одного состояния в другое или от одного владельца к другому.</p>
+    <div class="callout">
+      <div class="callout-label">Примеры движений</div>
+      <p>Деньги ушли с расчётного счёта → движение. Товар пришёл на склад → движение. Клиент получил товар, склад уменьшился → движение. Оборудование износилось за месяц → тоже движение (стоимость уменьшилась). Долг клиента уменьшился потому что он заплатил → движение.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2. Почему должно -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Почему «должно» — это не пожелание, а требование</div>
+    </div>
+    <p>Слово «должно» здесь очень жёсткое. В бухгалтерии это абсолютное правило. Причин три:</p>
+    <div class="reasons">
+      <div class="reason">
+        <div class="reason-num">1</div>
+        <div class="reason-body">
+          <div class="reason-title">Математическая точность</div>
+          <p class="reason-text">Бухгалтерия построена на том, что в конце всё сходится. Баланс всегда равен сам себе: активы = пассивы. Если пропустить хотя бы одну операцию — баланс не сойдётся. Это как уравнение: пропустишь один член — ответ будет неверным.</p>
+        </div>
+      </div>
+      <div class="reason">
+        <div class="reason-num">2</div>
+        <div class="reason-body">
+          <div class="reason-title">Юридическая обязанность</div>
+          <p class="reason-text">Каждая операция должна быть подтверждена документом. Купил товар — есть накладная. Заплатил — есть платёжное поручение или чек. Без документа операция юридически как бы не существует. Налоговая не примет расход без подтверждающего документа.</p>
+        </div>
+      </div>
+      <div class="reason">
+        <div class="reason-num">3</div>
+        <div class="reason-body">
+          <div class="reason-title">Управленческая необходимость</div>
+          <p class="reason-text">Если не записал операцию — принимаешь решения на неполных данных. Думаешь что на складе 100 единиц, а там 80 — потому что 20 отгрузили и не записали. Заказываешь меньше у поставщика, не выполняешь заказы, теряешь клиента.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3. Что значит записать -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Что значит «записать» — конкретно и подробно</div>
+    </div>
+    <p>Записать операцию — это не просто поставить галочку. Каждая запись в бухгалтерии содержит четыре обязательных элемента:</p>
+    <div class="elements-grid">
+      <div class="element-card">
+        <div class="element-num">Элемент 1</div>
+        <div class="element-name">Дата</div>
+        <div class="element-desc">Когда именно произошла операция. Не когда вспомнили, а когда реально произошло.</div>
+      </div>
+      <div class="element-card">
+        <div class="element-num">Элемент 2</div>
+        <div class="element-name">Содержание</div>
+        <div class="element-desc">Что именно произошло. «Получен товар от поставщика» или «Оплата аренды за апрель».</div>
+      </div>
+      <div class="element-card">
+        <div class="element-num">Элемент 3</div>
+        <div class="element-name">Сумма</div>
+        <div class="element-desc">В денежном выражении. Всегда конкретная цифра — не «примерно» и не «около».</div>
+      </div>
+      <div class="element-card">
+        <div class="element-num">Элемент 4</div>
+        <div class="element-name">Документ-основание</div>
+        <div class="element-desc">Что подтверждает операцию. Накладная, акт, платёжка, чек, договор.</div>
+      </div>
+    </div>
+    <div class="highlight highlight-warm">
+      <p>Без любого из этих четырёх элементов запись неполная. В 1С нельзя ввести просто цифру — программа требует создать документ со всеми этими полями. Это и есть принцип «должно быть записано», реализованный программно.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4. Момент записи -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Момент записи — сразу, не потом</div>
+    </div>
+    <p>Операция записывается сразу когда произошла, а не в конце недели или месяца.</p>
+    <div class="callout">
+      <div class="callout-label">Пример — что происходит когда откладывают</div>
+      <p>Кладовщик получил товар в понедельник, но решил записать в пятницу «чтобы не отвлекаться». За эти пять дней: бухгалтер не знает что товар есть на складе. Если придёт налоговая — товар есть физически, но в учёте его нет. Если менеджер продаст этот товар — в системе будет минус. Если товар окажется бракованным — сложнее доказать когда именно он пришёл.</p>
+    </div>
+    <div class="highlight">
+      <p>Профессиональное правило: первичный документ оформляется в момент совершения операции или сразу после неё. Не завтра. Не в конце недели.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5. Последствия -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Что будет если операцию не записать</div>
+    </div>
+    <p>Вот конкретные последствия — не абстрактные, а из реальной практики:</p>
+    <div class="consequences">
+      <div class="consequence">
+        <div class="consequence-icon">📦</div>
+        <div class="consequence-body">
+          <div class="consequence-title">Искажение остатков</div>
+          <p class="consequence-text">Продали 10 единиц товара, не записали. В системе числится 100 единиц, реально 90. Менеджер обещает клиенту товар которого физически нет — срыв поставки, недовольный клиент.</p>
+        </div>
+      </div>
+      <div class="consequence">
+        <div class="consequence-icon">📊</div>
+        <div class="consequence-body">
+          <div class="consequence-title">Неверная прибыль</div>
+          <p class="consequence-text">Заплатили за рекламу 5 000 000 сум, не записали как расход. Прибыль в отчёте выглядит на 5 миллионов больше. Думаешь что заработал больше — принимаешь неверные решения.</p>
+        </div>
+      </div>
+      <div class="consequence">
+        <div class="consequence-icon">🏛️</div>
+        <div class="consequence-body">
+          <div class="consequence-title">Налоговые проблемы</div>
+          <p class="consequence-text">Не записали расход — не смогли уменьшить налогооблагаемую базу. Переплатили налог. Деньги ушли государству вместо того чтобы остаться в бизнесе.</p>
+        </div>
+      </div>
+      <div class="consequence">
+        <div class="consequence-icon">👁️</div>
+        <div class="consequence-body">
+          <div class="consequence-title">Воровство становится незаметным</div>
+          <p class="consequence-text">Если сотрудник берёт деньги из кассы или товар со склада — это видно только если каждое движение записано. Без учёта обнаружится только когда недостача станет огромной.</p>
+        </div>
+      </div>
+      <div class="consequence">
+        <div class="consequence-icon">🏦</div>
+        <div class="consequence-body">
+          <div class="consequence-title">Невозможность получить кредит или инвестиции</div>
+          <p class="consequence-text">Банк или инвестор попросит финансовую отчётность. Если учёт велся с пропусками — отчётность недостоверна. Никто не даст деньги бизнесу который не знает что у него происходит.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 6. Первичный документ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Первичный документ — основа каждой записи</div>
+    </div>
+    <p>В бухгалтерии есть термин <strong>«первичный документ»</strong> или просто <strong>«первичка»</strong>. Это документ, который подтверждает что операция реально произошла.</p>
+    <div class="doc-list">
+      <div class="doc-row">
+        <div class="doc-name">Накладная</div>
+        <div class="doc-desc">Подтверждает передачу товара — от поставщика тебе или от тебя клиенту</div>
+      </div>
+      <div class="doc-row">
+        <div class="doc-name">Акт выполненных работ</div>
+        <div class="doc-desc">Подтверждает что услуга оказана и принята заказчиком</div>
+      </div>
+      <div class="doc-row">
+        <div class="doc-name">Платёжное поручение</div>
+        <div class="doc-desc">Подтверждает перевод денег через банк</div>
+      </div>
+      <div class="doc-row">
+        <div class="doc-name">Кассовый чек</div>
+        <div class="doc-desc">Подтверждает оплату через кассовый аппарат — наличными, картой или QR-кодом</div>
+      </div>
+      <div class="doc-row">
+        <div class="doc-name">ПКО (приходный ордер)</div>
+        <div class="doc-desc">Деньги пришли в кассу — оформляется внутри компании</div>
+      </div>
+      <div class="doc-row">
+        <div class="doc-name">РКО (расходный ордер)</div>
+        <div class="doc-desc">Деньги ушли из кассы — оформляется внутри компании</div>
+      </div>
+      <div class="doc-row">
+        <div class="doc-name">Счёт-фактура</div>
+        <div class="doc-desc">Документ для учёта НДС — основание для налогового вычета</div>
+      </div>
+      <div class="doc-row">
+        <div class="doc-name">Авансовый отчёт</div>
+        <div class="doc-desc">Сотрудник потратил деньги компании и отчитывается с чеками</div>
+      </div>
+    </div>
+    <div class="highlight highlight-blue">
+      <p>Главное правило: сначала происходит операция и оформляется документ — потом делается запись в учёте. Нет документа → нет записи → операции для бухгалтерии не существует.</p>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Пропущенная операция — это дыра в корпусе корабля. Маленькая — незаметна. Много маленьких — корабль тонет.»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>Пункт 2 из 9 · Блок 1 · День 1</span>
+    <strong>Следующий: Три главных вопроса учёта</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt1.html">← Пункт 1</a>
+    <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt3.html">Пункт 3 →</a>
+  </div>
+</div>
+
+</body>
+</html>
