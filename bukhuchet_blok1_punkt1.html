@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Бухучёт — Блок 1, Пункт 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Golos Text', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* Hero */
+  .hero {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 80px 40px 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '₽';
+    position: absolute;
+    right: -20px;
+    top: -40px;
+    font-size: 320px;
+    font-family: 'Playfair Display', serif;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .hero-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: rgba(247,244,238,0.45);
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 700;
+    line-height: 1.15;
+    max-width: 640px;
+    margin-bottom: 24px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: #A8C4B0;
+  }
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(247,244,238,0.6);
+    max-width: 500px;
+    line-height: 1.7;
+  }
+
+  /* Nav breadcrumb */
+  .breadcrumb {
+    padding: 16px 40px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--ink3);
+  }
+  .breadcrumb span { color: var(--ink3); }
+  .breadcrumb strong { color: var(--ink2); font-weight: 500; }
+  .breadcrumb .sep { opacity: 0.4; }
+
+  /* Main layout */
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 56px 40px 80px;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 56px;
+  }
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .section-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--bg);
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+
+  p {
+    font-size: 16px;
+    color: var(--ink2);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  p:last-child { margin-bottom: 0; }
+
+  /* Highlight box */
+  .highlight {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-light);
+    border-radius: 0 8px 8px 0;
+    padding: 20px 24px;
+    margin: 24px 0;
+  }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+
+  .highlight-warm {
+    border-left-color: var(--accent2);
+    background: var(--accent2-light);
+  }
+  .highlight-warm p { color: var(--accent2); }
+
+  /* Callout / definition */
+  .callout {
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin: 24px 0;
+  }
+  .callout-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 10px;
+  }
+  .callout p { color: var(--ink2); margin: 0; font-size: 15px; }
+
+  /* Examples list */
+  .ex-list { list-style: none; margin: 16px 0; }
+  .ex-list li {
+    font-size: 15px;
+    color: var(--ink2);
+    padding: 10px 0 10px 28px;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    line-height: 1.6;
+  }
+  .ex-list li:last-child { border-bottom: none; }
+  .ex-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 18px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .ex-list li.no::before { background: var(--accent2); }
+  .ex-list .tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .tag-yes { background: var(--accent-light); color: var(--accent); }
+  .tag-no  { background: var(--accent2-light); color: var(--accent2); }
+
+  /* Two column comparison */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+  @media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+  .compare-card {
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .compare-card.green { background: var(--accent-light); }
+  .compare-card.warm  { background: var(--accent2-light); }
+  .compare-card .c-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .compare-card.green .c-label { color: var(--accent); }
+  .compare-card.warm  .c-label { color: var(--accent2); }
+  .compare-card p { font-size: 14px; color: var(--ink2); margin: 0; line-height: 1.65; }
+
+  /* Scenarios */
+  .scenario {
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+  }
+  .scenario-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 8px;
+  }
+  .scenario h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .scenario p { font-size: 14px; margin: 0; color: var(--ink2); line-height: 1.65; }
+
+  /* Big quote */
+  .bigquote {
+    text-align: center;
+    padding: 48px 24px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin: 48px 0;
+  }
+  .bigquote p {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 3vw, 28px);
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.45;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* Footer nav */
+  .foot-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 40px;
+    border-top: 1px solid var(--line);
+    background: var(--card-bg);
+  }
+  .foot-nav span { font-size: 13px; color: var(--ink3); }
+  .foot-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--tag-bg);
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background .15s;
+  }
+  .foot-btn:hover { background: var(--line); }
+
+  /* Divider */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 48px 0;
+  }
+
+  strong { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">День 1 · Блок 1 · Пункт 1 из 9</div>
+  <h1>Бухучёт — это <em>система фиксации</em> всех операций бизнеса в денежном выражении</h1>
+  <p class="hero-sub">Разбираем первый и самый фундаментальный принцип. Без него всё остальное — просто термины без смысла.</p>
+</div>
+
+<div class="breadcrumb">
+  <strong>Основы бухучёта</strong>
+  <span class="sep">→</span>
+  <span>День 1</span>
+  <span class="sep">→</span>
+  <span>Блок 1</span>
+  <span class="sep">→</span>
+  <strong>Пункт 1</strong>
+</div>
+
+<div class="container">
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Что это такое и зачем это нужно</div>
+    </div>
+    <p>Представь что ты открыл магазин. Каждый день происходят десятки событий: пришёл товар от поставщика, продал что-то клиенту, заплатил за аренду, выдал зарплату сотруднику, положил деньги в банк.</p>
+    <p>Через месяц ты садишься и думаешь: <em>«А сколько я вообще заработал? Куда ушли деньги? Почему на счету меньше, чем я ожидал?»</em></p>
+    <p>Без записей — ты не знаешь. Ты можешь примерно помнить, но не знать точно. А бизнес, который не знает точно — это бизнес, которым управляют на ощущениях, а не на данных.</p>
+    <div class="highlight">
+      <p>Бухгалтерский учёт решает именно эту проблему. Он фиксирует каждое событие — сразу, в момент когда оно произошло, в цифрах.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Почему «система», а не просто «записи»</div>
+    </div>
+    <p>Слово «система» здесь ключевое. Это не просто блокнот куда ты пишешь «сегодня потратил столько-то». Система означает что у каждой записи есть строгое место, строгий формат, строгие правила.</p>
+    <div class="callout">
+      <div class="callout-label">Аналогия</div>
+      <p>Представь библиотеку. Можно хранить книги как попало — свалить в кучу. А можно по системе: каждая книга на своей полке, с карточкой, по жанрам и авторам. Во втором случае ты найдёшь любую книгу за 30 секунд. В первом — будешь искать часами.</p>
+    </div>
+    <p>Бухучёт — это библиотека для финансовых событий бизнеса. Каждое событие кладётся на своё место по строгим правилам. Именно поэтому через год ты можешь открыть записи и точно сказать: «В марте мы потратили на аренду столько-то, а в июне продали товаров на такую-то сумму».</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Почему именно «в денежном выражении»</div>
+    </div>
+    <p>Это очень важное ограничение. Бухучёт переводит абсолютно всё в деньги — потому что только деньги позволяют сравнивать несравнимые вещи.</p>
+    <div class="callout">
+      <div class="callout-label">Пример</div>
+      <p>У тебя на складе 50 ноутбуков, 200 мышек и 30 мониторов. Как посчитать «сколько всего товара»? Нельзя сложить ноутбуки с мышками — это разные вещи. Но можно перевести всё в деньги: ноутбуки — 50 000 000 сум, мышки — 2 000 000 сум, мониторы — 15 000 000 сум. Итого товаров на 67 000 000 сум. Теперь можно сравнивать и принимать решения.</p>
+    </div>
+    <p>То же самое с любыми другими активами. Оборудование, машины, долги клиентов, деньги в кассе — всё в одних единицах.</p>
+    <div class="highlight highlight-warm">
+      <p>Важное следствие: в бухучёте не существует того, что нельзя измерить деньгами. Талантливый сотрудник, отличная репутация, доверие клиентов — это реальные ценности, но бухучёт их не видит. Он видит только то, что имеет денежную оценку.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Что такое «операция» в бухгалтерском смысле</div>
+    </div>
+    <p>«Операция» — это любое событие, которое изменяет финансовое состояние бизнеса. На практике всё просто.</p>
+
+    <ul class="ex-list">
+      <li>Купили товар у поставщика <span class="tag tag-yes">операция</span></li>
+      <li>Продали товар клиенту <span class="tag tag-yes">операция</span></li>
+      <li>Клиент заплатил деньги <span class="tag tag-yes">операция</span></li>
+      <li>Заплатили за аренду <span class="tag tag-yes">операция</span></li>
+      <li>Взяли кредит в банке <span class="tag tag-yes">операция</span></li>
+      <li>Начислили зарплату (ещё не выплатили) <span class="tag tag-yes">операция</span></li>
+      <li class="no">Провели переговоры с клиентом <span class="tag tag-no">не операция</span></li>
+      <li class="no">Подписали договор на будущую поставку <span class="tag tag-no">не операция</span></li>
+      <li class="no">Решили купить новый офис <span class="tag tag-no">не операция</span></li>
+    </ul>
+
+    <div class="highlight">
+      <p>Ключевое слово — «изменяет». Как только что-то реально произошло и это можно измерить в деньгах — это операция, которую нужно записать. Намерение и договорённость — ещё не операция.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Когда именно фиксировать операцию</div>
+    </div>
+    <p>Операция фиксируется в момент, когда она произошла — не когда прошли деньги.</p>
+
+    <div class="compare">
+      <div class="compare-card green">
+        <div class="c-label">Пример 1 — продажа</div>
+        <p>Продал товар сегодня, клиент заплатит через две недели. Операция «продажа» — сегодня. Через две недели — отдельная операция «получение оплаты».</p>
+      </div>
+      <div class="compare-card warm">
+        <div class="c-label">Пример 2 — покупка</div>
+        <p>Поставщик привёз товар сегодня, ты заплатишь в следующем месяце. Операция «получение товара» — сегодня. Оплата — в следующем месяце.</p>
+      </div>
+    </div>
+
+    <p>Это называется <strong>принцип начисления</strong> — мы разберём его подробно позже. Сейчас главное: факт операции и факт движения денег — это часто разные моменты времени. И записывать нужно оба.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Зачем это нужно на практике — три реальных сценария</div>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-num">Сценарий 1</div>
+      <h4>Контроль</h4>
+      <p>Ты нанял менеджера и дал ему доступ к деньгам компании. Без учёта ты никогда не узнаешь — он тратит деньги правильно или нет. С учётом — каждая копейка записана, каждая операция видна.</p>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-num">Сценарий 2</div>
+      <h4>Налоги</h4>
+      <p>Государство хочет знать сколько ты заработал, чтобы взять налог. Если у тебя нет учёта — ты не можешь доказать свои доходы и расходы. Налоговая посчитает сама, и почти наверняка насчитает больше, чем есть на самом деле.</p>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-num">Сценарий 3</div>
+      <h4>Решения</h4>
+      <p>Ты думаешь открыть второй филиал. Стоит ли? Без учёта ты не знаешь реальную прибыльность первого. С учётом — у тебя есть точные цифры: сколько зарабатываешь, какие расходы, где узкие места. Решение принимаешь на основе данных, а не ощущений.</p>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Бухучёт — это навигатор для бизнеса. Можно ехать без него — на глаз, по ощущениям. Иногда доедешь. Но с навигатором ты всегда знаешь где ты, куда едешь и сколько осталось.»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <span>Пункт 1 из 9 · Блок 1 · День 1</span>
+  <a class="foot-btn" href="#">Пункт 2 →</a>
+</div>
+
+</body>
+</html>
