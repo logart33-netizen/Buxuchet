@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Блок 1 · Пункт 4 — Основы бухучёта</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: '4'; position: absolute; right: -10px; top: -20px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 24px 28px; margin: 16px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { color: var(--ink2); margin: 0 0 12px; font-size: 15px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* Three types cards */
+  .types { display: flex; flex-direction: column; gap: 20px; margin: 24px 0; }
+  .type-card { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .type-header { padding: 16px 20px; display: flex; align-items: center; gap: 12px; }
+  .type-card.buh .type-header { background: var(--accent-light); }
+  .type-card.nal .type-header { background: var(--accent2-light); }
+  .type-card.upr .type-header { background: var(--accent3-light); }
+  .type-badge { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; }
+  .type-card.buh .type-badge { background: var(--accent); color: #fff; }
+  .type-card.nal .type-badge { background: var(--accent2); color: #fff; }
+  .type-card.upr .type-badge { background: var(--accent3); color: #fff; }
+  .type-name { font-size: 16px; font-weight: 600; color: var(--ink); }
+  .type-body { padding: 20px; }
+  .type-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  @media (max-width: 480px) { .type-meta { grid-template-columns: 1fr; } }
+  .meta-item { background: var(--bg); border-radius: 8px; padding: 10px 12px; }
+  .meta-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); margin-bottom: 3px; }
+  .meta-value { font-size: 13px; color: var(--ink2); line-height: 1.5; }
+  .type-body p { font-size: 15px; color: var(--ink2); margin-bottom: 12px; line-height: 1.75; }
+  .type-body p:last-child { margin-bottom: 0; }
+
+  /* Formula box */
+  .formula { background: var(--ink); border-radius: 12px; padding: 20px 24px; margin: 20px 0; text-align: center; }
+  .formula-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: rgba(247,244,238,0.4); margin-bottom: 10px; }
+  .formula-text { font-family: 'Playfair Display', serif; font-size: clamp(16px, 2.5vw, 22px); font-weight: 700; color: #A8C4B0; }
+
+  /* Amortization columns */
+  .amort-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 560px) { .amort-cols { grid-template-columns: 1fr; } }
+  .amort-col { border-radius: 10px; padding: 18px 20px; }
+  .amort-col.buh { background: var(--accent-light); border: 1px solid rgba(45,95,63,0.2); }
+  .amort-col.nal { background: var(--accent2-light); border: 1px solid rgba(139,74,28,0.2); }
+  .amort-col-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 12px; }
+  .amort-col.buh .amort-col-label { color: var(--accent); }
+  .amort-col.nal .amort-col-label { color: var(--accent2); }
+  .amort-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink2); padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .amort-row:last-child { border-bottom: none; font-weight: 600; color: var(--ink); }
+
+  /* Tax comparison table */
+  .ex-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  .ex-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .ex-table td { padding: 11px 14px; border-bottom: 1px solid var(--line); color: var(--ink2); background: var(--card-bg); }
+  .ex-table tr:last-child td { border-bottom: none; }
+  .ex-table .total td { font-weight: 600; color: var(--ink); background: var(--tag-bg); }
+  .ex-table .section-row td { background: var(--tag-bg); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); padding: 8px 14px; }
+
+  /* Comparison summary table */
+  .comp-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; }
+  .comp-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .comp-table td { padding: 11px 14px; border-bottom: 1px solid var(--line); color: var(--ink2); vertical-align: top; background: var(--card-bg); }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table .row-label { font-weight: 600; color: var(--ink); background: var(--bg); width: 130px; }
+  .comp-table .yes { color: var(--accent); font-weight: 600; }
+  .comp-table .no  { color: var(--accent2); font-weight: 600; }
+
+  .bigquote { text-align: center; padding: 48px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 48px 0; }
+  .bigquote p { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic; color: var(--ink); line-height: 1.5; max-width: 560px; margin: 0 auto; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt3.html">← Пункт 3</a>
+  <span class="topnav-center">День 1 · Блок 1 · Пункт 4 из 9</span>
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt5.html">Пункт 5 →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 1 · Блок 1 · Пункт 4 из 9</div>
+  <h1>Чем отличается <em>бухгалтерский учёт</em> от управленческого и налогового</h1>
+  <p class="hero-sub">Три вида учёта — три разных взгляда на одну реальность. У каждого свой пользователь, своя цель и свои правила.</p>
+</div>
+
+<div class="container">
+
+  <!-- 1. Почему три вида -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Почему существует три вида учёта</div>
+    </div>
+    <p>На первый взгляд кажется странным: зачем вести три разных учёта об одном и том же бизнесе? Разве нельзя обойтись одним?</p>
+    <p>Нельзя. И вот почему. У каждого вида учёта — свой пользователь, своя цель и свои правила. Государство хочет знать одно. Владелец бизнеса хочет знать другое. Банк хочет знать третье. И каждый из них смотрит на одни и те же события по-разному.</p>
+    <div class="callout">
+      <div class="callout-label">Аналогия</div>
+      <p>Один и тот же человек описывает свою жизнь трём разным людям: врачу, работодателю и другу. Врачу — здоровье и болезни. Работодателю — опыт и навыки. Другу — интересные истории. Человек один, но три разных описания — потому что у каждого разные интересы. Так же и с бизнесом.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2. Три вида подробно -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Три вида учёта — подробно о каждом</div>
+    </div>
+
+    <div class="types">
+
+      <!-- Бухгалтерский -->
+      <div class="type-card buh">
+        <div class="type-header">
+          <span class="type-badge">Вид 1</span>
+          <span class="type-name">Бухгалтерский учёт — для государства и внешних пользователей</span>
+        </div>
+        <div class="type-body">
+          <div class="type-meta">
+            <div class="meta-item"><div class="meta-label">Для кого</div><div class="meta-value">Государство, банки, инвесторы, контрагенты</div></div>
+            <div class="meta-item"><div class="meta-label">Обязателен</div><div class="meta-value">Да — для всех юридических лиц по закону</div></div>
+            <div class="meta-item"><div class="meta-label">Правила</div><div class="meta-value">НСБУ (Нац. стандарты бухучёта), строго</div></div>
+            <div class="meta-item"><div class="meta-label">Цель</div><div class="meta-value">Достоверная отчётность по единым стандартам</div></div>
+          </div>
+          <p><strong>Цель:</strong> показать достоверную картину финансового состояния компании по единым стандартам, которым доверяют все.</p>
+          <p><strong>Главная особенность:</strong> строго регулируется государством. Есть чёткие правила — что и как записывать, какие формы использовать, в какие сроки сдавать отчётность. Отступать от этих правил нельзя.</p>
+          <p><strong>Что регулирует:</strong> в Узбекистане бухгалтерский учёт ведётся в соответствии с национальными стандартами бухгалтерского учёта (НСБУ). Это аналог международных стандартов МСФО, адаптированный под узбекское законодательство.</p>
+          <p><strong>Кто обязан вести:</strong> все юридические лица без исключения. Это не выбор — это обязанность, закреплённая законом.</p>
+          <p><strong>Пример:</strong> компания купила оборудование за 100 000 000 сум. В бухгалтерском учёте это оборудование будет стоить ровно столько сколько заплатили — 100 000 000 сум. Каждый год от этой суммы будет считаться амортизация по строго определённым правилам. Никаких отклонений.</p>
+        </div>
+      </div>
+
+      <!-- Налоговый -->
+      <div class="type-card nal">
+        <div class="type-header">
+          <span class="type-badge">Вид 2</span>
+          <span class="type-name">Налоговый учёт — для расчёта налогов</span>
+        </div>
+        <div class="type-body">
+          <div class="type-meta">
+            <div class="meta-item"><div class="meta-label">Для кого</div><div class="meta-value">Налоговая инспекция</div></div>
+            <div class="meta-item"><div class="meta-label">Обязателен</div><div class="meta-value">Да — по закону, Налоговый кодекс</div></div>
+            <div class="meta-item"><div class="meta-label">Правила</div><div class="meta-value">Налоговый кодекс РУз, строго</div></div>
+            <div class="meta-item"><div class="meta-label">Цель</div><div class="meta-value">Правильно рассчитать налоги</div></div>
+          </div>
+          <p><strong>Цель:</strong> правильно рассчитать налоги которые компания должна заплатить государству.</p>
+          <p><strong>Главная особенность:</strong> налоговый учёт часто отличается от бухгалтерского — потому что государство устанавливает свои особые правила для признания доходов и расходов в целях налогообложения. Эти правила могут не совпадать с бухгалтерскими.</p>
+          <p><strong>Почему они расходятся:</strong> вот конкретный пример. Компания купила компьютер за 10 000 000 сум. В бухгалтерском учёте его стоимость списывается (амортизируется) равномерно в течение 5 лет — по 2 000 000 сум в год. Но в налоговом учёте государство может разрешить списать всю стоимость сразу в первый год — чтобы стимулировать компании покупать оборудование. В результате: бухгалтерская прибыль и налогооблагаемая прибыль за первый год будут разными. Подробный разбор с таблицами — в разделе 3 ниже.</p>
+          <p><strong>Отчётность:</strong> налоговые декларации — НДС, налог на прибыль, зарплатные налоги. Подаются в налоговую по строго установленным формам и срокам.</p>
+          <p><strong>Важно понимать:</strong> в небольших компаниях бухгалтерский и налоговый учёт часто ведёт один и тот же бухгалтер. Но это всё равно два разных учёта с разными правилами.</p>
+        </div>
+      </div>
+
+      <!-- Управленческий -->
+      <div class="type-card upr">
+        <div class="type-header">
+          <span class="type-badge">Вид 3</span>
+          <span class="type-name">Управленческий учёт — для руководителей и собственников</span>
+        </div>
+        <div class="type-body">
+          <div class="type-meta">
+            <div class="meta-item"><div class="meta-label">Для кого</div><div class="meta-value">Директор, собственник, финансовый директор</div></div>
+            <div class="meta-item"><div class="meta-label">Обязателен</div><div class="meta-value">Нет — по желанию компании</div></div>
+            <div class="meta-item"><div class="meta-label">Правила</div><div class="meta-value">Любые — как удобно компании</div></div>
+            <div class="meta-item"><div class="meta-label">Цель</div><div class="meta-value">Помочь принимать управленческие решения</div></div>
+          </div>
+          <p><strong>Цель:</strong> помочь принимать правильные управленческие решения — открывать новые направления, сокращать расходы, понимать реальную прибыльность каждого продукта или подразделения.</p>
+          <p><strong>Главная особенность:</strong> никаких обязательных правил не существует. Никаких государственных стандартов. Никаких обязательных форм. Каждая компания ведёт управленческий учёт так как ей удобно. Хочешь — в Excel. Хочешь — в специальной программе. Хочешь — в блокноте.</p>
+          <p><strong>Что включает:</strong> всё что нужно конкретному руководителю для принятия решений. Например: прибыльность каждого продукта отдельно, реальная стоимость привлечения одного покупателя, сколько стоит каждый отдел компании, прогноз денежных потоков на следующий квартал, анализ почему в этом месяце прибыль упала.</p>
+          <p><strong>Почему это важно:</strong> бухгалтерский учёт часто не даёт ответов на вопросы которые нужны руководителю. Например, бухгалтерский отчёт покажет общую прибыль компании — но не скажет какой конкретно продукт её приносит, а какой съедает ресурсы. Для этого нужен управленческий учёт.</p>
+          <div class="callout">
+            <div class="callout-label">Пример</div>
+            <p>Компания продаёт три вида товара. Бухгалтерски — прибыль 15 000 000 сум. Но в управленческом учёте видно: первый товар принёс 20 000 000, второй — 5 000 000, а третий — убыток 10 000 000 сум. Без управленческого учёта директор не знает что третий товар тянет компанию вниз.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3. Почему расходятся подробно -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Почему бухгалтерская и налоговая прибыль могут не совпадать — подробный разбор</div>
+    </div>
+    <p>Это один из самых важных и непростых моментов. Разберём на конкретном примере с амортизацией — шаг за шагом.</p>
+    <p>Сначала главный принцип который нужно запомнить:</p>
+    <div class="formula">
+      <div class="formula-label">Как считается налог на прибыль</div>
+      <div class="formula-text">Выручка − Расходы = Прибыль → с неё платим налог</div>
+    </div>
+    <p>Это значит: <strong>чем больше расходов — тем меньше прибыль — тем меньше налог.</strong> Дальше всё строится на этом принципе.</p>
+
+    <p>Теперь пример. Компания купила компьютер за 10 000 000 сум. В бухгалтерии его стоимость нельзя списать сразу — компьютер служит несколько лет, значит его стоимость растягивается на весь срок службы. Это называется <strong>амортизация</strong>.</p>
+
+    <div class="amort-cols">
+      <div class="amort-col buh">
+        <div class="amort-col-label">Бухгалтерский учёт</div>
+        <div class="amort-row"><span>Стоимость компьютера</span><span>10 000 000 сум</span></div>
+        <div class="amort-row"><span>Срок службы</span><span>5 лет</span></div>
+        <div class="amort-row"><span>Списание в год</span><span>2 000 000 сум</span></div>
+        <div class="amort-row"><span>Метод</span><span>Равномерно</span></div>
+      </div>
+      <div class="amort-col nal">
+        <div class="amort-col-label">Налоговый учёт</div>
+        <div class="amort-row"><span>Стоимость компьютера</span><span>10 000 000 сум</span></div>
+        <div class="amort-row"><span>Списание в 1-й год</span><span>10 000 000 сум</span></div>
+        <div class="amort-row"><span>Со 2-го по 5-й год</span><span>0 сум</span></div>
+        <div class="amort-row"><span>Метод</span><span>Сразу весь</span></div>
+      </div>
+    </div>
+
+    <p>Государство иногда разрешает списать всю стоимость оборудования как расход уже в первый год. Это делается специально — чтобы компании охотнее покупали оборудование. Ведь большой расход в первый год уменьшает налог именно сейчас. Вот сравнение за 5 лет. Выручка каждый год — 20 000 000 сум. Налог на прибыль — 15%:</p>
+
+    <table class="ex-table">
+      <thead>
+        <tr><th>Год</th><th>Выручка</th><th>Расход</th><th>Прибыль</th><th>Налог 15%</th></tr>
+      </thead>
+      <tbody>
+        <tr class="section-row"><td colspan="5">Сценарий А — бухгалтерский учёт (амортизация равномерно, 5 лет)</td></tr>
+        <tr><td>1-й</td><td>20 000 000</td><td>2 000 000</td><td>18 000 000</td><td>2 700 000</td></tr>
+        <tr><td>2-й</td><td>20 000 000</td><td>2 000 000</td><td>18 000 000</td><td>2 700 000</td></tr>
+        <tr><td>3-й</td><td>20 000 000</td><td>2 000 000</td><td>18 000 000</td><td>2 700 000</td></tr>
+        <tr><td>4-й</td><td>20 000 000</td><td>2 000 000</td><td>18 000 000</td><td>2 700 000</td></tr>
+        <tr><td>5-й</td><td>20 000 000</td><td>2 000 000</td><td>18 000 000</td><td>2 700 000</td></tr>
+        <tr class="total"><td colspan="4">Итого налог за 5 лет</td><td>13 500 000</td></tr>
+        <tr class="section-row"><td colspan="5">Сценарий Б — налоговый учёт (списываем весь компьютер в 1-й год)</td></tr>
+        <tr><td>1-й</td><td>20 000 000</td><td>10 000 000</td><td>10 000 000</td><td>1 500 000</td></tr>
+        <tr><td>2-й</td><td>20 000 000</td><td>0</td><td>20 000 000</td><td>3 000 000</td></tr>
+        <tr><td>3-й</td><td>20 000 000</td><td>0</td><td>20 000 000</td><td>3 000 000</td></tr>
+        <tr><td>4-й</td><td>20 000 000</td><td>0</td><td>20 000 000</td><td>3 000 000</td></tr>
+        <tr><td>5-й</td><td>20 000 000</td><td>0</td><td>20 000 000</td><td>3 000 000</td></tr>
+        <tr class="total"><td colspan="4">Итого налог за 5 лет</td><td>13 500 000</td></tr>
+      </tbody>
+    </table>
+
+    <div class="highlight">
+      <p>Итоговый налог за 5 лет одинаковый в обоих случаях — 13 500 000 сум. Государство получает столько же. Но разница во времени: в первый год по сценарию Б компания платит 1 500 000 вместо 2 700 000. Эти лишние 1 200 000 сум остаются у компании и могут работать прямо сейчас — идти в оборот, покупать товар, платить зарплату. А со 2-го по 5-й год компания платит чуть больше — как бы возвращая эту разницу государству.</p>
+    </div>
+
+    <div class="highlight highlight-warm">
+      <p>Именно из-за таких расхождений в правилах бухгалтерская прибыль и налогооблагаемая прибыль за один и тот же год могут быть разными числами. Это не ошибка — это особенность двух разных систем учёта с разными целями и правилами.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4. Сравнительная таблица -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Сравнение трёх видов учёта</div>
+    </div>
+    <table class="comp-table">
+      <thead>
+        <tr><th></th><th>Бухгалтерский</th><th>Налоговый</th><th>Управленческий</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="row-label">Для кого</td><td>Государство, банки, инвесторы</td><td>Налоговая инспекция</td><td>Директор, собственник</td></tr>
+        <tr><td class="row-label">Обязателен</td><td class="yes">Да, по закону</td><td class="yes">Да, по закону</td><td class="no">Нет, по желанию</td></tr>
+        <tr><td class="row-label">Правила</td><td>НСБУ, строгие стандарты</td><td>Налоговый кодекс</td><td>Любые, как удобно</td></tr>
+        <tr><td class="row-label">Цель</td><td>Достоверная отчётность</td><td>Расчёт налогов</td><td>Управленческие решения</td></tr>
+        <tr><td class="row-label">Форма</td><td>Строго установленная</td><td>Строго установленная</td><td>Произвольная</td></tr>
+        <tr><td class="row-label">Период</td><td>Месяц, квартал, год</td><td>Квартал, год</td><td>Любой удобный</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5. Как связаны -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Как три вида учёта связаны между собой</div>
+    </div>
+    <p>Все три вида учёта описывают одни и те же реальные события бизнеса — но под разными углами и по разным правилам.</p>
+    <p>На практике это означает: бухгалтер обрабатывает одну и ту же операцию сразу в нескольких регистрах. Поступил товар от поставщика — это событие отражается в бухгалтерском учёте (по НСБУ), в налоговом учёте (для НДС и налога на прибыль) и при необходимости в управленческом учёте (для анализа себестоимости).</p>
+    <div class="highlight highlight-blue">
+      <p>Именно поэтому хорошая учётная система позволяет вести все три вида учёта одновременно. Один раз ввёл документ — система сама разнесла данные по нужным регистрам. В 1С это реализовано именно так.</p>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Бухгалтерский — как есть, по правилам, для всех. Налоговый — сколько платить государству. Управленческий — что делать дальше.»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>Пункт 4 из 9 · Блок 1 · День 1</span>
+    <strong>Следующий: Принцип двойной записи</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt3.html">← Пункт 3</a>
+    <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt5.html">Пункт 5 →</a>
+  </div>
+</div>
+
+</body>
+</html>
