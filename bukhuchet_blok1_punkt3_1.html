@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Блок 1 · Пункт 3 — Основы бухучёта</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: '3'; position: absolute; right: -10px; top: -20px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 24px 28px; margin: 24px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { color: var(--ink2); margin: 0 0 12px; font-size: 15px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  .questions { display: flex; flex-direction: column; gap: 12px; margin: 24px 0; }
+  .question-card { border-radius: 12px; padding: 20px 24px; display: flex; gap: 16px; align-items: flex-start; }
+  .q1 { background: var(--accent-light); border: 1px solid rgba(45,95,63,0.2); }
+  .q2 { background: var(--accent3-light); border: 1px solid rgba(28,63,110,0.2); }
+  .q3 { background: var(--accent2-light); border: 1px solid rgba(139,74,28,0.2); }
+  .question-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; flex-shrink: 0; }
+  .q1 .question-num { background: var(--accent); color: #fff; }
+  .q2 .question-num { background: var(--accent3); color: #fff; }
+  .q3 .question-num { background: var(--accent2); color: #fff; }
+  .question-body { flex: 1; }
+  .question-title { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .question-sub { font-size: 14px; color: var(--ink2); line-height: 1.6; margin: 0; }
+  .question-report { display: inline-block; margin-top: 8px; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  .q1 .question-report { background: rgba(45,95,63,0.15); color: var(--accent); }
+  .q2 .question-report { background: rgba(28,63,110,0.15); color: var(--accent3); }
+  .q3 .question-report { background: rgba(139,74,28,0.15); color: var(--accent2); }
+
+  .asset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  @media (max-width: 560px) { .asset-grid { grid-template-columns: 1fr; } }
+  .asset-card { background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; }
+  .asset-type { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
+  .asset-card:first-child .asset-type { color: var(--accent); }
+  .asset-card:last-child .asset-type { color: var(--accent3); }
+  .asset-name { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .asset-desc { font-size: 13px; color: var(--ink2); line-height: 1.6; margin: 0 0 10px; }
+  .asset-examples { font-size: 12px; color: var(--ink3); line-height: 1.6; }
+
+  .equation { background: var(--ink); color: var(--bg); border-radius: 12px; padding: 28px 32px; text-align: center; margin: 24px 0; }
+  .equation-label { font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 14px; }
+  .equation-formula { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-weight: 700; color: #A8C4B0; margin-bottom: 10px; }
+  .equation-desc { font-size: 13px; color: rgba(247,244,238,0.55); line-height: 1.6; }
+
+  .ex-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  .ex-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .ex-table td { padding: 12px 14px; border-bottom: 1px solid var(--line); color: var(--ink2); line-height: 1.5; background: var(--card-bg); }
+  .ex-table tr:last-child td { border-bottom: none; }
+  .ex-table .total td { font-weight: 600; color: var(--ink); background: var(--tag-bg); }
+  .ex-table .green { color: var(--accent); font-weight: 600; }
+  .ex-table .blue  { color: var(--accent3); font-weight: 600; }
+  .ex-table .warm  { color: var(--accent2); font-weight: 600; }
+
+  .capital-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  @media (max-width: 560px) { .capital-grid { grid-template-columns: 1fr; } }
+  .capital-card { background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
+  .capital-section { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+  .capital-item { margin-bottom: 8px; }
+  .capital-item:last-child { margin-bottom: 0; }
+  .capital-item-name { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+  .capital-item-desc { font-size: 12px; color: var(--ink2); line-height: 1.5; }
+
+  .flow { display: flex; align-items: center; gap: 0; margin: 24px 0; flex-wrap: wrap; }
+  .flow-item { flex: 1; min-width: 120px; padding: 16px; border-radius: 10px; text-align: center; }
+  .flow-item.green { background: var(--accent-light); }
+  .flow-item.blue  { background: var(--accent3-light); }
+  .flow-item.warm  { background: var(--accent2-light); }
+  .flow-label { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 4px; }
+  .flow-item.green .flow-label { color: var(--accent); }
+  .flow-item.blue  .flow-label { color: var(--accent3); }
+  .flow-item.warm  .flow-label { color: var(--accent2); }
+  .flow-value { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .flow-arrow { font-size: 20px; color: var(--ink3); padding: 0 6px; flex-shrink: 0; }
+
+  .bigquote { text-align: center; padding: 48px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 48px 0; }
+  .bigquote p { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic; color: var(--ink); line-height: 1.5; max-width: 560px; margin: 0 auto; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt2.html">← Пункт 2</a>
+  <span class="topnav-center">День 1 · Блок 1 · Пункт 3 из 9</span>
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt4.html">Пункт 4 →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 1 · Блок 1 · Пункт 3 из 9</div>
+  <h1>Три главных вопроса учёта: <em>Что есть? Откуда взялось? Как изменилось?</em></h1>
+  <p class="hero-sub">Вся бухгалтерия — это ответ на три простых вопроса. Если понять их — понятно зачем вообще существует учёт.</p>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Почему именно три вопроса — и почему они главные</div>
+    </div>
+    <p>Вся бухгалтерия, со всеми её счетами, проводками, отчётами и терминами — это по сути ответ на три простых вопроса. Если ты понимаешь эти три вопроса — ты понимаешь зачем вообще существует бухучёт.</p>
+    <p>Любой владелец бизнеса, любой директор, любой инвестор — когда смотрит на компанию, хочет знать именно это:</p>
+    <div class="questions">
+      <div class="question-card q1">
+        <div class="question-num">1</div>
+        <div class="question-body">
+          <div class="question-title">Что есть у компании прямо сейчас?</div>
+          <p class="question-sub">Какими ресурсами располагает бизнес на эту конкретную дату — деньги, товары, оборудование, долги клиентов.</p>
+          <span class="question-report">→ Бухгалтерский баланс (левая часть — Актив)</span>
+        </div>
+      </div>
+      <div class="question-card q2">
+        <div class="question-num">2</div>
+        <div class="question-body">
+          <div class="question-title">Откуда это всё взялось?</div>
+          <p class="question-sub">За счёт чего появились эти ресурсы — собственные деньги владельцев или заёмные средства.</p>
+          <span class="question-report">→ Бухгалтерский баланс (правая часть — Пассив)</span>
+        </div>
+      </div>
+      <div class="question-card q3">
+        <div class="question-num">3</div>
+        <div class="question-body">
+          <div class="question-title">Как это изменилось за период?</div>
+          <p class="question-sub">Сколько заработали, сколько потратили, стало больше или меньше — динамика за месяц, квартал, год.</p>
+          <span class="question-report">→ ОПУ (P&L) и Отчёт о движении денег (Cash Flow)</span>
+        </div>
+      </div>
+    </div>
+    <p>Три вопроса — три разных угла зрения на один и тот же бизнес. И для каждого вопроса в бухгалтерии есть свой инструмент, свой отчёт, своя логика.</p>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Вопрос первый: «Что есть?»</div>
+    </div>
+    <p>Это вопрос про текущее состояние бизнеса. Прямо сейчас, на эту конкретную дату — что принадлежит компании?</p>
+    <p>Когда ты задаёшь этот вопрос — ты получаешь список всего что есть. Например: деньги на расчётном счёте, деньги в кассе, товары на складе, оборудование, долги клиентов перед компанией. Всё это вместе называется <strong>Активы</strong>.</p>
+    <div class="callout">
+      <div class="callout-label">Важный момент</div>
+      <p>«Что есть» — это не только физические вещи которые можно потрогать. Долг клиента перед тобой — это тоже актив, потому что это деньги которые реально придут. Оплаченная вперёд аренда на три месяца — тоже актив, потому что ты уже заплатил и имеешь право пользоваться офисом три месяца.</p>
+    </div>
+    <p>Активы бывают двух принципиально разных видов:</p>
+    <div class="asset-grid">
+      <div class="asset-card">
+        <div class="asset-type">Оборотные активы</div>
+        <div class="asset-name">Быстрые ресурсы</div>
+        <p class="asset-desc">Превращаются в деньги или используются в течение года. Постоянно «оборачиваются» — приходят и уходят.</p>
+        <div class="asset-examples">Деньги на счету и в кассе · Товары на складе · Долги покупателей · Краткосрочные вложения</div>
+      </div>
+      <div class="asset-card">
+        <div class="asset-type">Внеоборотные активы</div>
+        <div class="asset-name">Долгосрочные ресурсы</div>
+        <p class="asset-desc">Служат дольше года. Используются для работы бизнеса. Их стоимость постепенно «съедается» через амортизацию.</p>
+        <div class="asset-examples">Оборудование · Транспорт · Здания · Мебель · Нематериальные активы</div>
+      </div>
+    </div>
+    <div class="highlight">
+      <p>На вопрос «Что есть» отвечает левая часть бухгалтерского баланса — она так и называется «Актив».</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Вопрос второй: «Откуда взялось?»</div>
+    </div>
+    <p>Это самый неочевидный вопрос для новичков, но он критически важен. Мы выяснили что у компании есть активы. Отлично. Но следующий вопрос — а за счёт чего всё это появилось? Откуда взялись эти деньги, товары, оборудование?</p>
+    <p>Ответов может быть только два:</p>
+    <div class="callout">
+      <div class="callout-label">Два источника любого актива</div>
+      <p><strong>Ответ А: Это собственные деньги</strong> — вложил владелец, или компания сама заработала и накопила прибыль. Это называется <strong>Собственный капитал</strong>.</p>
+      <p><strong>Ответ Б: Это чужие деньги</strong> — взяли в долг у банка, не заплатили ещё поставщику, должны сотрудникам зарплату. Это называется <strong>Обязательства</strong>.</p>
+    </div>
+    <p>И вот тут происходит главное открытие бухгалтерии — <strong>основное бухгалтерское уравнение:</strong></p>
+    <div class="equation">
+      <div class="equation-label">Основное уравнение бухгалтерии</div>
+      <div class="equation-formula">Активы = Капитал + Обязательства</div>
+      <div class="equation-desc">Это уравнение всегда верно. Абсолютно всегда. Если не сходится — где-то ошибка.</div>
+    </div>
+    <p>Пример. Открывается новая компания:</p>
+    <table class="ex-table">
+      <thead><tr><th>Операция</th><th>Что появилось</th><th>Откуда</th><th>Сумма</th></tr></thead>
+      <tbody>
+        <tr><td>Владелец вложил деньги</td><td>Деньги на счёте</td><td class="green">Капитал</td><td>20 000 000 сум</td></tr>
+        <tr><td>Взяли кредит в банке</td><td>Деньги на счёте</td><td class="blue">Обязательство</td><td>10 000 000 сум</td></tr>
+        <tr><td>Купили товар в долг</td><td>Товар на складе</td><td class="warm">Обязательство</td><td>5 000 000 сум</td></tr>
+        <tr class="total"><td colspan="3">Итого активов = Итого пассивов</td><td>35 000 000 сум ✓</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight highlight-warm">
+      <p>Два бизнеса могут иметь одинаковые активы — по 100 000 000 сум. Но у одного 90 миллионов собственные деньги, а у другого 90 миллионов — кредиты. Это совершенно разные ситуации. Первый устойчив, второй — в огромной долговой нагрузке. Вопрос «откуда взялось» позволяет это увидеть мгновенно.</p>
+    </div>
+    <div class="highlight highlight-blue">
+      <p>На вопрос «Откуда взялось» отвечает правая часть бухгалтерского баланса — она называется «Пассив» (Капитал + Обязательства).</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Глубже про Капитал и Обязательства</div>
+    </div>
+    <p>Капитал и Обязательства — это не монолитные понятия. Каждое из них состоит из нескольких частей, которые важно различать.</p>
+    <div class="capital-grid">
+      <div class="capital-card">
+        <div class="capital-section">Капитал (собственные средства)</div>
+        <div class="capital-item">
+          <div class="capital-item-name">Уставный капитал</div>
+          <div class="capital-item-desc">Деньги или имущество внесённые владельцами при создании компании. Стартовый взнос.</div>
+        </div>
+        <div class="capital-item">
+          <div class="capital-item-name">Нераспределённая прибыль</div>
+          <div class="capital-item-desc">Прибыль прошлых лет оставленная в компании для развития, не выплаченная владельцам.</div>
+        </div>
+        <div class="capital-item">
+          <div class="capital-item-name">Добавочный капитал</div>
+          <div class="capital-item-desc">Возникает при переоценке имущества или других особых случаях.</div>
+        </div>
+      </div>
+      <div class="capital-card">
+        <div class="capital-section">Обязательства (чужие средства)</div>
+        <div class="capital-item">
+          <div class="capital-item-name">Краткосрочные</div>
+          <div class="capital-item-desc">Нужно погасить в течение 12 месяцев. Долг поставщику, зарплата к выплате, налоги, короткий кредит.</div>
+        </div>
+        <div class="capital-item">
+          <div class="capital-item-name">Долгосрочные</div>
+          <div class="capital-item-desc">Срок погашения больше года. Долгосрочный кредит, лизинг оборудования.</div>
+        </div>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">Пример из практики</div>
+      <p>Если краткосрочных обязательств больше чем оборотных активов — у компании проблемы с ликвидностью. Денег нет чтобы заплатить по долгам прямо сейчас. Это называется кассовый разрыв — одна из самых распространённых проблем в бизнесе.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Вопрос третий: «Как изменилось?»</div>
+    </div>
+    <p>Первые два вопроса — это фотография. Снимок на конкретную дату. Но бизнес — это не фотография, это кино. Он постоянно движется, меняется, развивается или деградирует.</p>
+    <p>Вопрос «как изменилось» — это про динамику. За последний месяц, квартал, год: сколько заработали, сколько потратили, стало лучше или хуже, почему. Этот вопрос разбивается на три под-вопроса, каждый со своим отчётом:</p>
+    <div class="callout">
+      <div class="callout-label">Как изменился результат работы (прибыль)?</div>
+      <p><strong>Отчёт о прибылях и убытках (ОПУ / P&L)</strong> — показывает: вот выручка за период, вот расходы, вот что осталось — прибыль или убыток. Это «фильм» про эффективность работы за период.</p>
+    </div>
+    <div class="callout">
+      <div class="callout-label">Как изменились деньги?</div>
+      <p><strong>Отчёт о движении денежных средств (ОДС / Cash Flow)</strong> — показывает: сколько денег реально пришло, сколько реально ушло, сколько осталось на счёте. Важно: это не то же самое что прибыль — об этом подробно в следующих пунктах.</p>
+    </div>
+    <div class="callout">
+      <div class="callout-label">Как изменилось общее состояние?</div>
+      <p><strong>Сравнение двух балансов</strong> — баланс на начало и баланс на конец периода. Активов стало больше или меньше? Долгов прибавилось или убавилось? Капитал вырос?</p>
+    </div>
+    <div class="highlight">
+      <p>Именно поэтому бухгалтерские отчёты всегда составляются за период — месяц, квартал, год. Один баланс сам по себе мало что говорит. Но баланс в сравнении с прошлым периодом — это уже история развития бизнеса.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Как три вопроса связаны между собой</div>
+    </div>
+    <p>Это не три независимых вопроса — они жёстко связаны математически. Вот как работает эта связь:</p>
+    <div class="flow">
+      <div class="flow-item green">
+        <div class="flow-label">Вопрос 3</div>
+        <div class="flow-value">Заработали прибыль</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item blue">
+        <div class="flow-label">Вопрос 2</div>
+        <div class="flow-value">Капитал вырос</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item warm">
+        <div class="flow-label">Вопрос 1</div>
+        <div class="flow-value">Активов стало больше</div>
+      </div>
+    </div>
+    <p>И в обратную сторону: убыток уменьшает капитал, капитал уменьшает активы. Именно поэтому три главных финансовых отчёта — Баланс, ОПУ и ОДС — не существуют независимо. Цифра чистой прибыли из ОПУ попадает в Баланс как увеличение капитала. Деньги в ОДС совпадают с деньгами в Балансе. Это одна система — три разных угла зрения.</p>
+    <div class="highlight highlight-warm">
+      <p>Если что-то не сходится в одном отчёте — ищи ошибку через другой. Три отчёта всегда проверяют друг друга.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-title">Практический пример — три вопроса про одну компанию</div>
+    </div>
+    <p>Возьмём абстрактную торговую компанию — ООО «Торговля». Зададим три вопроса на 1 апреля:</p>
+    <table class="ex-table">
+      <thead><tr><th>Что есть (Активы)</th><th>Сумма</th></tr></thead>
+      <tbody>
+        <tr><td>Деньги на расчётном счёте</td><td>50 000 000 сум</td></tr>
+        <tr><td>Товары на складе</td><td>30 000 000 сум</td></tr>
+        <tr><td>Клиенты должны нам (дебиторка)</td><td>15 000 000 сум</td></tr>
+        <tr><td>Оборудование и оргтехника</td><td>20 000 000 сум</td></tr>
+        <tr class="total"><td>Итого активов</td><td>115 000 000 сум</td></tr>
+      </tbody>
+    </table>
+    <table class="ex-table">
+      <thead><tr><th>Откуда взялось (Пассивы)</th><th>Сумма</th></tr></thead>
+      <tbody>
+        <tr><td class="green">Вложили владельцы (капитал)</td><td>70 000 000 сум</td></tr>
+        <tr><td class="blue">Кредит в банке (обязательство)</td><td>25 000 000 сум</td></tr>
+        <tr><td class="warm">Долг поставщикам (обязательство)</td><td>20 000 000 сум</td></tr>
+        <tr class="total"><td>Итого пассивов</td><td>115 000 000 сум ✓</td></tr>
+      </tbody>
+    </table>
+    <table class="ex-table">
+      <thead><tr><th>Как изменилось за март (ОПУ)</th><th>Сумма</th></tr></thead>
+      <tbody>
+        <tr><td>Выручка от продаж</td><td>80 000 000 сум</td></tr>
+        <tr><td>Себестоимость проданных товаров</td><td>−50 000 000 сум</td></tr>
+        <tr><td>Аренда офиса и склада</td><td>−8 000 000 сум</td></tr>
+        <tr><td>Зарплата сотрудников</td><td>−12 000 000 сум</td></tr>
+        <tr><td>Прочие расходы</td><td>−3 000 000 сум</td></tr>
+        <tr class="total"><td>Чистая прибыль за март</td><td>7 000 000 сум</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight">
+      <p>Эта прибыль 7 000 000 сум автоматически увеличит капитал в балансе за апрель. Три вопроса — три таблицы — одна связанная картина.</p>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Три вопроса — это не учебная схема. Это способ думать о любом бизнесе. Открываешь отчёт — задаёшь три вопроса. Получаешь ясность.»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>Пункт 3 из 9 · Блок 1 · День 1</span>
+    <strong>Следующий: Отличие бухгалтерского, управленческого и налогового учёта</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt2.html">← Пункт 2</a>
+    <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt4.html">Пункт 4 →</a>
+  </div>
+</div>
+
+</body>
+</html>
