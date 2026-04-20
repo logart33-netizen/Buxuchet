@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Блок 1 · Пункт 7 — Основы бухучёта</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: '7'; position: absolute; right: -10px; top: -20px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 24px 28px; margin: 20px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { color: var(--ink2); margin: 0 0 12px; font-size: 15px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* Periods grid */
+  .periods { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+  .period-card { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; display: flex; }
+  .period-label-col { width: 100px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 16px; text-align: center; }
+  .period-card.month .period-label-col { background: var(--accent-light); }
+  .period-card.quarter .period-label-col { background: var(--accent3-light); }
+  .period-card.year .period-label-col { background: var(--accent2-light); }
+  .period-icon { font-size: 24px; margin-bottom: 6px; }
+  .period-name { font-size: 12px; font-weight: 600; }
+  .period-card.month .period-name { color: var(--accent); }
+  .period-card.quarter .period-name { color: var(--accent3); }
+  .period-card.year .period-name { color: var(--accent2); }
+  .period-body { flex: 1; padding: 16px 20px; }
+  .period-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .period-desc { font-size: 14px; color: var(--ink2); line-height: 1.65; }
+
+  /* What happens at period end */
+  .period-end-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 20px 0; }
+  @media (max-width: 600px) { .period-end-grid { grid-template-columns: 1fr; } }
+  .peg-card { border-radius: 10px; padding: 16px 18px; }
+  .peg-card.m { background: var(--accent-light); border: 1px solid rgba(45,95,63,0.2); }
+  .peg-card.q { background: var(--accent3-light); border: 1px solid rgba(28,63,110,0.2); }
+  .peg-card.y { background: var(--accent2-light); border: 1px solid rgba(139,74,28,0.2); }
+  .peg-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
+  .peg-card.m .peg-label { color: var(--accent); }
+  .peg-card.q .peg-label { color: var(--accent3); }
+  .peg-card.y .peg-label { color: var(--accent2); }
+  .peg-list { list-style: none; }
+  .peg-list li { font-size: 13px; color: var(--ink2); padding: 5px 0 5px 14px; position: relative; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.55; }
+  .peg-list li:last-child { border-bottom: none; }
+  .peg-list li::before { content: '—'; position: absolute; left: 0; color: var(--ink3); font-size: 11px; }
+
+  /* Management benefits */
+  .benefits { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  @media (max-width: 560px) { .benefits { grid-template-columns: 1fr; } }
+  .benefit-card { background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
+  .benefit-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .benefit-desc { font-size: 13px; color: var(--ink2); line-height: 1.6; }
+
+  /* Tax periods table */
+  .tax-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  .tax-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .tax-table td { padding: 12px 14px; border-bottom: 1px solid var(--line); color: var(--ink2); background: var(--card-bg); vertical-align: top; }
+  .tax-table tr:last-child td { border-bottom: none; }
+  .tax-table .tax-name { font-weight: 600; color: var(--ink); }
+
+  /* 1C steps */
+  .steps-1c { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+  .step-1c { display: flex; gap: 14px; align-items: flex-start; background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: var(--bg); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-body { flex: 1; }
+  .step-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .step-desc { font-size: 13px; color: var(--ink2); line-height: 1.6; }
+
+  /* Storno */
+  .storno-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+  @media (max-width: 560px) { .storno-cols { grid-template-columns: 1fr; } }
+  .storno-col { border-radius: 10px; padding: 16px 18px; }
+  .storno-col.wrong { background: #FEF2F2; border: 1px solid rgba(226,75,74,0.2); }
+  .storno-col.right { background: var(--accent-light); border: 1px solid rgba(45,95,63,0.2); }
+  .storno-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+  .storno-col.wrong .storno-label { color: #A32D2D; }
+  .storno-col.right .storno-label { color: var(--accent); }
+  .storno-text { font-size: 13px; line-height: 1.65; }
+  .storno-col.wrong .storno-text { color: #791F1F; }
+  .storno-col.right .storno-text { color: var(--ink2); }
+
+  /* Annual cycle timeline */
+  .timeline { position: relative; padding-left: 28px; margin: 20px 0; }
+  .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 1px; background: var(--line); }
+  .tl-item { position: relative; margin-bottom: 16px; }
+  .tl-item::before { content: ''; position: absolute; left: -24px; top: 6px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--accent); background: var(--card-bg); }
+  .tl-item.quarter::before { border-color: var(--accent3); }
+  .tl-item.year-end::before { border-color: var(--accent2); background: var(--accent2); }
+  .tl-period { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); margin-bottom: 4px; }
+  .tl-desc { font-size: 14px; color: var(--ink2); line-height: 1.65; }
+
+  .bigquote { text-align: center; padding: 48px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 48px 0; }
+  .bigquote p { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic; color: var(--ink); line-height: 1.5; max-width: 560px; margin: 0 auto; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt6.html">← Пункт 6</a>
+  <span class="topnav-center">День 1 · Блок 1 · Пункт 7 из 9</span>
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt8.html">Пункт 8 →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 1 · Блок 1 · Пункт 7 из 9</div>
+  <h1>Принцип периодичности: учёт <em>делится на периоды</em> — месяц, квартал, год</h1>
+  <p class="hero-sub">Бизнес работает непрерывно — но учёт нарезается на равные отрезки. Именно это делает бизнес управляемым и сравнимым.</p>
+</div>
+
+<div class="container">
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Зачем вообще делить учёт на периоды</div>
+    </div>
+    <p>Представь что ты ведёшь бизнес уже три года. За это время произошли тысячи операций — покупки, продажи, оплаты, расходы. Если смотреть на всё это одной огромной кучей — ты ничего не поймёшь. Нельзя сравнить «как было» и «как стало». Нельзя увидеть тенденцию. Нельзя понять в каком месяце пошло что-то не так.</p>
+    <p>Принцип периодичности решает эту проблему. Он говорит: <strong>бизнес работает непрерывно, но учёт нарезается на равные отрезки времени</strong>. В конце каждого отрезка подводится итог, составляется отчётность, считается прибыль.</p>
+    <div class="callout">
+      <div class="callout-label">Аналогия</div>
+      <p>Это как снимать показания счётчика воды раз в месяц. Вода течёт постоянно — но ты фиксируешь результат в конкретные моменты времени. Именно это позволяет сравнивать месяцы между собой и видеть динамику.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Какие бывают периоды</div>
+    </div>
+    <p>В бухгалтерском учёте используются три основных периода:</p>
+    <div class="periods">
+      <div class="period-card month">
+        <div class="period-label-col">
+          <div class="period-icon">📅</div>
+          <div class="period-name">Месяц</div>
+        </div>
+        <div class="period-body">
+          <div class="period-title">Базовый период — основа всей текущей работы</div>
+          <div class="period-desc">Именно внутри месяца вводятся документы, начисляется зарплата, считаются налоги. В конце месяца обязательно выполняется «закрытие месяца» — специальная процедура которая подводит итоги и рассчитывает финансовый результат.</div>
+        </div>
+      </div>
+      <div class="period-card quarter">
+        <div class="period-label-col">
+          <div class="period-icon">📊</div>
+          <div class="period-name">Квартал</div>
+        </div>
+        <div class="period-body">
+          <div class="period-title">Три месяца — используется для налоговой отчётности</div>
+          <div class="period-desc">Многие налоги — НДС, налог на прибыль — рассчитываются и платятся поквартально. По итогам квартала сдаются налоговые декларации. Это один из главных ритмов работы бухгалтера.</div>
+        </div>
+      </div>
+      <div class="period-card year">
+        <div class="period-label-col">
+          <div class="period-icon">🗓️</div>
+          <div class="period-name">Год</div>
+        </div>
+        <div class="period-body">
+          <div class="period-title">Главный период — годовая отчётность самая важная</div>
+          <div class="period-desc">Показывает результат работы бизнеса за полный цикл. На основе годовой отчётности принимаются стратегические решения, выплачиваются дивиденды, проводятся аудиты. В Узбекистане финансовый год совпадает с календарным — с 1 января по 31 декабря.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Что происходит в конце каждого периода</div>
+    </div>
+    <p>Конец периода — это не просто «время прошло». Это активная бухгалтерская работа.</p>
+    <div class="period-end-grid">
+      <div class="peg-card m">
+        <div class="peg-label">Конец месяца</div>
+        <ul class="peg-list">
+          <li>Начисляется амортизация</li>
+          <li>Начисляется зарплата</li>
+          <li>Рассчитываются налоги</li>
+          <li>Закрываются счета доходов и расходов</li>
+          <li>Формируется ОСВ</li>
+          <li>Проверяется баланс: активы = пассивы?</li>
+        </ul>
+      </div>
+      <div class="peg-card q">
+        <div class="peg-label">Конец квартала</div>
+        <ul class="peg-list">
+          <li>Всё то что в конце месяца</li>
+          <li>Составляются налоговые декларации</li>
+          <li>Сдаётся декларация по НДС</li>
+          <li>Платится НДС в бюджет</li>
+          <li>Авансовый платёж по налогу на прибыль</li>
+        </ul>
+      </div>
+      <div class="peg-card y">
+        <div class="peg-label">Конец года</div>
+        <ul class="peg-list">
+          <li>Всё то что в конце квартала</li>
+          <li>Годовая финансовая отчётность</li>
+          <li>Инвентаризация имущества</li>
+          <li>Сверка долгов с контрагентами</li>
+          <li>Закрытие года — прибыль переносится в капитал</li>
+          <li>Годовая декларация по налогу на прибыль</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Почему периодичность влияет на то как ты видишь бизнес</div>
+    </div>
+    <p>Периодичность — это не просто бухгалтерская техничность. Это инструмент управления. Когда у тебя есть данные по периодам — ты можешь:</p>
+    <div class="benefits">
+      <div class="benefit-card">
+        <div class="benefit-title">Сравнивать периоды между собой</div>
+        <div class="benefit-desc">Январь этого года против января прошлого. Второй квартал против первого. Видишь рост или падение — и можешь искать причину.</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-title">Видеть сезонность</div>
+        <div class="benefit-desc">Многие бизнесы имеют сезонные колебания. Без разбивки по месяцам этого не увидишь — всё сольётся в одну годовую цифру.</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-title">Реагировать вовремя</div>
+        <div class="benefit-desc">Если ждать итогов года — проблема возникшая в марте обнаружится только в декабре. Ежемесячная отчётность позволяет увидеть проблему через месяц после её возникновения.</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-title">Планировать</div>
+        <div class="benefit-desc">Зная как вёл себя бизнес в прошлые периоды — можно строить прогнозы и бюджеты на будущее.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Отчётный период и налоговый период — в чём разница</div>
+    </div>
+    <p>Это два разных понятия которые часто путают.</p>
+    <div class="callout">
+      <div class="callout-label">Отчётный период</div>
+      <p>Период за который составляется бухгалтерская отчётность. Обычно это месяц или квартал для внутренней отчётности, и год для внешней (банки, инвесторы, государство).</p>
+    </div>
+    <div class="callout">
+      <div class="callout-label">Налоговый период</div>
+      <p>Период за который рассчитывается и уплачивается конкретный налог. Для разных налогов он разный.</p>
+    </div>
+    <p>В Узбекистане налоговые периоды выглядят так:</p>
+    <table class="tax-table">
+      <thead>
+        <tr><th>Налог</th><th>Налоговый период</th><th>Когда сдаётся декларация</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="tax-name">НДС</td><td>Квартал</td><td>Ежеквартально</td></tr>
+        <tr><td class="tax-name">Налог на прибыль</td><td>Год</td><td>Раз в год + авансы ежеквартально</td></tr>
+        <tr><td class="tax-name">НДФЛ (зарплатный)</td><td>Месяц</td><td>Ежемесячно</td></tr>
+        <tr><td class="tax-name">Социальный налог</td><td>Месяц</td><td>Ежемесячно</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight highlight-blue">
+      <p>Бухгалтер работает в нескольких ритмах одновременно: каждый месяц закрывает месяц, каждый квартал сдаёт декларации, раз в год составляет годовую отчётность.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Закрытие периода в 1С — как это работает</div>
+    </div>
+    <p>В 1С процедура «Закрытие месяца» — это специальная операция которая выполняется в конце каждого месяца. Она делает несколько вещей автоматически:</p>
+    <div class="steps-1c">
+      <div class="step-1c">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Начисляет амортизацию</div>
+          <div class="step-desc">По всем основным средствам которые числятся в учёте. Программа сама рассчитывает сумму по каждому объекту и делает проводку — бухгалтеру не нужно считать вручную.</div>
+        </div>
+      </div>
+      <div class="step-1c">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Рассчитывает себестоимость</div>
+          <div class="step-desc">Если за месяц были продажи, программа рассчитывает точную себестоимость проданных товаров — с учётом метода ФИФО или средней стоимости.</div>
+        </div>
+      </div>
+      <div class="step-1c">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Закрывает счета доходов и расходов</div>
+          <div class="step-desc">Все накопленные за месяц доходы и расходы «схлопываются» в одну цифру — финансовый результат (прибыль или убыток). Счета доходов и расходов обнуляются — готовы к следующему месяцу.</div>
+        </div>
+      </div>
+      <div class="step-1c">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Рассчитывает налоги</div>
+          <div class="step-desc">НДС, налог на прибыль и другие — программа формирует налоговые регистры на основе проведённых за месяц документов.</div>
+        </div>
+      </div>
+    </div>
+    <div class="highlight highlight-warm">
+      <p>Если закрытие месяца не выполнено — отчётность за этот период будет неточной. Именно поэтому бухгалтеры всегда следят за тем чтобы закрытие было выполнено без ошибок прежде чем начать следующий месяц.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 7 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-title">Ошибка в прошлом периоде — что делать</div>
+    </div>
+    <p>Представь: бухгалтер закрыл январь, потом обнаружил ошибку в январской проводке. Что теперь? Нельзя просто «исправить» прошлый период — особенно если отчётность уже была сдана.</p>
+    <div class="storno-cols">
+      <div class="storno-col wrong">
+        <div class="storno-label">❌ Нельзя так</div>
+        <div class="storno-text">Просто исправить цифру в уже закрытом периоде. Это нарушит целостность отчётности и может скрыть ошибку от контролирующих органов.</div>
+      </div>
+      <div class="storno-col right">
+        <div class="storno-label">✓ Правильно так</div>
+        <div class="storno-text">Сделать сторнирование — отменить ошибочную проводку обратной записью, затем провести правильную проводку. В 1С это делается через специальный документ «Сторно».</div>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">Как работает сторнирование</div>
+      <p>Ошибочная проводка была: Дт «Товары» — Кт «Расчётный счёт» — 1 000 000 сум</p>
+      <p>Сторно (обратная запись): Дт «Расчётный счёт» — Кт «Товары» — 1 000 000 сум</p>
+      <p>Ошибка обнулилась. Теперь делается правильная проводка.</p>
+    </div>
+    <div class="highlight highlight-warm">
+      <p>Если ошибка обнаружена после того как налоговая декларация уже сдана — нужно подать уточнённую декларацию. Это отдельная процедура с которой поможет бухгалтер.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 8 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <div class="section-title">Почему периоды нельзя «пересекать»</div>
+    </div>
+    <p>Один из фундаментальных запретов бухгалтерии: нельзя смешивать операции разных периодов.</p>
+    <div class="callout">
+      <div class="callout-label">Пример нарушения</div>
+      <p>Компания оказала услугу в декабре, но бухгалтер забыл выставить акт и занёс операцию в январе. Это нарушение принципа периодичности.</p>
+    </div>
+    <p>Последствия:</p>
+    <div class="steps-1c">
+      <div class="step-1c" style="border-left: 3px solid var(--accent2);">
+        <div class="step-num" style="background: var(--accent2);">!</div>
+        <div class="step-body">
+          <div class="step-title">Декабрьская отчётность недостоверна</div>
+          <div class="step-desc">Выручка за декабрь не отражена — отчёт показывает меньше чем было на самом деле.</div>
+        </div>
+      </div>
+      <div class="step-1c" style="border-left: 3px solid var(--accent2);">
+        <div class="step-num" style="background: var(--accent2);">!</div>
+        <div class="step-body">
+          <div class="step-title">Январская отчётность тоже недостоверна</div>
+          <div class="step-desc">Январская выручка завышена на сумму декабрьской операции.</div>
+        </div>
+      </div>
+      <div class="step-1c" style="border-left: 3px solid var(--accent2);">
+        <div class="step-num" style="background: var(--accent2);">!</div>
+        <div class="step-body">
+          <div class="step-title">Налоговое нарушение</div>
+          <div class="step-desc">Налог за декабрь занижен. При проверке налоговая может начислить штрафы и пени.</div>
+        </div>
+      </div>
+    </div>
+    <div class="highlight">
+      <p>Именно поэтому в бухгалтерии есть жёсткое правило: <strong>дата документа = дата операции</strong>. Накладная от 15 декабря вводится датой 15 декабря. Не позже, не раньше.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 9 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">9</div>
+      <div class="section-title">Практический пример: как выглядит годовой цикл</div>
+    </div>
+    <p>Возьмём торговую компанию и посмотрим что происходит в течение года:</p>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-period">Январь — декабрь (каждый месяц)</div>
+        <div class="tl-desc">Вводятся первичные документы: накладные, акты, платёжки. Начисляется зарплата и налоги с неё. Выполняется закрытие месяца. Формируется ОСВ.</div>
+      </div>
+      <div class="tl-item quarter">
+        <div class="tl-period">Март, июнь, сентябрь, декабрь (конец квартала)</div>
+        <div class="tl-desc">Сдаётся декларация по НДС и платится НДС в бюджет. Сдаётся расчёт авансового платежа по налогу на прибыль.</div>
+      </div>
+      <div class="tl-item year-end">
+        <div class="tl-period">Декабрь (конец года)</div>
+        <div class="tl-desc">Проводится инвентаризация: пересчитываются товары на складе, деньги в кассе, сверяются долги с контрагентами. Начисляются все итоговые суммы. Закрывается год.</div>
+      </div>
+      <div class="tl-item quarter">
+        <div class="tl-period">Январь — март следующего года</div>
+        <div class="tl-desc">Составляется и сдаётся годовая финансовая отчётность. Сдаётся годовая декларация по налогу на прибыль. Утверждается годовой отчёт.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Принцип периодичности — это способ сделать непрерывный бизнес обозримым и управляемым. Бухгалтерия делает стоп-кадр и говорит: вот что произошло за этот отрезок времени, вот результат, вот где мы находимся.»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>Пункт 7 из 9 · Блок 1 · День 1</span>
+    <strong>Следующий: Принцип непрерывности</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt6.html">← Пункт 6</a>
+    <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt8.html">Пункт 8 →</a>
+  </div>
+</div>
+
+</body>
+</html>
