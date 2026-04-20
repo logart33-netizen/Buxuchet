@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Блок 1 · Пункт 9 — Основы бухучёта</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: '9'; position: absolute; right: -10px; top: -20px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+  .hero-badge { display: inline-block; margin-top: 20px; background: rgba(168,196,176,0.2); border: 1px solid rgba(168,196,176,0.3); color: #A8C4B0; font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 20px; letter-spacing: .05em; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 24px 28px; margin: 20px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { color: var(--ink2); margin: 0 0 12px; font-size: 15px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* Money conversion example */
+  .money-list { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 20px 0; }
+  .money-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--line); }
+  .money-row:last-child { border-bottom: none; background: var(--tag-bg); }
+  .money-item { font-size: 14px; color: var(--ink2); }
+  .money-value { font-size: 14px; font-weight: 600; color: var(--accent); }
+  .money-row.total .money-item { font-weight: 600; color: var(--ink); font-size: 15px; }
+  .money-row.total .money-value { font-size: 16px; color: var(--ink); }
+
+  /* In/out grid */
+  .inout { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  @media (max-width: 560px) { .inout { grid-template-columns: 1fr; } }
+  .inout-card { border-radius: 12px; padding: 18px 20px; }
+  .inout-card.in { background: var(--accent-light); border: 1px solid rgba(45,95,63,0.2); }
+  .inout-card.out { background: #F5F5F5; border: 1px solid rgba(0,0,0,0.08); }
+  .inout-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 12px; }
+  .inout-card.in .inout-label { color: var(--accent); }
+  .inout-card.out .inout-label { color: var(--ink3); }
+  .inout-list { list-style: none; }
+  .inout-list li { font-size: 13px; color: var(--ink2); padding: 6px 0 6px 16px; position: relative; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.55; }
+  .inout-list li:last-child { border-bottom: none; }
+  .inout-list li::before { content: '✓'; position: absolute; left: 0; font-size: 11px; }
+  .inout-card.in .inout-list li::before { color: var(--accent); }
+  .inout-card.out .inout-list li::before { content: '✗'; color: var(--ink3); }
+
+  /* Goodwill example */
+  .goodwill-calc { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 20px 0; }
+  .goodwill-row { display: flex; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .goodwill-row:last-child { border-bottom: none; }
+  .goodwill-row .label { color: var(--ink2); }
+  .goodwill-row .value { font-weight: 600; color: var(--ink); }
+  .goodwill-row.result { background: var(--accent-light); }
+  .goodwill-row.result .label { color: var(--accent); font-weight: 600; }
+  .goodwill-row.result .value { color: var(--accent); font-size: 16px; }
+
+  /* Historical cost comparison */
+  .hist-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  @media (max-width: 560px) { .hist-compare { grid-template-columns: 1fr; } }
+  .hc-card { border-radius: 10px; padding: 16px 18px; }
+  .hc-card.hist { background: var(--accent3-light); border: 1px solid rgba(28,63,110,0.2); }
+  .hc-card.market { background: var(--accent2-light); border: 1px solid rgba(139,74,28,0.2); }
+  .hc-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+  .hc-card.hist .hc-label { color: var(--accent3); }
+  .hc-card.market .hc-label { color: var(--accent2); }
+  .hc-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .hc-value { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .hc-card.hist .hc-value { color: var(--accent3); }
+  .hc-card.market .hc-value { color: var(--accent2); }
+  .hc-desc { font-size: 12px; color: var(--ink3); line-height: 1.55; }
+
+  /* Summary table */
+  .sum-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  .sum-table th { text-align: left; padding: 10px 16px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .sum-table td { padding: 12px 16px; border-bottom: 1px solid var(--line); color: var(--ink2); background: var(--card-bg); vertical-align: top; line-height: 1.5; }
+  .sum-table tr:last-child td { border-bottom: none; }
+  .sum-table .yes { color: var(--accent); font-weight: 500; }
+  .sum-table .no  { color: var(--ink3); }
+
+  /* Practical consequences */
+  .conseqs { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+  .conseq-item { display: flex; gap: 14px; background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; align-items: flex-start; }
+  .conseq-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--tag-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; }
+  .conseq-body { flex: 1; }
+  .conseq-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .conseq-desc { font-size: 13px; color: var(--ink2); line-height: 1.65; }
+
+  /* Final strength/weakness */
+  .sw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  @media (max-width: 560px) { .sw-grid { grid-template-columns: 1fr; } }
+  .sw-card { border-radius: 12px; padding: 20px; }
+  .sw-card.strength { background: var(--accent-light); border: 1px solid rgba(45,95,63,0.2); }
+  .sw-card.weakness { background: var(--accent2-light); border: 1px solid rgba(139,74,28,0.2); }
+  .sw-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
+  .sw-card.strength .sw-label { color: var(--accent); }
+  .sw-card.weakness .sw-label { color: var(--accent2); }
+  .sw-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+  .sw-desc { font-size: 13px; color: var(--ink2); line-height: 1.65; }
+
+  /* Completion banner */
+  .completion { background: var(--ink); border-radius: 16px; padding: 36px 32px; margin: 48px 0; text-align: center; }
+  .completion-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 14px; }
+  .completion h3 { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--bg); margin-bottom: 12px; }
+  .completion p { font-size: 15px; color: rgba(247,244,238,0.65); line-height: 1.7; max-width: 500px; margin: 0 auto 24px; }
+  .completion-pills { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .completion-pill { background: rgba(168,196,176,0.15); border: 1px solid rgba(168,196,176,0.25); color: #A8C4B0; font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 20px; }
+
+  .bigquote { text-align: center; padding: 48px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 48px 0; }
+  .bigquote p { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic; color: var(--ink); line-height: 1.5; max-width: 560px; margin: 0 auto; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt8.html">← Пункт 8</a>
+  <span class="topnav-center">День 1 · Блок 1 · Пункт 9 из 9</span>
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_3_day_plan.html">К плану →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 1 · Блок 1 · Пункт 9 из 9 — последний</div>
+  <h1>Принцип денежного измерения: <em>всё переводим в деньги</em></h1>
+  <p class="hero-sub">Почему репутация, сотрудники и культура компании не попадают в баланс — и почему это одновременно сила и ограничение бухгалтерии.</p>
+  <div class="hero-badge">Последний пункт Блока 1</div>
+</div>
+
+<div class="container">
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Что говорит этот принцип</div>
+    </div>
+    <p>Принцип денежного измерения звучит так: <strong>в бухгалтерском учёте отражается только то, что можно выразить в денежной форме.</strong></p>
+    <p>Если событие нельзя измерить в деньгах — его не существует для бухгалтерии. Неважно насколько это событие важно для бизнеса в реальности.</p>
+    <div class="highlight highlight-warm">
+      <p>Это звучит странно — и это правда странно. Но у этого есть глубокая причина. Сейчас разберём.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Почему деньги — единственный универсальный измеритель</div>
+    </div>
+    <p>Представь что у компании есть разные активы. Как сложить всё это вместе?</p>
+    <div class="money-list">
+      <div class="money-row"><span class="money-item">50 компьютеров</span><span class="money-value">75 000 000 сум</span></div>
+      <div class="money-row"><span class="money-item">200 единиц товара на складе</span><span class="money-value">40 000 000 сум</span></div>
+      <div class="money-row"><span class="money-item">3 грузовых автомобиля</span><span class="money-value">90 000 000 сум</span></div>
+      <div class="money-row"><span class="money-item">Право аренды офиса на 2 года</span><span class="money-value">24 000 000 сум</span></div>
+      <div class="money-row"><span class="money-item">Деньги на расчётном счёте</span><span class="money-value">15 000 000 сум</span></div>
+      <div class="money-row total"><span class="money-item">Итого активов</span><span class="money-value">244 000 000 сум</span></div>
+    </div>
+    <p>Нельзя сложить компьютеры с грузовиками и правами аренды — это разные вещи с разными единицами измерения. Но можно перевести всё в деньги — и тогда получается одна сопоставимая цифра.</p>
+    <div class="highlight">
+      <p>Деньги — это универсальный язык бухгалтерии. Благодаря им можно сравнивать несравнимое, складывать несуммируемое и анализировать динамику во времени.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Что попадает в учёт — и что нет</div>
+    </div>
+    <p>Это самая важная часть пункта. Принцип денежного измерения жёстко разделяет мир на две части.</p>
+    <div class="inout">
+      <div class="inout-card in">
+        <div class="inout-label">✓ Попадает в бухучёт</div>
+        <ul class="inout-list">
+          <li>Деньги (наличные, на счетах)</li>
+          <li>Товары и материалы — по стоимости покупки</li>
+          <li>Оборудование и здания — по цене приобретения</li>
+          <li>Долги клиентов (дебиторка)</li>
+          <li>Долги компании (кредиторка)</li>
+          <li>Купленные права (аренда, лицензии)</li>
+          <li>Купленные патенты и товарные знаки</li>
+          <li>Гудвилл (купленная репутация)</li>
+        </ul>
+      </div>
+      <div class="inout-card out">
+        <div class="inout-label">✗ Не попадает в бухучёт</div>
+        <ul class="inout-list">
+          <li>Репутация компании (если не куплена)</li>
+          <li>Квалификация и опыт сотрудников</li>
+          <li>Качество управленческой команды</li>
+          <li>Лояльность клиентов</li>
+          <li>Корпоративная культура</li>
+          <li>Узнаваемость бренда (если не куплен)</li>
+          <li>Ноу-хау разработанные внутри</li>
+          <li>Эксклюзивные отношения с партнёрами</li>
+        </ul>
+      </div>
+    </div>
+    <div class="highlight highlight-warm">
+      <p>Все вещи из правого столбца могут быть огромной ценностью для бизнеса — но их нет в балансе. Именно поэтому баланс никогда не показывает полную стоимость компании.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Почему балансовая стоимость всегда меньше рыночной</div>
+    </div>
+    <p>Это прямое следствие принципа денежного измерения — и одно из самых важных его практических проявлений.</p>
+    <div class="callout">
+      <div class="callout-label">Пример — крупная IT-компания</div>
+      <p>Бухгалтерский баланс показывает активов на 100 000 000 000 сум. Но рынок оценивает её в 500 000 000 000 сум — в пять раз дороже.</p>
+      <p>Где эти лишние 400 миллиардов? Это технологии и алгоритмы разработанные внутри компании, база из миллионов лояльных пользователей, репутация и доверие рынка, команда из лучших инженеров, накопленные данные. Всё это создаёт реальную ценность — но ни одна из этих вещей не измерима в деньгах достаточно надёжно чтобы попасть в баланс.</p>
+    </div>
+    <div class="highlight">
+      <p>Балансовая стоимость компании почти всегда меньше её рыночной стоимости. Это не ошибка бухгалтерии — это принцип денежного измерения в действии.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Исключение: гудвилл — когда репутация попадает в баланс</div>
+    </div>
+    <p>Есть один случай когда нематериальная ценность компании всё-таки попадает в учёт.</p>
+    <p><strong>Гудвилл (деловая репутация)</strong> — это разница между ценой покупки компании и стоимостью её чистых активов.</p>
+    <div class="callout">
+      <div class="callout-label">Пример расчёта гудвилла</div>
+      <p>Компания А покупает компанию Б. Смотрим на цифры:</p>
+    </div>
+    <div class="goodwill-calc">
+      <div class="goodwill-row"><span class="label">Цена покупки компании Б</span><span class="value">80 000 000 сум</span></div>
+      <div class="goodwill-row"><span class="label">Активы компании Б</span><span class="value">70 000 000 сум</span></div>
+      <div class="goodwill-row"><span class="label">Обязательства компании Б</span><span class="value">20 000 000 сум</span></div>
+      <div class="goodwill-row"><span class="label">Чистые активы (70 − 20)</span><span class="value">50 000 000 сум</span></div>
+      <div class="goodwill-row result"><span class="label">Гудвилл (80 − 50)</span><span class="value">30 000 000 сум</span></div>
+    </div>
+    <p>Покупатель заплатил на 30 000 000 сум больше чем «видно» в балансе. Эти 30 000 000 — гудвилл. Они отражают то за что заплатили сверх балансовой стоимости: репутацию, клиентскую базу, бренд, отношения.</p>
+    <div class="highlight highlight-blue">
+      <p>Гудвилл появляется в балансе только в одном случае — когда его купили. Репутация которую компания строила сама годами — в баланс не попадает. Репутация за которую заплатили при покупке — попадает как гудвилл. Принцип денежного измерения соблюдён: есть конкретная цена.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Проблема исторической стоимости</div>
+    </div>
+    <p>Принцип денежного измерения тесно связан с ещё одной важной концепцией — <strong>исторической стоимостью</strong>. В классическом бухгалтерском учёте активы оцениваются по той цене за которую они были куплены — не по текущей рыночной стоимости.</p>
+    <div class="callout">
+      <div class="callout-label">Пример со складом</div>
+      <p>Компания купила склад в 2010 году за 200 000 000 сум. Сегодня этот склад стоит 800 000 000 сум. В балансе — с учётом амортизации — он может числиться по 80 000 000 сум.</p>
+    </div>
+    <div class="hist-compare">
+      <div class="hc-card hist">
+        <div class="hc-label">В балансе (историческая стоимость)</div>
+        <div class="hc-title">Остаточная стоимость</div>
+        <div class="hc-value">80 000 000</div>
+        <div class="hc-desc">Зафиксирована в документах. Объективна и проверяема. Не зависит от мнения оценщика.</div>
+      </div>
+      <div class="hc-card market">
+        <div class="hc-label">На рынке (текущая стоимость)</div>
+        <div class="hc-title">Рыночная цена</div>
+        <div class="hc-value">800 000 000</div>
+        <div class="hc-desc">Субъективна. Два оценщика дадут разные цифры. Меняется каждый день.</div>
+      </div>
+    </div>
+    <div class="highlight">
+      <p>У исторической стоимости есть важное преимущество: она <strong>объективна и проверяема</strong>. Цена покупки зафиксирована в документах. Именно поэтому в классической бухгалтерии используется историческая стоимость, а не рыночная.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 7 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-title">Проблема инфляции и денежного измерения</div>
+    </div>
+    <p>Деньги сами по себе нестабильны — их покупательная способность меняется из-за инфляции. Это создаёт проблему.</p>
+    <div class="callout">
+      <div class="callout-label">Пример</div>
+      <p>Компания купила оборудование в 2015 году за 10 000 000 сум. В 2024 году это же оборудование стоит 25 000 000 сум — потому что за это время произошла инфляция и цены выросли.</p>
+      <p>В балансе оборудование всё ещё числится по исторической стоимости — 10 000 000 сум (минус амортизация). Получается что баланс сравнивает «старые» деньги 2015 года с «новыми» деньгами 2024 года — как будто они одинаковые. Но они не одинаковые.</p>
+    </div>
+    <div class="highlight highlight-warm">
+      <p>Это известная ограниченность принципа денежного измерения в условиях инфляции. В странах с высокой инфляцией это особенно актуально — в том числе в Узбекистане. В базовом учёте корректировки на инфляцию не делаются.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 8 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <div class="section-title">Практические последствия для работы с отчётностью</div>
+    </div>
+    <p>Понимание принципа денежного измерения меняет то как ты читаешь баланс:</p>
+    <div class="conseqs">
+      <div class="conseq-item">
+        <div class="conseq-icon">📊</div>
+        <div class="conseq-body">
+          <div class="conseq-title">Баланс — это не полная стоимость бизнеса</div>
+          <div class="conseq-desc">Он показывает только то что можно измерить в деньгах. Реальная ценность компании всегда больше балансовой — иногда в несколько раз.</div>
+        </div>
+      </div>
+      <div class="conseq-item">
+        <div class="conseq-icon">💡</div>
+        <div class="conseq-body">
+          <div class="conseq-title">Нематериальные активы в балансе — только купленные</div>
+          <div class="conseq-desc">Если видишь в балансе «нематериальные активы» или «гудвилл» — значит это было куплено, у этого есть конкретная цена приобретения.</div>
+        </div>
+      </div>
+      <div class="conseq-item">
+        <div class="conseq-icon">📈</div>
+        <div class="conseq-body">
+          <div class="conseq-title">Сравнение балансов разных лет может искажаться инфляцией</div>
+          <div class="conseq-desc">Если активы в балансе выросли на 10% — это не обязательно реальный рост. Возможно просто произошла инфляция на 10%.</div>
+        </div>
+      </div>
+      <div class="conseq-item">
+        <div class="conseq-icon">🏢</div>
+        <div class="conseq-body">
+          <div class="conseq-title">Рыночная капитализация vs балансовая стоимость</div>
+          <div class="conseq-desc">У успешных компаний рыночная стоимость в разы превышает балансовую. Этот разрыв — это всё то что принцип денежного измерения не может зафиксировать: репутация, люди, технологии.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 9 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">9</div>
+      <div class="section-title">Сила и ограничение принципа — итог</div>
+    </div>
+    <div class="sw-grid">
+      <div class="sw-card strength">
+        <div class="sw-label">Сила</div>
+        <div class="sw-title">Универсальный язык</div>
+        <div class="sw-desc">Деньги позволяют сложить компьютеры, грузовики и права аренды в одну цифру. Можно сравнивать компании между собой. Можно отслеживать изменения во времени. Цифры объективны и проверяемы.</div>
+      </div>
+      <div class="sw-card weakness">
+        <div class="sw-label">Ограничение</div>
+        <div class="sw-title">Неполная картина</div>
+        <div class="sw-desc">Репутация, люди, культура, знания — всё это остаётся за пределами баланса. Бухгалтерский баланс никогда не покажет полную стоимость бизнеса. Это инструмент, но не исчерпывающий.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Completion banner -->
+  <div class="completion">
+    <div class="completion-label">Блок 1 завершён</div>
+    <h3>Ты прошёл все 9 пунктов основ бухучёта</h3>
+    <p>Теперь у тебя есть фундамент — понимание языка на котором говорит бухгалтерия. Следующий шаг — применить всё это в 1С.</p>
+    <div class="completion-pills">
+      <span class="completion-pill">Что такое бухучёт</span>
+      <span class="completion-pill">Движение ценностей</span>
+      <span class="completion-pill">Три вопроса учёта</span>
+      <span class="completion-pill">Три вида учёта</span>
+      <span class="completion-pill">Двойная запись</span>
+      <span class="completion-pill">Принцип начисления</span>
+      <span class="completion-pill">Периодичность</span>
+      <span class="completion-pill">Непрерывность</span>
+      <span class="completion-pill">Денежное измерение</span>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Бухгалтерия видит только то, что можно измерить в деньгах. Но самое ценное в бизнесе — люди, репутация, доверие — в балансе не числится.»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>Пункт 9 из 9 · Блок 1 · День 1 — финиш</span>
+    <strong>Блок 1 пройден полностью</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_blok1_punkt8.html">← Пункт 8</a>
+    <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_3_day_plan.html">К плану обучения →</a>
+  </div>
+</div>
+
+</body>
+</html>
