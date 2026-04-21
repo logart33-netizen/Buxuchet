@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>День 1 · Блок 2 · Пункт 2 — Пассивы</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: 'П'; position: absolute; right: -10px; top: -20px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 24px 28px; margin: 20px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { color: var(--ink2); margin: 0 0 12px; font-size: 15px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* Two sources */
+  .two-sources { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  @media (max-width: 560px) { .two-sources { grid-template-columns: 1fr; } }
+  .source-card { border-radius: 12px; padding: 20px; }
+  .source-card.capital { background: var(--accent-light); border: 1px solid rgba(45,95,63,0.2); }
+  .source-card.debt { background: var(--accent2-light); border: 1px solid rgba(139,74,28,0.2); }
+  .source-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+  .source-card.capital .source-label { color: var(--accent); }
+  .source-card.debt .source-label { color: var(--accent2); }
+  .source-title { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .source-desc { font-size: 13px; color: var(--ink2); line-height: 1.65; }
+
+  /* Capital components */
+  .capital-items { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 20px 0; }
+  .capital-item { display: flex; gap: 0; border-bottom: 1px solid var(--line); }
+  .capital-item:last-child { border-bottom: none; }
+  .capital-name { width: 220px; flex-shrink: 0; padding: 16px 18px; font-size: 14px; font-weight: 600; color: var(--ink); background: var(--card-bg); border-right: 1px solid var(--line); }
+  .capital-body { flex: 1; padding: 16px 18px; background: var(--bg); }
+  .capital-def { font-size: 14px; color: var(--ink2); line-height: 1.65; margin-bottom: 8px; }
+  .capital-example { font-size: 13px; color: var(--ink3); line-height: 1.55; font-style: italic; }
+  @media (max-width: 560px) {
+    .capital-item { flex-direction: column; }
+    .capital-name { width: 100%; border-right: none; border-bottom: 1px solid var(--line); }
+  }
+
+  /* Liabilities group */
+  .liab-group { margin: 20px 0; }
+  .liab-header { padding: 14px 20px; border-radius: 12px 12px 0 0; display: flex; align-items: center; gap: 12px; }
+  .liab-header.short { background: var(--accent2); }
+  .liab-header.long  { background: var(--accent3); }
+  .liab-header-label { font-size: 13px; font-weight: 600; color: #fff; }
+  .liab-header-desc  { font-size: 12px; color: rgba(255,255,255,0.65); margin-left: auto; }
+  .liab-items { border: 1px solid var(--line); border-top: none; border-radius: 0 0 12px 12px; overflow: hidden; }
+  .liab-item { display: flex; border-bottom: 1px solid var(--line); }
+  .liab-item:last-child { border-bottom: none; }
+  .liab-name { width: 240px; flex-shrink: 0; padding: 14px 18px; font-size: 14px; font-weight: 600; color: var(--ink); background: var(--card-bg); border-right: 1px solid var(--line); }
+  .liab-desc { flex: 1; padding: 14px 18px; font-size: 13px; color: var(--ink2); background: var(--bg); line-height: 1.6; }
+  @media (max-width: 560px) {
+    .liab-item { flex-direction: column; }
+    .liab-name { width: 100%; border-right: none; border-bottom: 1px solid var(--line); }
+  }
+
+  /* Comparison table */
+  .comp-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  .comp-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .comp-table td { padding: 12px 14px; border-bottom: 1px solid var(--line); color: var(--ink2); background: var(--card-bg); vertical-align: top; line-height: 1.55; }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table .row-label { font-weight: 600; color: var(--ink); }
+
+  /* Stability scale */
+  .stability { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+  .stab-card { border-radius: 10px; padding: 16px 20px; display: flex; gap: 14px; align-items: flex-start; }
+  .stab-card.good { background: var(--accent-light); border: 1px solid rgba(45,95,63,0.2); }
+  .stab-card.warn { background: #FEF9E7; border: 1px solid rgba(200,150,0,0.2); }
+  .stab-card.bad  { background: var(--accent2-light); border: 1px solid rgba(139,74,28,0.2); }
+  .stab-icon { font-size: 20px; flex-shrink: 0; }
+  .stab-body { flex: 1; }
+  .stab-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .stab-card.good .stab-title { color: var(--accent); }
+  .stab-card.warn .stab-title { color: #8A6800; }
+  .stab-card.bad  .stab-title { color: var(--accent2); }
+  .stab-desc { font-size: 13px; color: var(--ink2); line-height: 1.6; }
+
+  /* Full balance */
+  .balance-full { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 600px) { .balance-full { grid-template-columns: 1fr; } }
+  .balance-side { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .balance-side-header { padding: 12px 18px; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+  .balance-side.asset-side .balance-side-header { background: var(--accent-light); color: var(--accent); }
+  .balance-side.pasv-side .balance-side-header { background: var(--accent2-light); color: var(--accent2); }
+  .bal-section-title { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); padding: 8px 14px 4px; background: var(--bg); border-top: 1px solid var(--line); }
+  .bal-row { display: flex; justify-content: space-between; padding: 8px 14px; border-bottom: 1px solid var(--line); }
+  .bal-row:last-child { border-bottom: none; }
+  .bal-row .bn { font-size: 12px; color: var(--ink2); line-height: 1.4; }
+  .bal-row .bv { font-size: 12px; font-weight: 600; color: var(--ink); white-space: nowrap; margin-left: 8px; }
+  .bal-total { display: flex; justify-content: space-between; padding: 12px 14px; background: var(--ink); }
+  .bal-total .bn { font-size: 13px; font-weight: 600; color: rgba(247,244,238,0.7); }
+  .bal-total .bv { font-size: 14px; font-weight: 700; color: #A8C4B0; }
+
+  /* Source connection */
+  .source-conn { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+  .conn-row { display: flex; gap: 12px; align-items: flex-start; background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .conn-asset { flex: 1; font-size: 13px; color: var(--accent); font-weight: 500; line-height: 1.5; }
+  .conn-arrow { font-size: 16px; color: var(--ink3); flex-shrink: 0; padding-top: 2px; }
+  .conn-source { flex: 1; font-size: 13px; color: var(--accent2); font-weight: 500; line-height: 1.5; }
+
+  /* Equation */
+  .equation { background: var(--ink); border-radius: 12px; padding: 24px 32px; text-align: center; margin: 24px 0; }
+  .equation-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: rgba(247,244,238,0.4); margin-bottom: 12px; }
+  .equation-formula { font-family: 'Playfair Display', serif; font-size: clamp(16px, 2.5vw, 24px); font-weight: 700; color: #A8C4B0; }
+
+  .bigquote { text-align: center; padding: 48px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 48px 0; }
+  .bigquote p { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic; color: var(--ink); line-height: 1.5; max-width: 560px; margin: 0 auto; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/den1_blok2_punkt1.html">← Пункт 1</a>
+  <span class="topnav-center">День 1 · Блок 2 · Пункт 2</span>
+  <a href="https://logart33-netizen.github.io/Buxuchet/den1_blok2_punkt3.html">Пункт 3 →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 1 · Блок 2 · Пункт 2</div>
+  <h1>Пассивы — <em>за счёт чего</em> появились активы</h1>
+  <p class="hero-sub">Капитал и обязательства — два источника всех активов компании. Разбираем каждый вид пассива подробно.</p>
+</div>
+
+<div class="container">
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Что такое пассив — главная идея</div>
+    </div>
+    <p>Мы разобрали активы — всё что есть у компании. Теперь логичный следующий вопрос: <strong>откуда всё это взялось?</strong></p>
+    <p>Именно на этот вопрос отвечают пассивы. Пассив — это источник финансирования активов. Каждый актив компании появился откуда-то. Либо владелец вложил свои деньги. Либо компания взяла в долг. Третьего не дано.</p>
+    <div class="two-sources">
+      <div class="source-card capital">
+        <div class="source-label">Источник 1</div>
+        <div class="source-title">Капитал</div>
+        <div class="source-desc">Собственные средства — деньги и имущество которые вложили владельцы компании, плюс накопленная прибыль.</div>
+      </div>
+      <div class="source-card debt">
+        <div class="source-label">Источник 2</div>
+        <div class="source-title">Обязательства</div>
+        <div class="source-desc">Чужие средства — всё что компания взяла в долг: кредиты банка, долги поставщикам, авансы клиентов.</div>
+      </div>
+    </div>
+    <div class="equation">
+      <div class="equation-label">Основное уравнение бухгалтерии</div>
+      <div class="equation-formula">Активы = Капитал + Обязательства</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Почему пассив — это не «минус»</div>
+    </div>
+    <p>Многие новички думают что пассив это что-то плохое — долги, обязательства. Это неправильное понимание. Пассив — это нейтральное понятие. Это просто ответ на вопрос «откуда взялось».</p>
+    <div class="callout">
+      <div class="callout-label">Пример — один склад, два источника</div>
+      <p>У компании есть склад стоимостью 100 000 000 сум. Этот склад мог появиться двумя путями:</p>
+      <p><strong>Путь 1:</strong> Владелец вложил 100 000 000 сум своих денег и купил склад. Пассив = Капитал. Никаких долгов.</p>
+      <p><strong>Путь 2:</strong> Компания взяла кредит в банке 100 000 000 сум и купила склад. Пассив = Обязательство. Есть долг перед банком.</p>
+      <p>В обоих случаях склад одинаковый — 100 000 000 сум в активе. Но источники разные. Именно пассив объясняет разницу.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Капитал — собственные средства компании</div>
+    </div>
+    <p>Капитал — это то что принадлежит владельцам компании. Если бы компания продала все активы и погасила все долги — остаток достался бы владельцам. Этот остаток и есть капитал.</p>
+    <div class="capital-items">
+      <div class="capital-item">
+        <div class="capital-name">Уставный капитал</div>
+        <div class="capital-body">
+          <div class="capital-def">Деньги или имущество которые владельцы внесли при создании компании. Стартовый взнос. Зафиксирован в уставе. Изменить можно только через официальную процедуру.</div>
+          <div class="capital-example">Пример: два партнёра создали ООО, каждый вложил по 5 000 000 сум. Уставный капитал = 10 000 000 сум.</div>
+        </div>
+      </div>
+      <div class="capital-item">
+        <div class="capital-name">Нераспределённая прибыль</div>
+        <div class="capital-body">
+          <div class="capital-def">Прибыль которую компания заработала за всё время работы, но не выплатила владельцам в виде дивидендов. Деньги остались в компании и работают на её развитие. Самая «живая» часть капитала — растёт каждый прибыльный год.</div>
+          <div class="capital-example">Пример: компания работает 5 лет, каждый год зарабатывала 3 000 000 сум прибыли и не платила дивиденды. Нераспределённая прибыль = 15 000 000 сум.</div>
+        </div>
+      </div>
+      <div class="capital-item">
+        <div class="capital-name">Добавочный капитал</div>
+        <div class="capital-body">
+          <div class="capital-def">Возникает в особых случаях: когда компания переоценивает своё имущество (здание выросло в цене) или продаёт акции дороже их номинальной стоимости.</div>
+          <div class="capital-example">В малом бизнесе встречается редко.</div>
+        </div>
+      </div>
+      <div class="capital-item">
+        <div class="capital-name">Резервный капитал</div>
+        <div class="capital-body">
+          <div class="capital-def">Часть прибыли которую компания откладывает «на чёрный день» по требованию закона или устава. Финансовая подушка безопасности.</div>
+          <div class="capital-example">Пример: закон обязывает откладывать 5% от чистой прибыли до тех пор пока резерв не достигнет 15% уставного капитала.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Краткосрочные обязательства — долги до 12 месяцев</div>
+    </div>
+    <div class="liab-group">
+      <div class="liab-header short">
+        <div class="liab-header-label">Краткосрочные обязательства</div>
+        <div class="liab-header-desc">погасить в течение 12 месяцев</div>
+      </div>
+      <div class="liab-items">
+        <div class="liab-item">
+          <div class="liab-name">Краткосрочные кредиты</div>
+          <div class="liab-desc">Кредиты банка со сроком погашения до 12 месяцев. Также сюда входит та часть долгосрочного кредита которую нужно погасить в ближайший год.</div>
+        </div>
+        <div class="liab-item">
+          <div class="liab-name">Кредиторская задолженность</div>
+          <div class="liab-desc">Компания получила товар но ещё не заплатила поставщику. Зеркальное отражение дебиторской задолженности — только с другой стороны. У поставщика в активах дебиторка, у нас в пассивах — кредиторка.</div>
+        </div>
+        <div class="liab-item">
+          <div class="liab-name">Зарплата к выплате</div>
+          <div class="liab-desc">Зарплата которая начислена сотрудникам но ещё не выплачена. Компания должна сотрудникам. Возникает в момент начисления, гасится в момент выплаты.</div>
+        </div>
+        <div class="liab-item">
+          <div class="liab-name">Налоги к уплате</div>
+          <div class="liab-desc">Начисленные но ещё не уплаченные налоги. НДС за квартал, налог на прибыль, зарплатные налоги (НДФЛ, социальный налог).</div>
+        </div>
+        <div class="liab-item">
+          <div class="liab-name">Авансы полученные</div>
+          <div class="liab-desc">Деньги полученные от клиентов вперёд, но товар ещё не отгружен. Это пассив — компания должна либо отгрузить товар, либо вернуть деньги. Доходом станет только после отгрузки.</div>
+        </div>
+        <div class="liab-item">
+          <div class="liab-name">Прочие обязательства</div>
+          <div class="liab-desc">Различные мелкие долги: перед арендодателем, перед учредителями по дивидендам, перед подотчётными лицами.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Долгосрочные обязательства — долги больше года</div>
+    </div>
+    <div class="liab-group">
+      <div class="liab-header long">
+        <div class="liab-header-label">Долгосрочные обязательства</div>
+        <div class="liab-header-desc">срок погашения больше 1 года</div>
+      </div>
+      <div class="liab-items">
+        <div class="liab-item">
+          <div class="liab-name">Долгосрочные кредиты</div>
+          <div class="liab-desc">Кредиты банка на срок более года. Инвестиционные кредиты на покупку оборудования, зданий, транспорта. Возвращаются частями в течение нескольких лет.</div>
+        </div>
+        <div class="liab-item">
+          <div class="liab-name">Лизинговые обязательства</div>
+          <div class="liab-desc">Если компания взяла оборудование или транспорт в лизинг (финансовую аренду), возникает долгосрочное обязательство перед лизинговой компанией. Похоже на кредит, но актив остаётся у лизингодателя.</div>
+        </div>
+        <div class="liab-item">
+          <div class="liab-name">Отложенные налоговые обязательства</div>
+          <div class="liab-desc">Разница между налогом уплаченным сейчас и налогом по бухгалтерской прибыли. Возникает из-за разных правил в бухучёте и налоговом учёте. Погашается в будущих периодах.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Чем отличается кредиторская задолженность от кредита</div>
+    </div>
+    <p>Оба являются обязательствами — но природа разная. Их часто путают.</p>
+    <table class="comp-table">
+      <thead><tr><th></th><th>Кредиторская задолженность</th><th>Кредит банка</th></tr></thead>
+      <tbody>
+        <tr><td class="row-label">Кто кредитор</td><td>Поставщик товаров или услуг</td><td>Банк</td></tr>
+        <tr><td class="row-label">Как возникает</td><td>В ходе обычной деятельности — взяли товар, не заплатили</td><td>Специально оформляется кредитный договор</td></tr>
+        <tr><td class="row-label">Проценты</td><td>Обычно беспроцентная</td><td>Всегда с процентами</td></tr>
+        <tr><td class="row-label">Срок</td><td>Недели или месяцы</td><td>Месяцы или годы</td></tr>
+        <tr><td class="row-label">Аналогия</td><td>Взял у друга продукты — должен вернуть</td><td>Взял кредит в банке на машину</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 7 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-title">Капитал и финансовая устойчивость</div>
+    </div>
+    <p>Соотношение капитала и обязательств — важнейший показатель финансовой устойчивости компании.</p>
+    <div class="stability">
+      <div class="stab-card good">
+        <div class="stab-icon">✓</div>
+        <div class="stab-body">
+          <div class="stab-title">Капитал значительно больше обязательств</div>
+          <div class="stab-desc">Компания финансово устойчива. Живёт в основном на свои деньги. Даже если все кредиторы придут за долгами — компания расплатится.</div>
+        </div>
+      </div>
+      <div class="stab-card warn">
+        <div class="stab-icon">⚠</div>
+        <div class="stab-body">
+          <div class="stab-title">Обязательства значительно больше капитала</div>
+          <div class="stab-desc">Компания сильно закредитована. Работает в основном на чужие деньги. Высокий долговой риск. При спаде доходов могут возникнуть проблемы с погашением долгов.</div>
+        </div>
+      </div>
+      <div class="stab-card bad">
+        <div class="stab-icon">✗</div>
+        <div class="stab-body">
+          <div class="stab-title">Капитал отрицательный</div>
+          <div class="stab-desc">Обязательства превышают все активы. Компания накопила столько убытков что «съела» весь вложенный капитал. Серьёзный сигнал — принцип непрерывности под угрозой.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 8 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <div class="section-title">Полный баланс — активы и пассивы вместе</div>
+    </div>
+    <p>Продолжаем с ООО «Торговля» из предыдущего пункта. Теперь смотрим на баланс целиком:</p>
+
+    <div class="balance-full">
+      <div class="balance-side asset-side">
+        <div class="balance-side-header">Актив — что есть</div>
+        <div class="bal-section-title">Внеоборотные активы</div>
+        <div class="bal-row"><span class="bn">Грузовой автомобиль</span><span class="bv">25 000 000</span></div>
+        <div class="bal-row"><span class="bn">Компьютеры и оргтехника</span><span class="bv">8 000 000</span></div>
+        <div class="bal-section-title">Оборотные активы</div>
+        <div class="bal-row"><span class="bn">Товары на складе</span><span class="bv">45 000 000</span></div>
+        <div class="bal-row"><span class="bn">Дебиторская задолженность</span><span class="bv">18 000 000</span></div>
+        <div class="bal-row"><span class="bn">Авансы выданные</span><span class="bv">5 000 000</span></div>
+        <div class="bal-row"><span class="bn">Деньги на счёте</span><span class="bv">12 000 000</span></div>
+        <div class="bal-row"><span class="bn">Деньги в кассе</span><span class="bv">500 000</span></div>
+        <div class="bal-total"><span class="bn">Итого активов</span><span class="bv">113 500 000</span></div>
+      </div>
+      <div class="balance-side pasv-side">
+        <div class="balance-side-header">Пассив — откуда взялось</div>
+        <div class="bal-section-title">Капитал</div>
+        <div class="bal-row"><span class="bn">Уставный капитал</span><span class="bv">20 000 000</span></div>
+        <div class="bal-row"><span class="bn">Нераспределённая прибыль</span><span class="bv">38 500 000</span></div>
+        <div class="bal-section-title">Долгосрочные обязательства</div>
+        <div class="bal-row"><span class="bn">Кредит банка (3 года)</span><span class="bv">25 000 000</span></div>
+        <div class="bal-section-title">Краткосрочные обязательства</div>
+        <div class="bal-row"><span class="bn">Кредиторка поставщикам</span><span class="bv">20 000 000</span></div>
+        <div class="bal-row"><span class="bn">Зарплата к выплате</span><span class="bv">6 000 000</span></div>
+        <div class="bal-row"><span class="bn">Налоги к уплате</span><span class="bv">4 000 000</span></div>
+        <div class="bal-total"><span class="bn">Итого пассивов</span><span class="bv">113 500 000 ✓</span></div>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <p>Актив = Пассив: 113 500 000 = 113 500 000. Уравнение сошлось. Так будет всегда при правильном учёте.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 9 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">9</div>
+      <div class="section-title">Каждый актив имеет свой источник в пассиве</div>
+    </div>
+    <p>Посмотрим на связь между конкретными активами и их источниками финансирования:</p>
+    <div class="source-conn">
+      <div class="conn-row">
+        <div class="conn-asset">Товары на складе 45 000 000</div>
+        <div class="conn-arrow">←</div>
+        <div class="conn-source">Кредиторка поставщику 20 000 000 + часть собственного капитала</div>
+      </div>
+      <div class="conn-row">
+        <div class="conn-asset">Грузовик 25 000 000</div>
+        <div class="conn-arrow">←</div>
+        <div class="conn-source">Долгосрочный кредит банка 25 000 000</div>
+      </div>
+      <div class="conn-row">
+        <div class="conn-asset">Деньги на счёте 12 000 000</div>
+        <div class="conn-arrow">←</div>
+        <div class="conn-source">Накопленная прибыль (часть нераспределённой)</div>
+      </div>
+    </div>
+    <div class="highlight highlight-warm">
+      <p>Каждый актив имеет свой источник в пассиве. Это не совпадение — это математическая неизбежность двойной записи. Нет ни одного актива который появился ниоткуда.</p>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Пассив — это не список долгов. Это ответ на вопрос откуда взялись активы. Капитал — доля владельцев. Обязательства — доля кредиторов.»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>День 1 · Блок 2 · Пункт 2</span>
+    <strong>Следующий: Капитал — собственные средства</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/den1_blok2_punkt1.html">← Пункт 1</a>
+    <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/den1_blok2_punkt3.html">Пункт 3 →</a>
+  </div>
+</div>
+
+</body>
+</html>
