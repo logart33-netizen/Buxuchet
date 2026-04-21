@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>День 1 · Блок 2 · Пункт 1 — Активы</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: 'A'; position: absolute; right: -10px; top: -20px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 24px 28px; margin: 20px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { color: var(--ink2); margin: 0 0 12px; font-size: 15px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* Asset type cards */
+  .asset-group { margin: 24px 0; }
+  .asset-group-header { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-radius: 12px 12px 0 0; }
+  .asset-group-header.current { background: var(--accent); }
+  .asset-group-header.fixed { background: var(--accent3); }
+  .asset-group-label { font-size: 13px; font-weight: 600; color: #fff; }
+  .asset-group-desc { font-size: 12px; color: rgba(255,255,255,0.65); margin-left: auto; }
+  .asset-items { border: 1px solid var(--line); border-top: none; border-radius: 0 0 12px 12px; overflow: hidden; }
+  .asset-item { display: flex; gap: 0; border-bottom: 1px solid var(--line); }
+  .asset-item:last-child { border-bottom: none; }
+  .asset-item-name { width: 220px; flex-shrink: 0; padding: 14px 18px; font-size: 14px; font-weight: 600; color: var(--ink); background: var(--card-bg); border-right: 1px solid var(--line); display: flex; align-items: flex-start; }
+  .asset-item-desc { flex: 1; padding: 14px 18px; font-size: 13px; color: var(--ink2); background: var(--bg); line-height: 1.6; }
+  @media (max-width: 560px) {
+    .asset-item { flex-direction: column; }
+    .asset-item-name { width: 100%; border-right: none; border-bottom: 1px solid var(--line); }
+  }
+
+  /* Liquidity scale */
+  .liquidity-scale { margin: 20px 0; display: flex; flex-direction: column; gap: 8px; }
+  .liq-row { display: flex; align-items: center; gap: 12px; }
+  .liq-bar-wrap { flex: 1; height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; }
+  .liq-bar { height: 100%; border-radius: 4px; }
+  .liq-name { width: 200px; font-size: 13px; color: var(--ink2); flex-shrink: 0; }
+  .liq-label { width: 80px; font-size: 11px; font-weight: 600; text-align: right; flex-shrink: 0; }
+  .liq-high { background: var(--accent); }
+  .liq-med  { background: #7AB59A; }
+  .liq-low  { background: #C4A882; }
+  .liq-vlow { background: var(--accent2); }
+  .liq-label.high { color: var(--accent); }
+  .liq-label.med  { color: #4A8A6A; }
+  .liq-label.low  { color: #8A6840; }
+  .liq-label.vlow { color: var(--accent2); }
+
+  /* Valuation table */
+  .val-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  .val-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .val-table td { padding: 12px 14px; border-bottom: 1px solid var(--line); color: var(--ink2); background: var(--card-bg); line-height: 1.5; vertical-align: top; }
+  .val-table tr:last-child td { border-bottom: none; }
+  .val-table .asset-name-col { font-weight: 600; color: var(--ink); }
+
+  /* NOT assets list */
+  .not-assets { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+  .not-asset-row { display: flex; gap: 14px; align-items: flex-start; background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; }
+  .not-icon { font-size: 18px; flex-shrink: 0; }
+  .not-body { flex: 1; }
+  .not-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .not-desc { font-size: 13px; color: var(--ink2); line-height: 1.6; }
+
+  /* Example balance */
+  .balance-example { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 20px 0; }
+  .balance-header { padding: 14px 20px; background: var(--tag-bg); border-bottom: 1px solid var(--line); }
+  .balance-header-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .balance-header-sub { font-size: 12px; color: var(--ink3); margin-top: 2px; }
+  .balance-section { padding: 4px 0; }
+  .balance-section-title { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink3); padding: 10px 20px 6px; background: var(--bg); border-top: 1px solid var(--line); }
+  .balance-row { display: flex; justify-content: space-between; padding: 10px 20px; border-bottom: 1px solid var(--line); }
+  .balance-row:last-child { border-bottom: none; }
+  .balance-row .b-name { font-size: 14px; color: var(--ink2); }
+  .balance-row .b-value { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .balance-total { display: flex; justify-content: space-between; padding: 14px 20px; background: var(--ink); }
+  .balance-total .b-name { font-size: 14px; font-weight: 600; color: rgba(247,244,238,0.7); }
+  .balance-total .b-value { font-size: 15px; font-weight: 700; color: #A8C4B0; }
+
+  /* Equation box */
+  .equation { background: var(--ink); border-radius: 12px; padding: 24px 32px; text-align: center; margin: 24px 0; }
+  .equation-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: rgba(247,244,238,0.4); margin-bottom: 12px; }
+  .equation-formula { font-family: 'Playfair Display', serif; font-size: clamp(16px, 2.5vw, 24px); font-weight: 700; color: #A8C4B0; }
+
+  .bigquote { text-align: center; padding: 48px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 48px 0; }
+  .bigquote p { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic; color: var(--ink); line-height: 1.5; max-width: 560px; margin: 0 auto; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_3_day_plan.html">← К плану</a>
+  <span class="topnav-center">День 1 · Блок 2 · Пункт 1</span>
+  <a href="https://logart33-netizen.github.io/Buxuchet/den1_blok2_punkt2.html">Пункт 2 →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 1 · Блок 2 · Пункт 1</div>
+  <h1>Активы — всё чем <em>владеет компания</em></h1>
+  <p class="hero-sub">Деньги, товары, оборудование, здания, долги клиентов перед компанией — разбираем каждый вид актива подробно.</p>
+</div>
+
+<div class="container">
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Что такое актив — самое простое объяснение</div>
+    </div>
+    <p>Актив — это всё что принадлежит компании и имеет денежную ценность.</p>
+    <p>Если можно ответить на вопрос <strong>«что есть у компании прямо сейчас?»</strong> — ответ будет список активов. Деньги в кассе — актив. Товар на складе — актив. Грузовик которым развозят товар — актив. Компьютер бухгалтера — актив. Долг клиента который ещё не заплатил — тоже актив.</p>
+    <div class="highlight">
+      <p>Главный признак актива: это ресурс который в будущем принесёт компании экономическую выгоду. Либо его можно продать и получить деньги, либо он помогает зарабатывать деньги.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Почему долг клиента — это тоже актив</div>
+    </div>
+    <p>Это самый неочевидный момент для новичков. Давай разберём.</p>
+    <p>Компания продала товар клиенту в кредит — отгрузила товар, но деньги ещё не получила. Казалось бы — денег нет, значит ничего нет. Но это не так.</p>
+    <div class="callout">
+      <div class="callout-label">Аналогия</div>
+      <p>Ты одолжил другу 100 000 сум. У тебя в кармане нет этих денег — но у тебя есть право их потребовать. Это твой актив.</p>
+    </div>
+    <p>У компании есть <strong>право требовать</strong> деньги от клиента. Это право закреплено документами — накладной, договором, актом. Клиент обязан заплатить. Это реальная ценность — деньги придут. Поэтому долг клиента перед компанией — это актив. Называется <strong>дебиторская задолженность</strong>.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Оборотные активы — быстрые ресурсы</div>
+    </div>
+    <p>Оборотные активы — это то что постоянно «оборачивается» в бизнесе: приходит, уходит, снова приходит. Превращаются в деньги или используются в течение одного года.</p>
+
+    <div class="asset-group">
+      <div class="asset-group-header current">
+        <div class="asset-group-label">Оборотные активы</div>
+        <div class="asset-group-desc">превращаются в деньги до 12 месяцев</div>
+      </div>
+      <div class="asset-items">
+        <div class="asset-item">
+          <div class="asset-item-name">Денежные средства</div>
+          <div class="asset-item-desc">Наличные в кассе и деньги на расчётном счёте. Самый ликвидный актив — это уже готовые деньги, превращать ни во что не нужно.</div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-item-name">Дебиторская задолженность</div>
+          <div class="asset-item-desc">Долги клиентов перед компанией. Деньги которые должны прийти. «Почти деньги» — нужно только подождать пока клиент заплатит.</div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-item-name">Товары</div>
+          <div class="asset-item-desc">Всё что лежит на складе и предназначено для продажи. Товар превращается в деньги когда его продают. Пока лежит на складе — это актив по стоимости покупки.</div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-item-name">Материалы и сырьё</div>
+          <div class="asset-item-desc">То из чего производится продукция. Для торговой компании — упаковочные материалы. Для производственной — сырьё для изготовления товара.</div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-item-name">Авансы выданные</div>
+          <div class="asset-item-desc">Деньги которые компания заплатила поставщику вперёд, но товар ещё не получила. Это тоже актив — у компании есть право получить товар.</div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-item-name">Расходы будущих периодов</div>
+          <div class="asset-item-desc">Оплаченная вперёд аренда или страховка. Деньги ушли — но право пользоваться ресурсом ещё есть. Каждый месяц часть этого актива превращается в расход.</div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-item-name">Краткосрочные вложения</div>
+          <div class="asset-item-desc">Деньги вложенные на короткий срок: депозиты в банке до 12 месяцев, краткосрочные ценные бумаги.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Внеоборотные активы — долгосрочные ресурсы</div>
+    </div>
+    <p>Внеоборотные активы — это то что служит долго, больше одного года. Они не продаются каждый день — они используются для работы бизнеса и постепенно передают свою стоимость в расходы через амортизацию.</p>
+
+    <div class="asset-group">
+      <div class="asset-group-header fixed">
+        <div class="asset-group-label">Внеоборотные активы</div>
+        <div class="asset-group-desc">служат дольше 1 года</div>
+      </div>
+      <div class="asset-items">
+        <div class="asset-item">
+          <div class="asset-item-name">Основные средства</div>
+          <div class="asset-item-desc">Оборудование, машины, здания, земля, мебель, компьютеры. Всё что стоит дорого и служит больше года. В балансе — по остаточной стоимости: цена покупки минус накопленная амортизация. Пример: станок за 50 000 000 сум, срок 10 лет, через 3 года: 50 − 15 = 35 000 000 сум.</div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-item-name">Нематериальные активы</div>
+          <div class="asset-item-desc">Активы без физической формы но имеющие ценность. Купленные патенты, лицензии, программное обеспечение, товарные знаки. Ключевое слово — «купленные». Только то за что реально заплатили.</div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-item-name">Гудвилл</div>
+          <div class="asset-item-desc">Деловая репутация купленная при поглощении другой компании. Разница между ценой покупки и стоимостью чистых активов. Появляется в балансе только когда его купили.</div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-item-name">Долгосрочные вложения</div>
+          <div class="asset-item-desc">Инвестиции в другие компании, долгосрочные займы выданные, вклады в уставный капитал других организаций.</div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-item-name">Незавершённое строительство</div>
+          <div class="asset-item-desc">Здание или объект который строится но ещё не введён в эксплуатацию. Уже потрачены деньги, стоимость есть — значит это актив. В амортизацию не попадает до ввода в эксплуатацию.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Ликвидность — насколько быстро актив превращается в деньги</div>
+    </div>
+    <p>Ликвидность — это скорость с которой актив можно превратить в деньги без потери стоимости. Это важное свойство — именно по нему активы располагаются в балансе.</p>
+
+    <div class="liquidity-scale">
+      <div class="liq-row">
+        <div class="liq-name">Деньги</div>
+        <div class="liq-bar-wrap"><div class="liq-bar liq-high" style="width:100%"></div></div>
+        <div class="liq-label high">Абсолютная</div>
+      </div>
+      <div class="liq-row">
+        <div class="liq-name">Дебиторская задолженность</div>
+        <div class="liq-bar-wrap"><div class="liq-bar liq-high" style="width:80%"></div></div>
+        <div class="liq-label high">Высокая</div>
+      </div>
+      <div class="liq-row">
+        <div class="liq-name">Товары на складе</div>
+        <div class="liq-bar-wrap"><div class="liq-bar liq-med" style="width:55%"></div></div>
+        <div class="liq-label med">Средняя</div>
+      </div>
+      <div class="liq-row">
+        <div class="liq-name">Оборудование</div>
+        <div class="liq-bar-wrap"><div class="liq-bar liq-low" style="width:30%"></div></div>
+        <div class="liq-label low">Низкая</div>
+      </div>
+      <div class="liq-row">
+        <div class="liq-name">Здания и земля</div>
+        <div class="liq-bar-wrap"><div class="liq-bar liq-vlow" style="width:12%"></div></div>
+        <div class="liq-label vlow">Очень низкая</div>
+      </div>
+    </div>
+
+    <div class="highlight highlight-blue">
+      <p>В балансе активы располагаются от наименее ликвидных к наиболее ликвидным: сначала внеоборотные (здания, оборудование), потом оборотные, в конце — деньги.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Как активы оцениваются в балансе</div>
+    </div>
+    <p>Разные активы оцениваются по-разному. Это важно понимать когда читаешь баланс.</p>
+    <table class="val-table">
+      <thead><tr><th>Актив</th><th>Как оценивается</th></tr></thead>
+      <tbody>
+        <tr><td class="asset-name-col">Денежные средства</td><td>По номиналу. 5 000 000 сум = 5 000 000 сум.</td></tr>
+        <tr><td class="asset-name-col">Дебиторская задолженность</td><td>По сумме долга. Если есть сомнения что клиент заплатит — создаётся резерв по сомнительным долгам и сумма уменьшается.</td></tr>
+        <tr><td class="asset-name-col">Товары</td><td>По стоимости приобретения (сколько заплатили поставщику). Если рыночная цена упала ниже — переоценивается вниз.</td></tr>
+        <tr><td class="asset-name-col">Основные средства</td><td>По остаточной стоимости: цена покупки минус накопленная амортизация.</td></tr>
+        <tr><td class="asset-name-col">Нематериальные активы</td><td>Аналогично основным средствам: цена покупки минус амортизация.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 7 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-title">Что НЕ является активом — распространённые заблуждения</div>
+    </div>
+    <div class="not-assets">
+      <div class="not-asset-row">
+        <div class="not-icon">✗</div>
+        <div class="not-body">
+          <div class="not-title">Расходы — не актив</div>
+          <div class="not-desc">Заплатили за электричество — деньги ушли безвозвратно, никакого права на будущий ресурс нет. Не путать с расходами будущих периодов где есть право на будущий ресурс.</div>
+        </div>
+      </div>
+      <div class="not-asset-row">
+        <div class="not-icon">✗</div>
+        <div class="not-body">
+          <div class="not-title">Репутация заработанная своим трудом — не актив в балансе</div>
+          <div class="not-desc">Нельзя надёжно измерить в деньгах. Если репутацию купили (гудвилл при поглощении) — тогда да, попадёт в баланс.</div>
+        </div>
+      </div>
+      <div class="not-asset-row">
+        <div class="not-icon">✗</div>
+        <div class="not-body">
+          <div class="not-title">Сотрудники — не актив в балансе</div>
+          <div class="not-desc">Люди это люди, не имущество. Квалификация и опыт ценны, но не измеримы для баланса. В балансе есть только начисленная к выплате зарплата — как обязательство.</div>
+        </div>
+      </div>
+      <div class="not-asset-row">
+        <div class="not-icon">✗</div>
+        <div class="not-body">
+          <div class="not-title">Убыток — не актив</div>
+          <div class="not-desc">Компания потеряла деньги — это уменьшение капитала, а не появление нового актива.</div>
+        </div>
+      </div>
+      <div class="not-asset-row">
+        <div class="not-icon">⚠</div>
+        <div class="not-body">
+          <div class="not-title">Арендованное имущество — сложный случай</div>
+          <div class="not-desc">В классическом учёте арендованное оборудование не является активом арендатора — оно принадлежит арендодателю. Но при долгосрочной аренде в современных стандартах арендатор отражает «право пользования» как актив.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 8 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <div class="section-title">Практический пример — активы торговой компании</div>
+    </div>
+    <p>Возьмём ООО «Торговля» на 1 апреля и посмотрим как выглядит раздел активов в балансе:</p>
+
+    <div class="balance-example">
+      <div class="balance-header">
+        <div class="balance-header-title">ООО «Торговля» — Актив баланса</div>
+        <div class="balance-header-sub">на 1 апреля</div>
+      </div>
+      <div class="balance-section-title">Внеоборотные активы</div>
+      <div class="balance-section">
+        <div class="balance-row"><span class="b-name">Грузовой автомобиль (остаточная стоимость)</span><span class="b-value">25 000 000 сум</span></div>
+        <div class="balance-row"><span class="b-name">Компьютеры и оргтехника</span><span class="b-value">8 000 000 сум</span></div>
+      </div>
+      <div class="balance-section-title">Оборотные активы</div>
+      <div class="balance-section">
+        <div class="balance-row"><span class="b-name">Товары на складе</span><span class="b-value">45 000 000 сум</span></div>
+        <div class="balance-row"><span class="b-name">Дебиторская задолженность</span><span class="b-value">18 000 000 сум</span></div>
+        <div class="balance-row"><span class="b-name">Авансы выданные поставщикам</span><span class="b-value">5 000 000 сум</span></div>
+        <div class="balance-row"><span class="b-name">Деньги на расчётном счёте</span><span class="b-value">12 000 000 сум</span></div>
+        <div class="balance-row"><span class="b-name">Деньги в кассе</span><span class="b-value">500 000 сум</span></div>
+      </div>
+      <div class="balance-total">
+        <span class="b-name">Итого активов</span>
+        <span class="b-value">113 500 000 сум</span>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">Проверь себя</div>
+      <p>По каждой строке задай три вопроса: это реально существует? Это принесёт деньги? Можно это продать? Если да на все три — это актив.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 9 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">9</div>
+      <div class="section-title">Связь активов с основным уравнением</div>
+    </div>
+    <p>Активы — это левая часть основного бухгалтерского уравнения:</p>
+    <div class="equation">
+      <div class="equation-label">Основное уравнение бухгалтерии</div>
+      <div class="equation-formula">Активы = Капитал + Обязательства</div>
+    </div>
+    <p>Правая часть (Капитал + Обязательства) объясняет откуда эти активы появились. Каждый актив существует потому что либо владелец вложил деньги (капитал), либо компания взяла в долг (обязательства).</p>
+    <div class="highlight">
+      <p>Нет ни одного актива который появился ниоткуда — у каждого есть источник финансирования. Это и есть баланс.</p>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Актив — это не просто то что есть. Это то что в будущем принесёт деньги. Именно поэтому долг клиента и деньги в кассе — одинаково активы.»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>День 1 · Блок 2 · Пункт 1</span>
+    <strong>Следующий: Пассивы — за счёт чего появились активы</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_3_day_plan.html">← К плану</a>
+    <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/den1_blok2_punkt2.html">Пункт 2 →</a>
+  </div>
+</div>
+
+</body>
+</html>
