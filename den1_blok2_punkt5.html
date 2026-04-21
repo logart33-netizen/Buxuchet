@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>День 1 · Блок 2 · Пункт 5 — Обязательства</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: 'Д'; position: absolute; right: -10px; top: -20px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 24px 28px; margin: 20px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { color: var(--ink2); margin: 0 0 12px; font-size: 15px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* Obligation groups */
+  .oblig-group { margin: 20px 0; }
+  .oblig-group-header { padding: 14px 20px; border-radius: 12px 12px 0 0; display: flex; align-items: center; gap: 12px; }
+  .oblig-group-header.short { background: var(--accent2); }
+  .oblig-group-header.long  { background: var(--accent3); }
+  .oblig-header-label { font-size: 13px; font-weight: 600; color: #fff; }
+  .oblig-header-desc  { font-size: 12px; color: rgba(255,255,255,0.65); margin-left: auto; }
+  .oblig-items { border: 1px solid var(--line); border-top: none; border-radius: 0 0 12px 12px; overflow: hidden; }
+  .oblig-item { border-bottom: 1px solid var(--line); }
+  .oblig-item:last-child { border-bottom: none; }
+  .oblig-item-header { padding: 14px 18px 10px; display: flex; align-items: center; gap: 10px; background: var(--card-bg); }
+  .oblig-item-name { font-size: 15px; font-weight: 600; color: var(--ink); flex: 1; }
+  .oblig-item-body { padding: 0 18px 16px; background: var(--card-bg); }
+  .oblig-item-body p { font-size: 14px; margin-bottom: 10px; }
+
+  /* Posting visual */
+  .posting { display: flex; align-items: stretch; gap: 0; margin: 8px 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); }
+  .posting-dt { flex: 1; background: var(--accent-light); padding: 10px 14px; }
+  .posting-kt { flex: 1; background: var(--accent2-light); padding: 10px 14px; }
+  .posting-arrow { display: flex; align-items: center; justify-content: center; background: var(--tag-bg); padding: 0 10px; font-size: 16px; color: var(--ink3); flex-shrink: 0; }
+  .posting-label { font-size: 9px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 2px; }
+  .posting-dt .posting-label { color: var(--accent); }
+  .posting-kt .posting-label { color: var(--accent2); }
+  .posting-account { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .posting-comment { font-size: 11px; color: var(--ink3); margin-top: 1px; }
+  .posting-sum { background: var(--ink); padding: 10px 12px; display: flex; align-items: center; justify-content: center; flex-direction: column; min-width: 90px; }
+  .posting-sum-label { font-size: 9px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(247,244,238,0.4); margin-bottom: 2px; }
+  .posting-sum-value { font-size: 12px; font-weight: 600; color: #A8C4B0; text-align: center; }
+  .posting-step { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); margin: 10px 0 4px; }
+
+  /* Credit distribution example */
+  .credit-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+  @media (max-width: 480px) { .credit-split { grid-template-columns: 1fr; } }
+  .cs-card { border-radius: 10px; padding: 14px 16px; }
+  .cs-card.long  { background: var(--accent3-light); border: 1px solid rgba(28,63,110,0.2); }
+  .cs-card.short { background: var(--accent2-light); border: 1px solid rgba(139,74,28,0.2); }
+  .cs-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
+  .cs-card.long  .cs-label { color: var(--accent3); }
+  .cs-card.short .cs-label { color: var(--accent2); }
+  .cs-value { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .cs-desc { font-size: 12px; color: var(--ink3); line-height: 1.5; }
+
+  /* Good/bad kreditorka */
+  .kreditor-cases { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+  .kcase { display: flex; gap: 14px; align-items: flex-start; border-radius: 10px; padding: 16px 18px; }
+  .kcase.good { background: var(--accent-light); border: 1px solid rgba(45,95,63,0.2); }
+  .kcase.warn { background: #FEF9E7; border: 1px solid rgba(200,150,0,0.2); }
+  .kcase.bad  { background: var(--accent2-light); border: 1px solid rgba(139,74,28,0.2); }
+  .kcase-icon { font-size: 20px; flex-shrink: 0; }
+  .kcase-body { flex: 1; }
+  .kcase-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .kcase.good .kcase-title { color: var(--accent); }
+  .kcase.warn .kcase-title { color: #8A6800; }
+  .kcase.bad  .kcase-title { color: var(--accent2); }
+  .kcase-desc { font-size: 13px; color: var(--ink2); line-height: 1.6; }
+
+  /* Liquidity formula */
+  .liq-formula { background: var(--tag-bg); border-radius: 12px; padding: 20px 24px; margin: 16px 0; }
+  .liq-formula-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; }
+  .liq-formula-text { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: 12px; }
+  .liq-example { background: var(--card-bg); border-radius: 8px; padding: 14px 16px; font-size: 14px; color: var(--ink2); line-height: 1.7; margin-top: 10px; }
+  .liq-result { font-size: 15px; font-weight: 600; color: var(--accent); margin-top: 6px; }
+
+  /* Balance obligations section */
+  .balance-obligs { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 16px 0; }
+  .bo-section-title { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); padding: 10px 18px 6px; background: var(--bg); border-top: 1px solid var(--line); }
+  .bo-section-title:first-child { border-top: none; }
+  .bo-row { display: flex; justify-content: space-between; padding: 11px 18px; border-bottom: 1px solid var(--line); }
+  .bo-row:last-child { border-bottom: none; }
+  .bo-row .bn { font-size: 14px; color: var(--ink2); }
+  .bo-row .bv { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .bo-total { display: flex; justify-content: space-between; padding: 13px 18px; background: var(--ink); }
+  .bo-total .bn { font-size: 14px; font-weight: 600; color: rgba(247,244,238,0.7); }
+  .bo-total .bv { font-size: 15px; font-weight: 700; color: #A8C4B0; }
+
+  .bigquote { text-align: center; padding: 48px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 48px 0; }
+  .bigquote p { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic; color: var(--ink); line-height: 1.5; max-width: 560px; margin: 0 auto; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/den1_blok2_punkt4.html">← Пункт 4</a>
+  <span class="topnav-center">День 1 · Блок 2 · Пункт 5</span>
+  <a href="https://logart33-netizen.github.io/Buxuchet/den1_blok2_punkt6.html">Пункт 6 →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 1 · Блок 2 · Пункт 5</div>
+  <h1>Обязательства — <em>долги компании</em></h1>
+  <p class="hero-sub">Краткосрочные и долгосрочные обязательства, проводки, ликвидность — и почему долги это не всегда плохо.</p>
+</div>
+
+<div class="container">
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Что такое обязательство</div>
+    </div>
+    <p>Обязательство — это долг компании перед кем-либо. Деньги которые нужно вернуть, товар который нужно отгрузить, услугу которую нужно оказать.</p>
+    <p>Ключевое слово — <strong>нужно</strong>. Обязательство это не «возможно вернём» — это «обязаны вернуть». У каждого обязательства есть кредитор (тот кому должны) и срок погашения.</p>
+    <div class="highlight">
+      <p>Обязательства — правая часть баланса наряду с капиталом. Разница одна: капитал возвращать не нужно, обязательства — нужно.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Краткосрочные обязательства — срок до 12 месяцев</div>
+    </div>
+    <p>Краткосрочные обязательства — «горящие» долги. Их нужно погасить в течение ближайшего года из текущей выручки.</p>
+
+    <div class="oblig-group">
+      <div class="oblig-group-header short">
+        <div class="oblig-header-label">Краткосрочные обязательства</div>
+        <div class="oblig-header-desc">погасить в течение 12 месяцев</div>
+      </div>
+      <div class="oblig-items">
+
+        <div class="oblig-item">
+          <div class="oblig-item-header"><div class="oblig-item-name">Кредиторская задолженность перед поставщиками</div></div>
+          <div class="oblig-item-body">
+            <p>Самый распространённый вид. Компания получила товар или услугу, но ещё не заплатила. Зеркальное отражение дебиторки: у поставщика в активах — дебиторская задолженность, у нас в пассивах — кредиторская.</p>
+            <div class="posting-step">При получении товара в долг</div>
+            <div class="posting">
+              <div class="posting-dt"><div class="posting-label">Дебет</div><div class="posting-account">Товары</div><div class="posting-comment">Товар пришёл на склад</div></div>
+              <div class="posting-arrow">→</div>
+              <div class="posting-kt"><div class="posting-label">Кредит</div><div class="posting-account">Расчёты с поставщиками</div><div class="posting-comment">Появился долг</div></div>
+              <div class="posting-sum"><div class="posting-sum-label">Сумма</div><div class="posting-sum-value">8 000 000 сум</div></div>
+            </div>
+            <div class="posting-step">При оплате поставщику</div>
+            <div class="posting">
+              <div class="posting-dt"><div class="posting-label">Дебет</div><div class="posting-account">Расчёты с поставщиками</div><div class="posting-comment">Долг погашен</div></div>
+              <div class="posting-arrow">→</div>
+              <div class="posting-kt"><div class="posting-label">Кредит</div><div class="posting-account">Расчётный счёт</div><div class="posting-comment">Деньги ушли</div></div>
+              <div class="posting-sum"><div class="posting-sum-label">Сумма</div><div class="posting-sum-value">8 000 000 сум</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="oblig-item">
+          <div class="oblig-item-header"><div class="oblig-item-name">Краткосрочные кредиты и займы</div></div>
+          <div class="oblig-item-body">
+            <p>Деньги взятые у банка на срок до 12 месяцев. Также сюда включается та часть долгосрочного кредита которую нужно погасить в ближайший год.</p>
+            <div class="posting-step">При получении кредита</div>
+            <div class="posting">
+              <div class="posting-dt"><div class="posting-label">Дебет</div><div class="posting-account">Расчётный счёт</div><div class="posting-comment">Деньги пришли</div></div>
+              <div class="posting-arrow">→</div>
+              <div class="posting-kt"><div class="posting-label">Кредит</div><div class="posting-account">Краткосрочные кредиты</div><div class="posting-comment">Появился долг перед банком</div></div>
+              <div class="posting-sum"><div class="posting-sum-label">Сумма</div><div class="posting-sum-value">10 000 000 сум</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="oblig-item">
+          <div class="oblig-item-header"><div class="oblig-item-name">Зарплата к выплате</div></div>
+          <div class="oblig-item-body">
+            <p>Начисленная но ещё не выплаченная зарплата. Сотрудники уже отработали — деньги им причитаются. С момента начисления до момента выплаты — обязательство перед персоналом.</p>
+            <div class="posting-step">При начислении зарплаты</div>
+            <div class="posting">
+              <div class="posting-dt"><div class="posting-label">Дебет</div><div class="posting-account">Расходы на зарплату</div><div class="posting-comment">Расход зафиксирован</div></div>
+              <div class="posting-arrow">→</div>
+              <div class="posting-kt"><div class="posting-label">Кредит</div><div class="posting-account">Расчёты по зарплате</div><div class="posting-comment">Долг перед сотрудниками</div></div>
+              <div class="posting-sum"><div class="posting-sum-label">Сумма</div><div class="posting-sum-value">5 000 000 сум</div></div>
+            </div>
+            <div class="posting-step">При выплате зарплаты</div>
+            <div class="posting">
+              <div class="posting-dt"><div class="posting-label">Дебет</div><div class="posting-account">Расчёты по зарплате</div><div class="posting-comment">Долг погашен</div></div>
+              <div class="posting-arrow">→</div>
+              <div class="posting-kt"><div class="posting-label">Кредит</div><div class="posting-account">Расчётный счёт</div><div class="posting-comment">Деньги ушли сотрудникам</div></div>
+              <div class="posting-sum"><div class="posting-sum-label">Сумма</div><div class="posting-sum-value">5 000 000 сум</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="oblig-item">
+          <div class="oblig-item-header"><div class="oblig-item-name">Налоги к уплате</div></div>
+          <div class="oblig-item-body">
+            <p>Начисленные но ещё не уплаченные налоги. Налог начисляется в момент возникновения обязательства, а платится чуть позже.</p>
+            <div class="callout" style="margin-top:10px;">
+              <div class="callout-label">Виды налогов к уплате</div>
+              <p>НДС — квартальный. Налог на прибыль — авансы ежеквартально. НДФЛ с зарплаты — ежемесячно. Социальный налог — ежемесячно.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="oblig-item">
+          <div class="oblig-item-header"><div class="oblig-item-name">Авансы полученные</div></div>
+          <div class="oblig-item-body">
+            <p>Деньги полученные от клиентов вперёд, но товар ещё не отгружен или услуга не оказана. Компания должна либо выполнить работу, либо вернуть деньги. Доходом аванс станет только после выполнения обязательства.</p>
+            <div class="posting-step">При получении аванса</div>
+            <div class="posting">
+              <div class="posting-dt"><div class="posting-label">Дебет</div><div class="posting-account">Расчётный счёт</div><div class="posting-comment">Деньги пришли</div></div>
+              <div class="posting-arrow">→</div>
+              <div class="posting-kt"><div class="posting-label">Кредит</div><div class="posting-account">Авансы полученные</div><div class="posting-comment">Долг перед клиентом</div></div>
+              <div class="posting-sum"><div class="posting-sum-label">Сумма</div><div class="posting-sum-value">аванс</div></div>
+            </div>
+            <div class="posting-step">После отгрузки товара</div>
+            <div class="posting">
+              <div class="posting-dt"><div class="posting-label">Дебет</div><div class="posting-account">Авансы полученные</div><div class="posting-comment">Обязательство погашено</div></div>
+              <div class="posting-arrow">→</div>
+              <div class="posting-kt"><div class="posting-label">Кредит</div><div class="posting-account">Выручка</div><div class="posting-comment">Теперь это доход</div></div>
+              <div class="posting-sum"><div class="posting-sum-label">Сумма</div><div class="posting-sum-value">аванс</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="oblig-item">
+          <div class="oblig-item-header"><div class="oblig-item-name">Прочие краткосрочные обязательства</div></div>
+          <div class="oblig-item-body">
+            <p>Различные мелкие долги: долг перед арендодателем за текущий месяц, задолженность по начисленным но не выплаченным дивидендам, долги перед подотчётными лицами (сотрудник потратил больше чем получил под отчёт).</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Долгосрочные обязательства — срок больше года</div>
+    </div>
+    <p>Долгосрочные обязательства — «спокойные» долги. Используются для финансирования долгосрочных активов: оборудования, зданий, транспорта.</p>
+
+    <div class="oblig-group">
+      <div class="oblig-group-header long">
+        <div class="oblig-header-label">Долгосрочные обязательства</div>
+        <div class="oblig-header-desc">срок погашения больше 1 года</div>
+      </div>
+      <div class="oblig-items">
+
+        <div class="oblig-item">
+          <div class="oblig-item-header"><div class="oblig-item-name">Долгосрочные кредиты и займы</div></div>
+          <div class="oblig-item-body">
+            <p>Кредиты банка на срок более года. Самый распространённый вид долгосрочного обязательства.</p>
+            <p><strong>Особенность учёта:</strong> каждый год часть долгосрочного кредита переходит в краткосрочные обязательства — та часть которую нужно погасить в ближайшие 12 месяцев.</p>
+            <div class="callout">
+              <div class="callout-label">Пример — кредит на 3 года, 30 000 000 сум</div>
+              <p>Погашаем по 10 000 000 сум в год. На начало второго года:</p>
+            </div>
+            <div class="credit-split">
+              <div class="cs-card long">
+                <div class="cs-label">Долгосрочная часть</div>
+                <div class="cs-value">20 000 000</div>
+                <div class="cs-desc">Погасим в годы 2 и 3 — больше 12 месяцев</div>
+              </div>
+              <div class="cs-card short">
+                <div class="cs-label">Краткосрочная часть</div>
+                <div class="cs-value">10 000 000</div>
+                <div class="cs-desc">Погасим в ближайший год — меньше 12 месяцев</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="oblig-item">
+          <div class="oblig-item-header"><div class="oblig-item-name">Лизинговые обязательства</div></div>
+          <div class="oblig-item-body">
+            <p>Лизинг — долгосрочная аренда с правом выкупа. Компания берёт оборудование или транспорт у лизинговой компании, пользуется им и платит ежемесячно. В конце срока — выкупает по остаточной стоимости.</p>
+            <p>По сути это тот же кредит, только вместо денег получаешь сразу оборудование. Лизинговые платежи разделяются на основной долг и проценты. Лизинговое обязательство в балансе — сумма всех будущих платежей без процентной части.</p>
+          </div>
+        </div>
+
+        <div class="oblig-item">
+          <div class="oblig-item-header"><div class="oblig-item-name">Отложенные налоговые обязательства</div></div>
+          <div class="oblig-item-body">
+            <p>Разница между налогом уплаченным сейчас и налогом который должен был быть уплачен по бухгалтерской прибыли. Возникает из-за разных правил в бухучёте и налоговом учёте. Погашается в будущих периодах когда разница «выравнивается».</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Кредиторская задолженность — хорошо или плохо?</div>
+    </div>
+    <p>Это вопрос который часто возникает. Ответ зависит от ситуации:</p>
+    <div class="kreditor-cases">
+      <div class="kcase good">
+        <div class="kcase-icon">✓</div>
+        <div class="kcase-body">
+          <div class="kcase-title">Умеренная кредиторка — нормально и выгодно</div>
+          <div class="kcase-desc">Компания купила товар с отсрочкой 30 дней. Пользуется товаром, продаёт, получает деньги — и только потом платит поставщику. Поставщик фактически бесплатно кредитует бизнес на 30 дней. Это называется «бесплатное финансирование» — никаких процентов.</div>
+        </div>
+      </div>
+      <div class="kcase warn">
+        <div class="kcase-icon">⚠</div>
+        <div class="kcase-body">
+          <div class="kcase-title">Кредиторка больше дебиторки — сигнал</div>
+          <div class="kcase-desc">Компания должна поставщикам больше чем клиенты должны ей. Компания «кредитует» своих клиентов за счёт своих поставщиков. Рискованно: если клиенты задержат оплату — нечем платить поставщикам.</div>
+        </div>
+      </div>
+      <div class="kcase bad">
+        <div class="kcase-icon">✗</div>
+        <div class="kcase-body">
+          <div class="kcase-title">Просроченная кредиторка — проблема</div>
+          <div class="kcase-desc">Компания не платит поставщикам в срок. Поставщики перестают отгружать товар, начисляют штрафы и пени, могут подать в суд. Репутация падает. Новые поставщики требуют предоплату.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Ликвидность и обязательства</div>
+    </div>
+    <p>Краткосрочные обязательства нужно погашать из оборотных активов. Именно поэтому важно смотреть не только на размер обязательств, но и чем их покрывать.</p>
+
+    <div class="liq-formula">
+      <div class="liq-formula-label">Коэффициент текущей ликвидности</div>
+      <div class="liq-formula-text">Оборотные активы ÷ Краткосрочные обязательства</div>
+      <p style="font-size:14px;color:var(--ink2);margin:6px 0 0;">Норма: больше 1 (желательно 1.5–2). Если меньше 1 — у компании не хватает оборотных активов чтобы покрыть ближайшие долги. Угроза кассового разрыва.</p>
+      <div class="liq-example">
+        <strong>Для ООО «Торговля»:</strong><br>
+        Оборотные активы: 45 000 000 + 18 000 000 + 5 000 000 + 12 500 000 = 80 500 000 сум<br>
+        Краткосрочные обязательства: 30 000 000 сум<br>
+        <div class="liq-result">Коэффициент = 80 500 000 ÷ 30 000 000 = 2.68 — отлично ✓</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Обязательства в балансе — полная картина</div>
+    </div>
+    <p>Раздел обязательств в балансе ООО «Торговля»:</p>
+
+    <div class="balance-obligs">
+      <div class="bo-section-title">Долгосрочные обязательства</div>
+      <div class="bo-row"><span class="bn">Кредит банка (3 года)</span><span class="bv">25 000 000 сум</span></div>
+      <div class="bo-section-title">Краткосрочные обязательства</div>
+      <div class="bo-row"><span class="bn">Кредиторская задолженность поставщикам</span><span class="bv">20 000 000 сум</span></div>
+      <div class="bo-row"><span class="bn">Зарплата к выплате</span><span class="bv">6 000 000 сум</span></div>
+      <div class="bo-row"><span class="bn">Налоги к уплате</span><span class="bv">4 000 000 сум</span></div>
+      <div class="bo-total"><span class="bn">Итого обязательств</span><span class="bv">55 000 000 сум</span></div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">Проверяем уравнение</div>
+      <p>Капитал (58 500 000) + Обязательства (55 000 000) = <strong>113 500 000 = Активы ✓</strong></p>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Обязательства — это не враги. Это инструмент. Ключевой вопрос не "есть ли долги", а "может ли компания их обслуживать".»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>День 1 · Блок 2 · Пункт 5</span>
+    <strong>Следующий: Баланс целиком + практическое задание</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/den1_blok2_punkt4.html">← Пункт 4</a>
+    <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/den1_blok2_punkt6.html">Пункт 6 →</a>
+  </div>
+</div>
+
+</body>
+</html>
