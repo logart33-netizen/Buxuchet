@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>День 1 · Блок 2 · Пункт 4 — Капитал</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: 'К'; position: absolute; right: -10px; top: -20px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 24px 28px; margin: 20px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { color: var(--ink2); margin: 0 0 12px; font-size: 15px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* Formula */
+  .formula-box { background: var(--ink); border-radius: 12px; padding: 24px 32px; text-align: center; margin: 20px 0; }
+  .formula-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: rgba(247,244,238,0.4); margin-bottom: 10px; }
+  .formula-text { font-family: 'Playfair Display', serif; font-size: clamp(16px, 2.5vw, 22px); font-weight: 700; color: #A8C4B0; }
+
+  /* Sources */
+  .sources { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+  .source-item { display: flex; gap: 14px; background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; align-items: flex-start; }
+  .src-num { width: 32px; height: 32px; border-radius: 50%; background: var(--tag-bg); color: var(--ink); font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .src-body { flex: 1; }
+  .src-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .src-desc { font-size: 14px; color: var(--ink2); line-height: 1.65; }
+
+  /* Capital components */
+  .cap-components { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 20px 0; }
+  .cap-comp { border-bottom: 1px solid var(--line); }
+  .cap-comp:last-child { border-bottom: none; }
+  .cap-comp-header { padding: 14px 20px; background: var(--tag-bg); display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .cap-comp-num { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink3); }
+  .cap-comp-name { font-size: 15px; font-weight: 600; color: var(--ink); flex: 1; }
+  .cap-comp-body { padding: 20px; background: var(--card-bg); }
+  .cap-comp-body p { font-size: 15px; margin-bottom: 12px; }
+
+  /* Emission visual */
+  .emission-visual { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 16px 0; }
+  .emission-header { padding: 12px 18px; background: var(--accent3-light); font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--accent3); }
+  .emission-row { display: flex; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--line); gap: 12px; }
+  .emission-row:last-child { border-bottom: none; }
+  .emission-label { font-size: 13px; color: var(--ink3); width: 200px; flex-shrink: 0; }
+  .emission-value { font-size: 15px; font-weight: 600; color: var(--ink); flex: 1; }
+  .emission-note { font-size: 12px; color: var(--ink3); }
+  .emission-row.highlight-row { background: var(--accent3-light); }
+  .emission-row.highlight-row .emission-label { color: var(--accent3); font-weight: 600; }
+  .emission-row.highlight-row .emission-value { color: var(--accent3); font-size: 16px; }
+
+  /* Change list */
+  .change-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  @media (max-width: 560px) { .change-cols { grid-template-columns: 1fr; } }
+  .change-col { border-radius: 10px; padding: 16px 18px; }
+  .change-col.up { background: var(--accent-light); border: 1px solid rgba(45,95,63,0.2); }
+  .change-col.dn { background: var(--accent2-light); border: 1px solid rgba(139,74,28,0.2); }
+  .change-col-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
+  .change-col.up .change-col-label { color: var(--accent); }
+  .change-col.dn .change-col-label { color: var(--accent2); }
+  .change-list { list-style: none; }
+  .change-list li { font-size: 13px; color: var(--ink2); padding: 5px 0 5px 16px; position: relative; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.55; }
+  .change-list li:last-child { border-bottom: none; }
+  .change-list li::before { content: ''; position: absolute; left: 0; top: 12px; width: 8px; height: 8px; border-radius: 50%; }
+  .change-col.up .change-list li::before { background: var(--accent); }
+  .change-col.dn .change-list li::before { background: var(--accent2); }
+
+  /* Posting visual */
+  .posting { display: flex; align-items: stretch; gap: 0; margin: 12px 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+  .posting-dt { flex: 1; background: var(--accent-light); padding: 12px 16px; }
+  .posting-kt { flex: 1; background: var(--accent2-light); padding: 12px 16px; }
+  .posting-arrow { display: flex; align-items: center; justify-content: center; background: var(--tag-bg); padding: 0 12px; font-size: 18px; color: var(--ink3); flex-shrink: 0; }
+  .posting-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 3px; }
+  .posting-dt .posting-label { color: var(--accent); }
+  .posting-kt .posting-label { color: var(--accent2); }
+  .posting-account { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .posting-comment { font-size: 11px; color: var(--ink3); margin-top: 2px; }
+  .posting-sum { background: var(--ink); padding: 12px 14px; display: flex; align-items: center; justify-content: center; flex-direction: column; min-width: 100px; }
+  .posting-sum-label { font-size: 9px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: rgba(247,244,238,0.4); margin-bottom: 3px; }
+  .posting-sum-value { font-size: 13px; font-weight: 600; color: #A8C4B0; text-align: center; }
+  .posting-step { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); margin: 16px 0 6px; }
+
+  /* Year example table */
+  .year-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  .year-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .year-table td { padding: 12px 14px; border-bottom: 1px solid var(--line); color: var(--ink2); background: var(--card-bg); }
+  .year-table tr:last-child td { border-bottom: none; }
+  .year-table .total td { font-weight: 600; color: var(--ink); background: var(--tag-bg); }
+  .year-table .up { color: var(--accent); font-weight: 600; }
+  .year-table .dn { color: var(--accent2); font-weight: 600; }
+
+  /* Danger box */
+  .danger-box { background: var(--accent2-light); border: 1px solid rgba(139,74,28,0.2); border-radius: 12px; padding: 20px 24px; margin: 20px 0; }
+  .danger-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--accent2); margin-bottom: 10px; }
+  .danger-example { background: var(--card-bg); border-radius: 8px; padding: 14px 16px; margin: 12px 0; font-size: 14px; color: var(--ink2); line-height: 1.7; }
+  .danger-consequences { list-style: none; margin-top: 12px; }
+  .danger-consequences li { font-size: 14px; color: var(--ink2); padding: 5px 0 5px 16px; position: relative; line-height: 1.6; }
+  .danger-consequences li::before { content: '✗'; position: absolute; left: 0; color: var(--accent2); font-size: 12px; }
+
+  /* Capital in balance */
+  .balance-capital { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 16px 0; }
+  .bc-header { padding: 12px 18px; background: var(--tag-bg); font-size: 12px; font-weight: 600; color: var(--ink3); letter-spacing: .08em; text-transform: uppercase; }
+  .bc-row { display: flex; justify-content: space-between; padding: 11px 18px; border-bottom: 1px solid var(--line); }
+  .bc-row:last-child { border-bottom: none; }
+  .bc-row .bn { font-size: 14px; color: var(--ink2); }
+  .bc-row .bv { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .bc-total { display: flex; justify-content: space-between; padding: 13px 18px; background: var(--ink); }
+  .bc-total .bn { font-size: 14px; font-weight: 600; color: rgba(247,244,238,0.7); }
+  .bc-total .bv { font-size: 15px; font-weight: 700; color: #A8C4B0; }
+
+  .bigquote { text-align: center; padding: 48px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 48px 0; }
+  .bigquote p { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic; color: var(--ink); line-height: 1.5; max-width: 560px; margin: 0 auto; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/den1_blok2_punkt3.html">← Пункт 3</a>
+  <span class="topnav-center">День 1 · Блок 2 · Пункт 4</span>
+  <a href="https://logart33-netizen.github.io/Buxuchet/den1_blok2_punkt5.html">Пункт 5 →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 1 · Блок 2 · Пункт 4</div>
+  <h1>Капитал — <em>собственные средства</em> компании</h1>
+  <p class="hero-sub">Что такое чистые активы, откуда берётся капитал, как он меняется — и почему отрицательный капитал это опасно.</p>
+</div>
+
+<div class="container">
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Что такое капитал — глубже чем кажется</div>
+    </div>
+    <p>Капитал — это <strong>остаток</strong>. Возьми всё что есть у компании (активы), вычти все долги (обязательства) — что останется, то и принадлежит владельцам.</p>
+    <div class="formula-box">
+      <div class="formula-label">Формула капитала</div>
+      <div class="formula-text">Капитал = Активы − Обязательства</div>
+    </div>
+    <p>Именно поэтому капитал ещё называют <strong>чистыми активами</strong> или <strong>собственным капиталом</strong>. Это то что реально «своё» — без чужих денег.</p>
+    <div class="callout">
+      <div class="callout-label">Пример</div>
+      <p>Активов 113 500 000 сум, обязательств 55 000 000 сум.</p>
+      <p><strong>Капитал = 113 500 000 − 55 000 000 = 58 500 000 сум.</strong></p>
+      <p>Это реальная стоимость бизнеса для владельцев — если продать всё и раздать долги, им достанется именно эта сумма.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Три источника появления капитала</div>
+    </div>
+    <div class="sources">
+      <div class="source-item">
+        <div class="src-num">1</div>
+        <div class="src-body">
+          <div class="src-title">Вложения владельцев</div>
+          <div class="src-desc">Владельцы вносят деньги или имущество в компанию. Это уставный капитал при создании или дополнительные взносы позже. «Внешний» капитал — пришёл снаружи.</div>
+        </div>
+      </div>
+      <div class="source-item">
+        <div class="src-num">2</div>
+        <div class="src-body">
+          <div class="src-title">Заработанная прибыль</div>
+          <div class="src-desc">Компания работает и зарабатывает прибыль. Если прибыль не выплачивается владельцам — она остаётся в компании и увеличивает капитал. «Внутренний» капитал — компания создала его сама своей работой.</div>
+        </div>
+      </div>
+      <div class="source-item">
+        <div class="src-num">3</div>
+        <div class="src-body">
+          <div class="src-title">Переоценка активов</div>
+          <div class="src-desc">Если имущество выросло в стоимости и была проведена официальная переоценка — разница идёт в добавочный капитал. «Бумажный» рост — реальных денег не прибавилось, просто актив стал стоить дороже.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Четыре составляющих капитала — подробно</div>
+    </div>
+
+    <div class="cap-components">
+
+      <!-- Уставный -->
+      <div class="cap-comp">
+        <div class="cap-comp-header">
+          <span class="cap-comp-num">Часть 1</span>
+          <span class="cap-comp-name">Уставный капитал</span>
+        </div>
+        <div class="cap-comp-body">
+          <p>Деньги или имущество которые владельцы внесли при создании компании. Стартовый взнос. Зафиксирован в уставе. Изменить можно только через официальную процедуру — собрание учредителей, изменение устава, регистрация в государственных органах.</p>
+          <p>Уставный капитал выполняет три важные функции:</p>
+          <p><strong>Гарантия для кредиторов</strong> — минимальная гарантия что у компании есть что-то «своё». Именно поэтому законодательство устанавливает минимальный размер уставного капитала.</p>
+          <p><strong>Определение долей владельцев</strong> — если в компании несколько владельцев, уставный капитал определяет кому сколько принадлежит. Владелец 30% уставного капитала получает 30% дивидендов и имеет 30% голосов на собрании.</p>
+          <p><strong>Отправная точка</strong> — первые деньги с которых начинается бизнес. До первой выручки именно уставный капитал финансирует первые расходы.</p>
+        </div>
+      </div>
+
+      <!-- Нераспределённая прибыль -->
+      <div class="cap-comp">
+        <div class="cap-comp-header">
+          <span class="cap-comp-num">Часть 2</span>
+          <span class="cap-comp-name">Нераспределённая прибыль</span>
+        </div>
+        <div class="cap-comp-body">
+          <p>Самая «живая» часть капитала — меняется каждый год. Это вся прибыль которую компания заработала за всё время работы, минус дивиденды которые были выплачены владельцам.</p>
+          <div class="formula-box">
+            <div class="formula-label">Формула нераспределённой прибыли</div>
+            <div class="formula-text">НП (конец года) = НП (начало года) + Чистая прибыль − Дивиденды</div>
+          </div>
+          <p>Если компания работала в убыток — нераспределённая прибыль уменьшается. Если убытки накапливаются годами — она может уйти в отрицательную зону. Тогда говорят «непокрытый убыток».</p>
+        </div>
+      </div>
+
+      <!-- Добавочный капитал -->
+      <div class="cap-comp">
+        <div class="cap-comp-header">
+          <span class="cap-comp-num">Часть 3</span>
+          <span class="cap-comp-name">Добавочный капитал</span>
+        </div>
+        <div class="cap-comp-body">
+          <p>Возникает в двух основных случаях:</p>
+
+          <p><strong>Случай 1: Переоценка основных средств.</strong> Раз в несколько лет компания может провести официальную переоценку имущества. Если здание подорожало с 50 000 000 до 80 000 000 сум — разница 30 000 000 сум идёт в добавочный капитал. Это не доход — деньги не пришли. Просто актив стал стоить дороже.</p>
+
+          <p><strong>Случай 2: Эмиссионный доход.</strong> Это более сложная тема — разберём подробно.</p>
+
+          <p>Сначала два термина которые нужно понять:</p>
+
+          <div class="callout">
+            <div class="callout-label">Номинальная стоимость акции</div>
+            <p>Это «паспортная» стоимость акции — та которая написана на ней при выпуске. Она фиксируется в уставе компании и не меняется.</p>
+            <p>Аналогия: монета в 1 000 сум имеет номинал 1 000 сум. Это написано прямо на ней. Это и есть номинальная стоимость.</p>
+            <p>Например, компания выпустила 1 000 акций с номинальной стоимостью 1 000 сум каждая. Уставный капитал = 1 000 × 1 000 = 1 000 000 сум.</p>
+          </div>
+
+          <div class="callout">
+            <div class="callout-label">Рыночная (продажная) стоимость акции</div>
+            <p>Это то сколько реально готов заплатить покупатель. Если компания успешна и растёт — покупатели готовы платить больше номинала. Если дела плохи — меньше.</p>
+            <p>Аналогия: ты купил редкую монету номиналом 1 сум. Коллекционеры готовы заплатить за неё 50 000 сум. Номинал — 1 сум, рыночная стоимость — 50 000 сум.</p>
+          </div>
+
+          <p><strong>Эмиссионный доход</strong> — это разница между рыночной ценой продажи акции и её номинальной стоимостью.</p>
+
+          <div class="emission-visual">
+            <div class="emission-header">Пример: компания продаёт новые акции инвестору</div>
+            <div class="emission-row">
+              <div class="emission-label">Номинальная стоимость акции</div>
+              <div class="emission-value">1 000 сум</div>
+              <div class="emission-note">записана в уставе</div>
+            </div>
+            <div class="emission-row">
+              <div class="emission-label">Цена продажи инвестору</div>
+              <div class="emission-value">1 500 сум</div>
+              <div class="emission-note">инвестор оценил компанию дороже номинала</div>
+            </div>
+            <div class="emission-row">
+              <div class="emission-label">Количество акций</div>
+              <div class="emission-value">1 000 акций</div>
+              <div class="emission-note"></div>
+            </div>
+            <div class="emission-row">
+              <div class="emission-label">Всего получено денег</div>
+              <div class="emission-value">1 500 000 сум</div>
+              <div class="emission-note">1 500 × 1 000</div>
+            </div>
+            <div class="emission-row">
+              <div class="emission-label">В уставный капитал</div>
+              <div class="emission-value">1 000 000 сум</div>
+              <div class="emission-note">1 000 × 1 000 (по номиналу)</div>
+            </div>
+            <div class="emission-row highlight-row">
+              <div class="emission-label">Эмиссионный доход → в добавочный капитал</div>
+              <div class="emission-value">500 000 сум</div>
+              <div class="emission-note">разница (1 500 − 1 000) × 1 000 акций</div>
+            </div>
+          </div>
+
+          <p>Почему эмиссионный доход не идёт в уставный капитал? Потому что уставный капитал строго соответствует номинальной стоимости всех акций — это закреплено в уставе. Превышение над номиналом учитывается отдельно — в добавочном капитале.</p>
+          <p>Почему это не доход в P&L? Потому что компания не «заработала» эти деньги своей операционной деятельностью. Это вложение инвестора. Поэтому в отчёт о прибылях это не попадает — только в капитал.</p>
+          <div class="highlight highlight-blue">
+            <p>В малом и среднем бизнесе добавочный капитал встречается редко. Он характерен для акционерных обществ которые привлекают инвестиции через продажу акций.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Резервный -->
+      <div class="cap-comp">
+        <div class="cap-comp-header">
+          <span class="cap-comp-num">Часть 4</span>
+          <span class="cap-comp-name">Резервный капитал</span>
+        </div>
+        <div class="cap-comp-body">
+          <p>Часть прибыли которую компания откладывает «на чёрный день» по требованию закона или устава. Своего рода финансовая подушка безопасности.</p>
+          <p>Если в будущем возникнут убытки или непредвиденные расходы — сначала покрываются из резервного капитала, и только потом затрагивается нераспределённая прибыль или уставный капитал.</p>
+          <p>В Узбекистане законодательство обязывает некоторые виды компаний формировать резервный фонд — обычно это процент от чистой прибыли каждый год до тех пор пока резерв не достигнет установленного минимума.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Как капитал изменяется</div>
+    </div>
+    <div class="change-cols">
+      <div class="change-col up">
+        <div class="change-col-label">Капитал растёт когда</div>
+        <ul class="change-list">
+          <li>Владельцы вносят дополнительные взносы</li>
+          <li>Компания зарабатывает чистую прибыль</li>
+          <li>Проводится переоценка активов вверх</li>
+          <li>Акции продаются дороже номинала (эмиссионный доход)</li>
+        </ul>
+      </div>
+      <div class="change-col dn">
+        <div class="change-col-label">Капитал уменьшается когда</div>
+        <ul class="change-list">
+          <li>Компания несёт убытки</li>
+          <li>Владельцы забирают дивиденды</li>
+          <li>Компания выкупает собственные акции</li>
+          <li>Проводится переоценка активов вниз</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Дивиденды — как они влияют на капитал</div>
+    </div>
+    <p>Дивиденды — это выплата части прибыли владельцам компании. Это не расход бизнеса — это распределение уже заработанной прибыли. Происходит в два этапа:</p>
+
+    <div class="posting-step">Этап 1 — Начисление дивидендов (решение собрания)</div>
+    <div class="posting">
+      <div class="posting-dt"><div class="posting-label">Дебет</div><div class="posting-account">Нераспределённая прибыль</div><div class="posting-comment">Капитал уменьшается</div></div>
+      <div class="posting-arrow">→</div>
+      <div class="posting-kt"><div class="posting-label">Кредит</div><div class="posting-account">Расчёты с учредителями</div><div class="posting-comment">Появился долг перед владельцами</div></div>
+      <div class="posting-sum"><div class="posting-sum-label">Сумма</div><div class="posting-sum-value">сумма дивидендов</div></div>
+    </div>
+
+    <div class="posting-step">Этап 2 — Выплата дивидендов</div>
+    <div class="posting">
+      <div class="posting-dt"><div class="posting-label">Дебет</div><div class="posting-account">Расчёты с учредителями</div><div class="posting-comment">Долг перед владельцами погашен</div></div>
+      <div class="posting-arrow">→</div>
+      <div class="posting-kt"><div class="posting-label">Кредит</div><div class="posting-account">Расчётный счёт</div><div class="posting-comment">Деньги ушли из компании</div></div>
+      <div class="posting-sum"><div class="posting-sum-label">Сумма</div><div class="posting-sum-value">сумма дивидендов</div></div>
+    </div>
+
+    <div class="highlight highlight-warm">
+      <p>Итог: капитал уменьшился, активы (деньги) уменьшились на ту же сумму. Уравнение сохранилось.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Отрицательный капитал — что это и почему опасно</div>
+    </div>
+    <div class="danger-box">
+      <div class="danger-label">Ситуация: отрицательный капитал</div>
+      <div class="danger-example">
+        Уставный капитал: 10 000 000 сум<br>
+        Убытки за 3 года: −25 000 000 сум<br>
+        <strong>Капитал = 10 000 000 − 25 000 000 = −15 000 000 сум</strong>
+      </div>
+      <p style="font-size:14px;color:var(--ink2);margin:10px 0 8px;">Что это означает: обязательства превышают активы. Если бы компания закрылась и продала всё имущество — денег бы не хватило чтобы расплатиться со всеми кредиторами.</p>
+      <p style="font-size:13px;font-weight:600;color:var(--accent2);margin-bottom:6px;">Последствия:</p>
+      <ul class="danger-consequences">
+        <li>Банки не дают кредиты</li>
+        <li>Поставщики требуют предоплату</li>
+        <li>Аудиторы ставят под сомнение принцип непрерывности</li>
+        <li>Налоговые органы могут инициировать проверку</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 7 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-title">Связь капитала с прибылью</div>
+    </div>
+    <p>Это ключевое понимание которое объединяет баланс и отчёт о прибылях:</p>
+    <div class="highlight">
+      <p>Прибыль увеличивает капитал. Убыток уменьшает капитал. Баланс и P&L математически связаны через нераспределённую прибыль.</p>
+    </div>
+    <p>Когда компания зарабатывает прибыль 5 000 000 сум:</p>
+    <div class="callout">
+      <div class="callout-label">Что происходит одновременно</div>
+      <p><strong>В P&L:</strong> доходы превысили расходы на 5 000 000 сум — зафиксирована чистая прибыль.</p>
+      <p><strong>В балансе:</strong> нераспределённая прибыль выросла на 5 000 000 → капитал вырос на 5 000 000 → активы тоже выросли на 5 000 000.</p>
+    </div>
+    <div class="highlight highlight-blue">
+      <p>Чистая прибыль из P&L всегда равна изменению нераспределённой прибыли в балансе (если не было дивидендов). Это не совпадение — это математическая связь между двумя отчётами.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 8 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <div class="section-title">Практический пример — как капитал меняется за год</div>
+    </div>
+
+    <table class="year-table">
+      <thead><tr><th>Статья капитала</th><th>Начало года</th><th>Движение</th><th>Конец года</th></tr></thead>
+      <tbody>
+        <tr><td>Уставный капитал</td><td>20 000 000</td><td>—</td><td>20 000 000</td></tr>
+        <tr><td>Нераспределённая прибыль</td><td>31 500 000</td><td><span class="up">+10 000 000</span> прибыль</td><td>—</td></tr>
+        <tr><td>Нераспределённая прибыль</td><td>—</td><td><span class="dn">−3 000 000</span> дивиденды</td><td>38 500 000</td></tr>
+        <tr class="total"><td>Итого капитал</td><td>51 500 000</td><td>+7 000 000</td><td>58 500 000</td></tr>
+      </tbody>
+    </table>
+
+    <p>Раздел «Капитал» в балансе на конец года выглядит так:</p>
+    <div class="balance-capital">
+      <div class="bc-header">Капитал — раздел пассива баланса</div>
+      <div class="bc-row"><span class="bn">Уставный капитал</span><span class="bv">20 000 000 сум</span></div>
+      <div class="bc-row"><span class="bn">Добавочный капитал</span><span class="bv">—</span></div>
+      <div class="bc-row"><span class="bn">Резервный капитал</span><span class="bv">—</span></div>
+      <div class="bc-row"><span class="bn">Нераспределённая прибыль</span><span class="bv">38 500 000 сум</span></div>
+      <div class="bc-total"><span class="bn">Итого капитал</span><span class="bv">58 500 000 сум</span></div>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Капитал — это живой показатель истории компании. Сколько вложили, сколько заработали, сколько забрали, сколько потеряли.»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>День 1 · Блок 2 · Пункт 4</span>
+    <strong>Следующий: Обязательства — долги компании</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/den1_blok2_punkt3.html">← Пункт 3</a>
+    <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/den1_blok2_punkt5.html">Пункт 5 →</a>
+  </div>
+</div>
+
+</body>
+</html>
