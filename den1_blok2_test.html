@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тест — Блок 2: Активы и Пассивы</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+    --correct: #2D5F3F;
+    --correct-bg: #E8F0EB;
+    --wrong: #A32D2D;
+    --wrong-bg: #FCEBEB;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+
+  .hero { background: var(--ink); color: #F7F4EE; padding: 60px 40px 48px; position: relative; overflow: hidden; }
+  .hero::before { content: '?'; position: absolute; right: -10px; top: -30px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 16px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 4vw, 42px); font-weight: 700; line-height: 1.2; margin-bottom: 14px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 15px; color: rgba(247,244,238,0.6); line-height: 1.7; }
+
+  .progress-wrap { padding: 16px 40px; background: var(--card-bg); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 16px; }
+  .progress-bar-outer { flex: 1; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+  .progress-bar-inner { height: 100%; background: var(--accent); border-radius: 3px; transition: width .4s ease; }
+  .progress-text { font-size: 13px; color: var(--ink3); white-space: nowrap; }
+  .score-pill { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 20px; background: var(--accent-light); color: var(--accent); white-space: nowrap; }
+
+  .quiz { max-width: 680px; margin: 0 auto; padding: 40px 40px 80px; }
+
+  .q-card { background: var(--card-bg); border: 1px solid var(--line); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+  .q-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  .q-num { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink3); }
+  .q-topic { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; background: var(--tag-bg); color: var(--ink2); }
+  .q-text { font-size: 17px; font-weight: 500; color: var(--ink); line-height: 1.55; margin-bottom: 22px; font-family: 'Playfair Display', serif; }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn { width: 100%; text-align: left; padding: 14px 18px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--bg); cursor: pointer; font-family: 'Golos Text', sans-serif; font-size: 15px; color: var(--ink2); line-height: 1.55; transition: border-color .15s, background .15s; display: flex; align-items: flex-start; gap: 12px; }
+  .option-btn:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-light); color: var(--ink); }
+  .option-btn:disabled { cursor: default; }
+  .option-btn.correct { border-color: var(--correct); background: var(--correct-bg); color: var(--correct); }
+  .option-btn.wrong { border-color: var(--wrong); background: var(--wrong-bg); color: var(--wrong); }
+  .option-btn.show-correct { border-color: var(--correct); background: var(--correct-bg); color: var(--correct); }
+  .opt-letter { width: 24px; height: 24px; border-radius: 50%; background: var(--tag-bg); font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--ink3); margin-top: 2px; }
+  .option-btn.correct .opt-letter, .option-btn.show-correct .opt-letter { background: var(--correct); color: #fff; }
+  .option-btn.wrong .opt-letter { background: var(--wrong); color: #fff; }
+
+  .feedback { border-radius: 10px; padding: 14px 18px; margin-top: 14px; display: none; }
+  .feedback.show { display: flex; gap: 12px; align-items: flex-start; }
+  .feedback.correct-fb { background: var(--correct-bg); border: 1px solid rgba(45,95,63,0.2); }
+  .feedback.wrong-fb { background: var(--wrong-bg); border: 1px solid rgba(163,45,45,0.2); }
+  .fb-icon { font-size: 18px; flex-shrink: 0; }
+  .fb-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .feedback.correct-fb .fb-title { color: var(--correct); }
+  .feedback.wrong-fb .fb-title { color: var(--wrong); }
+  .fb-text { font-size: 13px; color: var(--ink2); line-height: 1.65; }
+
+  .next-wrap { margin-top: 20px; display: none; }
+  .next-wrap.show { display: flex; justify-content: flex-end; }
+  .next-btn { background: var(--ink); color: #F7F4EE; border: none; border-radius: 10px; padding: 13px 28px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Golos Text', sans-serif; transition: opacity .15s; }
+  .next-btn:hover { opacity: 0.85; }
+
+  /* Start screen */
+  .start-screen { max-width: 680px; margin: 0 auto; padding: 40px; }
+  .start-card { background: var(--card-bg); border: 1px solid var(--line); border-radius: 16px; padding: 32px; margin-bottom: 20px; }
+  .start-card h2 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 14px; }
+  .start-card p { font-size: 15px; color: var(--ink2); line-height: 1.75; margin-bottom: 14px; }
+  .start-card p:last-child { margin-bottom: 0; }
+  .topics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 16px 0; }
+  @media (max-width: 560px) { .topics-grid { grid-template-columns: 1fr 1fr; } }
+  .topic-pill { background: var(--tag-bg); border-radius: 8px; padding: 8px 12px; font-size: 12px; color: var(--ink2); line-height: 1.4; }
+  .topic-pill strong { display: block; font-size: 11px; color: var(--ink3); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 2px; }
+  .start-btn { width: 100%; padding: 16px; background: var(--ink); color: #F7F4EE; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Golos Text', sans-serif; transition: opacity .15s; }
+  .start-btn:hover { opacity: 0.85; }
+
+  /* Results */
+  .results { display: none; max-width: 680px; margin: 0 auto; padding: 40px 40px 80px; }
+  .results.show { display: block; }
+  .result-hero { background: var(--ink); border-radius: 16px; padding: 36px 32px; text-align: center; margin-bottom: 28px; }
+  .result-score-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 12px; }
+  .result-score { font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 700; line-height: 1; margin-bottom: 8px; }
+  .result-score.excellent { color: #A8C4B0; }
+  .result-score.good { color: #FAC775; }
+  .result-score.needs-work { color: #F09595; }
+  .result-total { font-size: 16px; color: rgba(247,244,238,0.6); margin-bottom: 16px; }
+  .result-message { font-family: 'Playfair Display', serif; font-size: 20px; font-style: italic; color: #F7F4EE; line-height: 1.4; max-width: 420px; margin: 0 auto; }
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+  .stat-card { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 16px; text-align: center; }
+  .stat-value { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+  .stat-card.correct-stat .stat-value { color: var(--correct); }
+  .stat-card.wrong-stat .stat-value { color: var(--wrong); }
+  .stat-card.pct-stat .stat-value { color: var(--ink); }
+  .stat-label { font-size: 12px; color: var(--ink3); }
+  .mistakes-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 16px; }
+  .mistake-item { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-bottom: 12px; }
+  .mistake-topic { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; }
+  .mistake-q { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 12px; line-height: 1.5; font-family: 'Playfair Display', serif; }
+  .mistake-answers { display: flex; flex-direction: column; gap: 6px; }
+  .mistake-row { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; line-height: 1.5; }
+  .badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; margin-top: 2px; }
+  .badge-wrong-ans { background: var(--wrong-bg); color: var(--wrong); }
+  .badge-right-ans { background: var(--correct-bg); color: var(--correct); }
+  .mistake-explain { font-size: 13px; color: var(--ink3); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); line-height: 1.6; }
+  .restart-btn { width: 100%; margin-top: 28px; padding: 16px; background: var(--ink); color: #F7F4EE; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Golos Text', sans-serif; transition: opacity .15s; }
+  .restart-btn:hover { opacity: 0.85; }
+
+  @media (max-width: 560px) {
+    .topnav, .progress-wrap { padding: 12px 20px; }
+    .hero { padding: 48px 20px 36px; }
+    .quiz, .results, .start-screen { padding: 24px 20px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_3_day_plan.html">← К плану обучения</a>
+  <span id="nav-score" style="font-size:13px;color:var(--ink3);"></span>
+</div>
+
+<div class="hero">
+  <div class="hero-label">Блок 2 · Проверка знаний</div>
+  <h1>Тест: <em>Активы и Пассивы</em></h1>
+  <p class="hero-sub">30 вопросов · по 5 на каждый пункт · сложные варианты ответов · после каждого — объяснение</p>
+</div>
+
+<div class="progress-wrap" id="progress-wrap" style="display:none;">
+  <div class="progress-bar-outer"><div class="progress-bar-inner" id="progress-bar" style="width:0%"></div></div>
+  <span class="progress-text" id="progress-text">1 / 30</span>
+  <span class="score-pill" id="score-pill">0 ✓</span>
+</div>
+
+<!-- Start -->
+<div class="start-screen" id="start-screen">
+  <div class="start-card">
+    <h2>Что тебя ждёт</h2>
+    <p>30 вопросов — по 5 на каждый из 6 пунктов Блока 2. Неправильные варианты специально составлены так чтобы сбивать с толку — придётся думать.</p>
+    <div class="topics-grid">
+      <div class="topic-pill"><strong>Пункт 1</strong>Активы</div>
+      <div class="topic-pill"><strong>Пункт 2</strong>Пассивы</div>
+      <div class="topic-pill"><strong>Пункт 3</strong>Пассивы = К + О</div>
+      <div class="topic-pill"><strong>Пункт 4</strong>Капитал</div>
+      <div class="topic-pill"><strong>Пункт 5</strong>Обязательства</div>
+      <div class="topic-pill"><strong>Пункт 6</strong>Баланс целиком</div>
+    </div>
+    <p>В конце — итоговый результат и подробный разбор каждой ошибки.</p>
+  </div>
+  <button class="start-btn" onclick="startQuiz()">Начать тест →</button>
+</div>
+
+<!-- Quiz -->
+<div class="quiz" id="quiz-screen" style="display:none;">
+  <div class="q-card">
+    <div class="q-meta">
+      <span class="q-num" id="q-num">Вопрос 1 из 30</span>
+      <span class="q-topic" id="q-topic"></span>
+    </div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback">
+      <span class="fb-icon" id="fb-icon"></span>
+      <div class="fb-body">
+        <div class="fb-title" id="fb-title"></div>
+        <div class="fb-text" id="fb-text"></div>
+      </div>
+    </div>
+  </div>
+  <div class="next-wrap" id="next-wrap">
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">Следующий вопрос →</button>
+  </div>
+</div>
+
+<!-- Results -->
+<div class="results" id="results-screen">
+  <div class="result-hero">
+    <div class="result-score-label">Результат теста</div>
+    <div class="result-score" id="result-score"></div>
+    <div class="result-total" id="result-total"></div>
+    <div class="result-message" id="result-message"></div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-card correct-stat"><div class="stat-value" id="stat-correct"></div><div class="stat-label">правильных</div></div>
+    <div class="stat-card wrong-stat"><div class="stat-value" id="stat-wrong"></div><div class="stat-label">ошибок</div></div>
+    <div class="stat-card pct-stat"><div class="stat-value" id="stat-pct"></div><div class="stat-label">результат</div></div>
+  </div>
+  <div id="mistakes-section"></div>
+  <button class="restart-btn" onclick="restartQuiz()">Пройти тест заново</button>
+</div>
+
+<script>
+const QUESTIONS = [
+
+  // ── ПУНКТ 1: Активы ──
+  {
+    topic: 'Пункт 1 — Активы',
+    text: 'Компания оплатила годовую подписку на программное обеспечение 1С — 6 000 000 сум 1 октября. Что появится в балансе на 31 декабря?',
+    options: [
+      'Расход 6 000 000 сум в P&L — всё списывается в момент оплаты',
+      'Актив «Расходы будущих периодов» 4 500 000 сум + расход 1 500 000 сум в P&L',
+      'Нематериальный актив 6 000 000 сум — это право пользования программой',
+      'Актив «Расходы будущих периодов» 6 000 000 сум — расхода пока нет'
+    ],
+    correct: 1,
+    explanation: 'За 3 месяца (октябрь-декабрь) признан расход: 6 000 000 ÷ 12 × 3 = 1 500 000 сум. Оставшиеся 9 месяцев — актив «Расходы будущих периодов» 4 500 000 сум. Подписка — не нематериальный актив: куплено право пользования на период, а не навсегда.'
+  },
+  {
+    topic: 'Пункт 1 — Активы',
+    text: 'Клиент должен компании 10 000 000 сум. Выяснилось что клиент на грани банкротства — вероятность получить деньги около 30%. Как дебиторка отразится в балансе?',
+    options: [
+      'Дебиторка 10 000 000 сум — долг юридически не списан, сумма не меняется',
+      'Дебиторка 3 000 000 сум — через резерв по сомнительным долгам',
+      'Дебиторка списывается полностью — её нет в балансе',
+      'Дебиторка переводится в раздел «Долгосрочные активы»'
+    ],
+    correct: 1,
+    explanation: 'Создаётся резерв по сомнительным долгам: 70% вероятность невозврата × 10 000 000 = 7 000 000 резерв. Дебиторка в балансе = 10 000 000 − 7 000 000 = 3 000 000 сум. Полностью списать нельзя — юридически долг ещё существует.'
+  },
+  {
+    topic: 'Пункт 1 — Активы',
+    text: 'Компания арендует склад уже 8 лет и считает его «своим». Директор хочет поставить его в баланс как актив. Можно ли это сделать?',
+    options: [
+      'Да — компания использует его больше года, значит это внеоборотный актив',
+      'Да — но только по рыночной стоимости аренды за 8 лет',
+      'Нет — арендованное имущество принадлежит арендодателю, не компании',
+      'Да — если договор аренды больше 5 лет, актив можно поставить на баланс'
+    ],
+    correct: 2,
+    explanation: 'В классическом учёте арендованное имущество не является активом арендатора — оно принадлежит арендодателю. Срок пользования и «ощущение своего» значения не имеют. Принцип денежного измерения: у компании нет права собственности которое можно надёжно оценить.'
+  },
+  {
+    topic: 'Пункт 1 — Активы',
+    text: 'Компания купила станок за 20 000 000 сум, срок службы 5 лет. Через 2 года рыночная стоимость выросла до 35 000 000 сум. По какой стоимости станок стоит в балансе?',
+    options: [
+      '35 000 000 сум — по рыночной, это честнее для отчётности',
+      '20 000 000 сум — историческая стоимость не меняется',
+      '12 000 000 сум — историческая стоимость минус амортизация за 2 года',
+      '27 500 000 сум — среднее между исторической и рыночной стоимостью'
+    ],
+    correct: 2,
+    explanation: 'Основные средства учитываются по остаточной стоимости: 20 000 000 − (2 × 4 000 000) = 12 000 000 сум. Амортизация в год = 20 000 000 ÷ 5 = 4 000 000. Рыночный рост в классическом учёте не отражается — только историческая стоимость минус накопленная амортизация.'
+  },
+  {
+    topic: 'Пункт 1 — Активы',
+    text: 'Что из перечисленного является оборотным активом?',
+    options: [
+      'Грузовик купленный год назад за 15 000 000 сум',
+      'Аванс выданный поставщику за товар который привезут через 2 недели',
+      'Патент купленный за 5 000 000 сум сроком на 10 лет',
+      'Незавершённое строительство нового склада'
+    ],
+    correct: 1,
+    explanation: 'Аванс выданный — оборотный актив: превратится в товар (или вернётся деньгами) в течение 12 месяцев. Грузовик — внеоборотный (служит больше года). Патент — нематериальный внеоборотный актив. Незавершённое строительство — внеоборотный актив (будет использоваться больше года).'
+  },
+
+  // ── ПУНКТ 2: Пассивы ──
+  {
+    topic: 'Пункт 2 — Пассивы',
+    text: 'Компания А: капитал 80 000 000, обязательства 20 000 000. Компания Б: капитал 20 000 000, обязательства 80 000 000. Активы у обоих по 100 000 000 сум. Оба директора говорят что их компании «одинаково успешны». Кто прав?',
+    options: [
+      'Оба правы — активы одинаковые, значит компании финансово равны',
+      'Директор А прав — его компания финансово значительно устойчивее',
+      'Директор Б прав — большие обязательства означают доверие кредиторов к компании',
+      'Невозможно сказать без отчёта о прибылях за последний год'
+    ],
+    correct: 1,
+    explanation: 'Одинаковые активы не означают одинаковое финансовое положение. У А коэффициент автономии 80% — компания независима, живёт на свои деньги. У Б — 20% — компания почти полностью зависит от кредиторов. При любом сбое в выручке Б рискует не расплатиться по долгам.'
+  },
+  {
+    topic: 'Пункт 2 — Пассивы',
+    text: 'Поставщик отгрузил компании товар на 15 000 000 сум с отсрочкой 45 дней. Одновременно компания отгрузила товар своему клиенту на 12 000 000 сум с отсрочкой 30 дней. Какова чистая долговая позиция компании?',
+    options: [
+      'Компания в плюсе на 3 000 000 — ей должны больше чем она должна',
+      'Компания в минусе на 3 000 000 — она должна больше чем ей должны',
+      'Позиция нейтральная — входящий и исходящий потоки почти компенсируют друг друга',
+      'Нельзя сравнивать — это разные виды задолженности с разными сроками'
+    ],
+    correct: 1,
+    explanation: 'Кредиторка (должны поставщику) = 15 000 000. Дебиторка (клиент должен нам) = 12 000 000. Чистая позиция = 12 − 15 = −3 000 000 сум. Компания должна больше чем ей должны. Это риск: если клиент задержит оплату, нечем будет платить поставщику.'
+  },
+  {
+    topic: 'Пункт 2 — Пассивы',
+    text: 'Компания получила кредит 36 000 000 сум на 3 года с погашением 1 000 000 сум в месяц. Как этот кредит отразится в балансе через 18 месяцев?',
+    options: [
+      'Долгосрочные обязательства 18 000 000 сум — срок договора ещё не истёк',
+      'Краткосрочные обязательства 18 000 000 сум — осталось меньше 2 лет',
+      'Краткосрочные 12 000 000 сум + долгосрочные 6 000 000 сум',
+      'Долгосрочные 12 000 000 сум + краткосрочные 6 000 000 сум'
+    ],
+    correct: 2,
+    explanation: 'Через 18 месяцев остаток = 36 000 000 − 18 000 000 = 18 000 000 сум. Из них ближайшие 12 месяцев: 12 × 1 000 000 = 12 000 000 — краткосрочные. Последние 6 платежей (месяцы 31-36) = 6 000 000 — долгосрочные. Кредит всегда делится по сроку погашения.'
+  },
+  {
+    topic: 'Пункт 2 — Пассивы',
+    text: 'Директор говорит: «Наша кредиторская задолженность выросла вдвое — это плохо». Финансовый директор отвечает: «Наоборот, это хорошо». Кто прав?',
+    options: [
+      'Директор прав — любой рост долгов всегда несёт риск',
+      'Финансовый директор прав — больше кредиторки означает больше бесплатного финансирования',
+      'Оба могут быть правы — зависит от причины роста и сроков погашения',
+      'Финансовый директор прав, но только если кредиторка краткосрочная'
+    ],
+    correct: 2,
+    explanation: 'Рост кредиторки из-за увеличения закупок при росте бизнеса — хорошо (больше бесплатного финансирования оборотного капитала). Рост из-за неспособности платить вовремя — плохо. Без контекста однозначного ответа нет — нужно смотреть причину и сроки.'
+  },
+  {
+    topic: 'Пункт 2 — Пассивы',
+    text: 'Компания имеет: активов 50 000 000, краткосрочных обязательств 30 000 000, долгосрочных обязательств 10 000 000. Чему равен капитал?',
+    options: [
+      '20 000 000 сум',
+      '40 000 000 сум',
+      '10 000 000 сум',
+      'Нельзя определить без знания структуры активов'
+    ],
+    correct: 2,
+    explanation: 'Капитал = Активы − Все обязательства = 50 000 000 − 30 000 000 − 10 000 000 = 10 000 000 сум. Структура активов для этого расчёта не важна — важна только их общая сумма. Уравнение: Активы = Капитал + Обязательства.'
+  },
+
+  // ── ПУНКТ 3: Пассивы = Капитал + Обязательства ──
+  {
+    topic: 'Пункт 3 — Пассивы = Капитал + Обязательства',
+    text: 'Компания погасила долг перед поставщиком — заплатила 5 000 000 сум. Как изменились обе стороны баланса?',
+    options: [
+      'Активы −5 млн, Капитал −5 млн, обязательства не изменились',
+      'Активы −5 млн, Обязательства −5 млн, Капитал не изменился',
+      'Ничего не изменилось — долг просто переходит из одной категории в другую',
+      'Активы −5 млн, Пассивы −5 млн — итог баланса уменьшился на 5 млн'
+    ],
+    correct: 1,
+    explanation: 'Деньги ушли — актив −5 млн. Долг перед поставщиком погашен — обязательство −5 млн. Капитал не затронут. Итог баланса уменьшился с обеих сторон на 5 млн. Это третий тип операции: «Актив ↓ Пассив ↓».'
+  },
+  {
+    topic: 'Пункт 3 — Пассивы = Капитал + Обязательства',
+    text: 'Компания получила от клиента аванс 10 000 000 сум. Затем отгрузила товар (себестоимость 7 000 000 сум). Как изменился капитал после отгрузки?',
+    options: [
+      'Капитал не изменился — аванс уже был получен раньше',
+      'Капитал вырос на 10 000 000 сум (вся выручка)',
+      'Капитал вырос на 3 000 000 сум (прибыль от операции)',
+      'Капитал вырос на 7 000 000 сум (себестоимость отгруженного товара)'
+    ],
+    correct: 2,
+    explanation: 'При получении аванса капитал не изменился — появилось обязательство. При отгрузке: выручка 10 000 000 − себестоимость 7 000 000 = прибыль 3 000 000. Именно прибыль увеличивает нераспределённую прибыль → капитал растёт на 3 000 000.'
+  },
+  {
+    topic: 'Пункт 3 — Пассивы = Капитал + Обязательства',
+    text: 'Компания провела официальную переоценку здания: балансовая стоимость 20 000 000 сум, после переоценки — 35 000 000 сум. Как изменилось уравнение баланса?',
+    options: [
+      'Активы +15 млн, Обязательства +15 млн — появился долг перед оценщиком',
+      'Активы +15 млн, Капитал (добавочный) +15 млн',
+      'Активы +15 млн, Выручка +15 млн в P&L — это доход от роста стоимости',
+      'Ничего не изменилось — рыночная переоценка не влияет на баланс'
+    ],
+    correct: 1,
+    explanation: 'Переоценка: здание в балансе +15 млн (актив вырос), добавочный капитал +15 млн (пассив вырос). Это не доход в P&L — деньги не получены, это «бумажный» рост. Уравнение сохраняется: обе стороны выросли на одинаковую сумму.'
+  },
+  {
+    topic: 'Пункт 3 — Пассивы = Капитал + Обязательства',
+    text: 'Владелец компании взял из кассы 3 000 000 сум «на личные нужды» без оформления дивидендов. Как это правильно отразить в учёте?',
+    options: [
+      'Расход компании 3 000 000 сум — деньги фактически потрачены',
+      'Уменьшение уставного капитала на 3 000 000 сум',
+      'Уменьшение нераспределённой прибыли — это те же дивиденды по сути',
+      'Дебиторская задолженность владельца перед компанией 3 000 000 сум'
+    ],
+    correct: 3,
+    explanation: 'Без оформления дивидендов деньги взятые владельцем — это долг владельца перед компанией (дебиторская задолженность учредителя). Деньги ушли из кассы (актив −), дебиторка на учредителя (+). Как расход или уменьшение капитала это отражать нельзя без решения собрания.'
+  },
+  {
+    topic: 'Пункт 3 — Пассивы = Капитал + Обязательства',
+    text: 'Коэффициент автономии компании снизился с 65% до 48% за год. Что из перечисленного могло это вызвать?',
+    options: [
+      'Компания получила большую прибыль и не выплатила дивиденды',
+      'Компания взяла долгосрочный кредит на расширение производства',
+      'Клиенты погасили крупную дебиторскую задолженность',
+      'Компания продала часть оборудования и погасила краткосрочный долг'
+    ],
+    correct: 1,
+    explanation: 'Кредит увеличивает обязательства → доля капитала в пассиве падает → коэффициент автономии снижается. Прибыль без дивидендов увеличила бы капитал → коэффициент вырос бы. Погашение дебиторки меняет только активы — на пассив не влияет. Продажа + погашение долга: активы −, обязательства − — соотношение может не измениться.'
+  },
+
+  // ── ПУНКТ 4: Капитал ──
+  {
+    topic: 'Пункт 4 — Капитал',
+    text: 'Компания работает 3 года. Уставный капитал 10 000 000 сум. Год 1: прибыль 5 000 000, дивиденды 2 000 000. Год 2: убыток 4 000 000. Год 3: прибыль 3 000 000, дивидендов нет. Чему равен капитал на конец третьего года?',
+    options: [
+      '12 000 000 сум',
+      '14 000 000 сум',
+      '16 000 000 сум',
+      '8 000 000 сум'
+    ],
+    correct: 0,
+    explanation: 'НП после года 1: 5 000 000 − 2 000 000 = 3 000 000. После года 2: 3 000 000 − 4 000 000 = −1 000 000 (непокрытый убыток). После года 3: −1 000 000 + 3 000 000 = 2 000 000. Итого капитал: уставный 10 000 000 + НП 2 000 000 = 12 000 000 сум.'
+  },
+  {
+    topic: 'Пункт 4 — Капитал',
+    text: 'Акционерное общество выпустило 1 000 акций номиналом 500 сум каждая. Продало их инвесторам по 800 сум за акцию. Как изменился капитал?',
+    options: [
+      'Уставный капитал +800 000 сум — всё по цене продажи',
+      'Уставный капитал +500 000 сум, добавочный капитал (эмиссионный доход) +300 000 сум',
+      'Уставный капитал +500 000 сум, выручка +300 000 сум в P&L',
+      'Нераспределённая прибыль +800 000 сум — это доход компании'
+    ],
+    correct: 1,
+    explanation: 'По номиналу (500 × 1 000 акций) = 500 000 сум — в уставный капитал. Эмиссионный доход (300 × 1 000) = 300 000 сум — в добавочный капитал. Это не выручка и не прибыль — компания привлекала инвестиции, а не продавала товар или услугу.'
+  },
+  {
+    topic: 'Пункт 4 — Капитал',
+    text: 'Компания показала чистую прибыль 8 000 000 сум. Владельцы решили выплатить дивиденды 5 000 000 сум. На сколько вырастет нераспределённая прибыль?',
+    options: [
+      'На 8 000 000 сум — дивиденды платятся из денег, а не уменьшают НП',
+      'На 3 000 000 сум — прибыль минус дивиденды',
+      'На 5 000 000 сум — только та часть которую не выплатили',
+      'НП не изменится — дивиденды платятся из уставного капитала'
+    ],
+    correct: 1,
+    explanation: 'НП (конец) = НП (начало) + Чистая прибыль − Дивиденды = НП + 8 000 000 − 5 000 000 = НП + 3 000 000. Дивиденды напрямую уменьшают нераспределённую прибыль при начислении (Дт НП — Кт Расчёты с учредителями).'
+  },
+  {
+    topic: 'Пункт 4 — Капитал',
+    text: 'Компания несколько лет работала в убыток. Капитал стал отрицательным: −8 000 000 сум. Что это означает для баланса?',
+    options: [
+      'Баланс не сходится — отрицательный капитал математически невозможен',
+      'Активов больше чем обязательств на 8 000 000 сум',
+      'Обязательств больше чем активов на 8 000 000 сум',
+      'Компания должна учредителям 8 000 000 сум дополнительных взносов'
+    ],
+    correct: 2,
+    explanation: 'Капитал = Активы − Обязательства. Если капитал = −8 000 000, то Обязательства = Активы + 8 000 000. Обязательств больше чем активов на 8 000 000. Баланс при этом математически сходится — отрицательный капитал допустим и встречается у убыточных компаний.'
+  },
+  {
+    topic: 'Пункт 4 — Капитал',
+    text: 'Компания переоценила склад: с 30 000 000 до 45 000 000 сум. Через год продала его за 50 000 000 сум. Какая прибыль попадёт в P&L?',
+    options: [
+      '20 000 000 сум — разница между ценой продажи и исторической ценой покупки',
+      '5 000 000 сум — разница между ценой продажи и переоценённой балансовой стоимостью',
+      '50 000 000 сум — вся выручка от продажи является доходом',
+      '0 сум — переоценка уже учла весь рост стоимости заранее'
+    ],
+    correct: 1,
+    explanation: 'После переоценки балансовая стоимость = 45 000 000 сум. Продали за 50 000 000. Прибыль = 50 000 000 − 45 000 000 = 5 000 000 сум → в P&L. 15 000 000 (рост при переоценке) уже учтены в добавочном капитале — в P&L они не попадают.'
+  },
+
+  // ── ПУНКТ 5: Обязательства ──
+  {
+    topic: 'Пункт 5 — Обязательства',
+    text: 'Компания взяла кредит 36 000 000 сум на 3 года с погашением 1 000 000 сум в месяц. Как кредит отразится в балансе через 18 месяцев?',
+    options: [
+      'Долгосрочные обязательства 18 000 000 сум — срок договора ещё не истёк',
+      'Краткосрочные обязательства 18 000 000 сум — осталось меньше 2 лет',
+      'Краткосрочные 12 000 000 + долгосрочные 6 000 000 сум',
+      'Долгосрочные 12 000 000 + краткосрочные 6 000 000 сум'
+    ],
+    correct: 2,
+    explanation: 'Остаток через 18 месяцев: 36 000 000 − 18 000 000 = 18 000 000 сум. Из них ближайшие 12 месяцев: 12 × 1 000 000 = 12 000 000 → краткосрочные. Оставшиеся 6 000 000 (последние 6 платежей) → долгосрочные. Кредит всегда делится по сроку фактического погашения.'
+  },
+  {
+    topic: 'Пункт 5 — Обязательства',
+    text: 'Компания начислила НДС к уплате 4 000 000 сум по итогам квартала. Срок уплаты — через 20 дней. Как это отразится в балансе прямо сейчас?',
+    options: [
+      'Расход в P&L 4 000 000 сум — налог это расход компании',
+      'Краткосрочное обязательство «НДС к уплате» 4 000 000 сум',
+      'Уменьшение денег на расчётном счёте на 4 000 000 сум',
+      'Долгосрочное обязательство — срок уплаты ещё не наступил'
+    ],
+    correct: 1,
+    explanation: 'НДС начислен — появилось обязательство перед государством. Деньги ещё не ушли (уйдут через 20 дней). Краткосрочное (срок до 12 месяцев). Важно: НДС не является расходом компании в P&L — это налог который компания собирает у покупателей и передаёт государству.'
+  },
+  {
+    topic: 'Пункт 5 — Обязательства',
+    text: 'Компания имеет кредиторку 20 000 000 сум (срок оплаты через 60 дней) и дебиторку 15 000 000 сум (срок получения через 30 дней). Директор говорит: «Нам должны меньше чем мы должны — срочно взыскиваем долги». Прав ли он?',
+    options: [
+      'Да — кредиторка всегда должна быть меньше дебиторки',
+      'Нет — кредиторка это бесплатное финансирование, её выгоднее иметь больше',
+      'Нет — дебиторка придёт через 30 дней, а платить поставщику только через 60. Риска нет.',
+      'Да, но только если кредиторка уже просрочена'
+    ],
+    correct: 2,
+    explanation: 'Дебиторка придёт через 30 дней, кредиторку нужно погасить через 60 дней. Значит деньги придут раньше чем нужно платить — кассового разрыва нет. Срочно взыскивать нет необходимости. Само соотношение сумм без учёта сроков ничего не говорит о риске.'
+  },
+  {
+    topic: 'Пункт 5 — Обязательства',
+    text: 'Компания выплатила зарплату 5 000 000 сум — зарплата была начислена в прошлом месяце. Что произойдёт в P&L текущего месяца?',
+    options: [
+      'Расход 5 000 000 сум — деньги фактически выплачены в этом месяце',
+      'Расход 0 сум — он уже был признан в прошлом месяце при начислении',
+      'Расход 5 000 000 делится пополам между прошлым и текущим месяцем',
+      'Расход признаётся в момент выплаты согласно кассовому методу'
+    ],
+    correct: 1,
+    explanation: 'Расход признан в прошлом месяце при начислении (Дт «Расходы на зарплату» — Кт «Расчёты по зарплате»). В текущем месяце при выплате: деньги ушли (актив −), долг перед сотрудниками погашен (обязательство −). В P&L этого месяца ничего нет — только баланс изменился.'
+  },
+  {
+    topic: 'Пункт 5 — Обязательства',
+    text: 'У компании коэффициент текущей ликвидности = 0.7. Что это означает?',
+    options: [
+      'Всё нормально — для торговых компаний коэффициент меньше 1 считается нормой',
+      'Краткосрочных долгов больше чем оборотных активов — есть реальный риск не расплатиться вовремя',
+      'Компания убыточна — нужно срочно увеличивать выручку',
+      'Долгосрочных обязательств слишком много — нужно их рефинансировать в краткосрочные'
+    ],
+    correct: 1,
+    explanation: 'Коэффициент < 1 означает: краткосрочные обязательства > оборотных активов. Компании не хватит текущих ресурсов чтобы расплатиться по ближайшим долгам. Это не значит что компания убыточна — она может быть прибыльной но с проблемой ликвидности. Долгосрочные обязательства здесь вообще ни при чём.'
+  },
+
+  // ── ПУНКТ 6: Баланс целиком ──
+  {
+    topic: 'Пункт 6 — Баланс целиком',
+    text: 'Баланс компании сошёлся: Актив = Пассив = 80 000 000 сум. Гарантирует ли это что в учёте нет ошибок?',
+    options: [
+      'Да — равенство баланса математически гарантирует отсутствие ошибок',
+      'Да, но только если отчётность подтверждена аудитором',
+      'Нет — можно провести ошибочную проводку на одну сумму по дебету и кредиту, и баланс сойдётся',
+      'Нет — баланс сходится только при правильном учёте'
+    ],
+    correct: 2,
+    explanation: 'Баланс сойдётся даже при ошибках: если провести операцию не на тот счёт (сумма одинакова), дважды провести одну операцию (оба счёта задвоены), пропустить операцию целиком (оба счёта пропущены). Равенство — необходимое, но недостаточное условие отсутствия ошибок.'
+  },
+  {
+    topic: 'Пункт 6 — Баланс целиком',
+    text: 'Компания прибыльная третий год подряд, но денег на счёте всё меньше. Баланс сходится. В чём причина?',
+    options: [
+      'Бухгалтер неправильно считает прибыль — реально компания убыточна',
+      'Деньги уходят в дебиторку и товарные запасы — компания растёт быстрее чем собирает деньги',
+      'Это невозможно — прибыльная компания всегда накапливает деньги',
+      'Компания платит слишком много налогов с прибыли'
+    ],
+    correct: 1,
+    explanation: 'Классический сценарий роста: компания продаёт в кредит (дебиторка растёт), закупает больше товара (запасы растут). Прибыль есть в P&L, но деньги «заморожены» в активах. Именно для выявления этого существует Cash Flow — он показывает реальное движение денег отдельно от прибыли.'
+  },
+  {
+    topic: 'Пункт 6 — Баланс целиком',
+    text: 'Аудитор говорит: «Балансовая стоимость вашей компании 50 000 000 сум, а покупатель готов заплатить 120 000 000 сум». Откуда разница 70 000 000 сум?',
+    options: [
+      'Аудитор ошибся — рыночная цена не может превышать балансовую более чем вдвое',
+      'Разница — это будущие прибыли которые покупатель рассчитывает получить',
+      'Разница — это ценности которые нельзя надёжно измерить в деньгах: репутация, клиенты, команда, технологии',
+      'Разница — это активы которые не были правильно переоценены по рыночной стоимости'
+    ],
+    correct: 2,
+    explanation: 'Принцип денежного измерения: в баланс попадает только то что можно надёжно измерить в деньгах. Репутация, лояльная клиентская база, уникальная команда, технологии — реальная ценность, но в балансе её нет. Покупатель платит за всё это сверх балансовой стоимости.'
+  },
+  {
+    topic: 'Пункт 6 — Баланс целиком',
+    text: 'Компания на 31 декабря: оборотные активы 60 000 000, внеоборотные 40 000 000, краткосрочные обязательства 25 000 000, долгосрочные обязательства 35 000 000. Капитал и коэффициент автономии?',
+    options: [
+      'Капитал 40 000 000, автономия 40%',
+      'Капитал 35 000 000, автономия 35%',
+      'Капитал 40 000 000, автономия 50%',
+      'Капитал 60 000 000, автономия 60%'
+    ],
+    correct: 0,
+    explanation: 'Активы = 60 + 40 = 100 000 000. Обязательства = 25 + 35 = 60 000 000. Капитал = 100 − 60 = 40 000 000. Автономия = 40 000 000 ÷ 100 000 000 = 40%. Структура активов (оборотные/внеоборотные) для расчёта капитала не нужна — только итог.'
+  },
+  {
+    topic: 'Пункт 6 — Баланс целиком',
+    text: 'Что из перечисленного НЕ изменит итоговую сумму активов?',
+    options: [
+      'Компания получила кредит в банке — деньги пришли на счёт',
+      'Компания оплатила долг поставщику деньгами',
+      'Компания купила товар у поставщика за наличные деньги',
+      'Компания получила аванс от клиента на расчётный счёт'
+    ],
+    correct: 2,
+    explanation: 'Купили товар за деньги: деньги − товары + — один актив превратился в другой, итог активов не изменился. Получение кредита: деньги +, кредит + — активы выросли. Оплата долга: деньги −, обязательства − — активы уменьшились. Аванс от клиента: деньги +, обязательства + — активы выросли.'
+  }
+];
+
+let currentQ = 0, score = 0, answered = false, userAnswers = [];
+
+function startQuiz() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('progress-wrap').style.display = 'flex';
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = QUESTIONS[currentQ];
+  answered = false;
+  document.getElementById('q-num').textContent = `Вопрос ${currentQ + 1} из ${QUESTIONS.length}`;
+  document.getElementById('q-topic').textContent = q.topic;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('progress-bar').style.width = (currentQ / QUESTIONS.length * 100) + '%';
+  document.getElementById('progress-text').textContent = `${currentQ + 1} / ${QUESTIONS.length}`;
+  document.getElementById('score-pill').textContent = `${score} ✓`;
+  document.getElementById('nav-score').textContent = currentQ > 0 ? `${score} / ${currentQ}` : '';
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  ['А','Б','В','Г'].forEach((l, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-letter">${l}</span><span>${q.options[i]}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    opts.appendChild(btn);
+  });
+
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('next-wrap').className = 'next-wrap';
+  document.getElementById('next-btn').textContent = currentQ === QUESTIONS.length - 1 ? 'Посмотреть результат →' : 'Следующий вопрос →';
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = QUESTIONS[currentQ];
+  const isCorrect = idx === q.correct;
+  document.querySelectorAll('.option-btn').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.correct) btn.classList.add('show-correct');
+    if (i === idx && !isCorrect) btn.classList.add('wrong');
+  });
+  if (isCorrect) score++;
+  userAnswers.push({ qIdx: currentQ, selected: idx, correct: isCorrect });
+  const fb = document.getElementById('feedback');
+  fb.className = `feedback show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
+  document.getElementById('fb-icon').textContent = isCorrect ? '✓' : '✗';
+  document.getElementById('fb-title').textContent = isCorrect ? 'Правильно!' : 'Неправильно';
+  document.getElementById('fb-text').textContent = q.explanation;
+  document.getElementById('next-wrap').className = 'next-wrap show';
+  document.getElementById('score-pill').textContent = `${score} ✓`;
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= QUESTIONS.length) showResults();
+  else showQuestion();
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+  const rs = document.getElementById('results-screen');
+  rs.className = 'results show';
+  const pct = Math.round(score / QUESTIONS.length * 100);
+  const scoreEl = document.getElementById('result-score');
+  scoreEl.textContent = pct + '%';
+  scoreEl.className = `result-score ${pct >= 80 ? 'excellent' : pct >= 60 ? 'good' : 'needs-work'}`;
+  document.getElementById('result-total').textContent = `${score} правильных из ${QUESTIONS.length} вопросов`;
+  document.getElementById('stat-correct').textContent = score;
+  document.getElementById('stat-wrong').textContent = QUESTIONS.length - score;
+  document.getElementById('stat-pct').textContent = pct + '%';
+  document.getElementById('result-message').textContent = pct >= 80 ? 'Отличный результат. Блок 2 усвоен.' : pct >= 60 ? 'Хорошо. Повтори пункты где были ошибки.' : 'Нужно вернуться к материалу. Разбери ошибки ниже.';
+
+  const mistakes = userAnswers.filter(a => !a.correct);
+  const ms = document.getElementById('mistakes-section');
+  if (!mistakes.length) {
+    ms.innerHTML = '<div style="text-align:center;padding:24px;color:var(--correct);font-weight:600;font-size:16px;">Ни одной ошибки!</div>';
+  } else {
+    const L = ['А','Б','В','Г'];
+    ms.innerHTML = `<div class="mistakes-title">Разбор ошибок (${mistakes.length})</div>` +
+      mistakes.map(a => {
+        const q = QUESTIONS[a.qIdx];
+        return `<div class="mistake-item">
+          <div class="mistake-topic">${q.topic}</div>
+          <div class="mistake-q">${q.text}</div>
+          <div class="mistake-answers">
+            <div class="mistake-row"><span class="badge badge-wrong-ans">Твой ответ</span><span>${L[a.selected]}. ${q.options[a.selected]}</span></div>
+            <div class="mistake-row"><span class="badge badge-right-ans">Правильно</span><span>${L[q.correct]}. ${q.options[q.correct]}</span></div>
+          </div>
+          <div class="mistake-explain">${q.explanation}</div>
+        </div>`;
+      }).join('');
+  }
+}
+
+function restartQuiz() {
+  currentQ = 0; score = 0; answered = false; userAnswers = [];
+  document.getElementById('results-screen').className = 'results';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('progress-wrap').style.display = 'flex';
+  showQuestion();
+}
+</script>
+</body>
+</html>
