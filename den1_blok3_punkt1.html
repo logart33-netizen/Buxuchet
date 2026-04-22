@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>День 1 · Блок 3 · Пункт 1 — Доход (выручка)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: '₽'; position: absolute; right: -10px; top: -20px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 24px 28px; margin: 20px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { color: var(--ink2); margin: 0 0 12px; font-size: 15px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* Two concepts */
+  .two-concepts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  @media (max-width: 560px) { .two-concepts { grid-template-columns: 1fr; } }
+  .concept { border-radius: 12px; padding: 18px 20px; }
+  .concept.main { background: var(--accent-light); border: 1px solid rgba(45,95,63,0.2); }
+  .concept.other { background: var(--tag-bg); border: 1px solid var(--line); }
+  .concept-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+  .concept.main .concept-label { color: var(--accent); }
+  .concept.other .concept-label { color: var(--ink3); }
+  .concept-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .concept-desc { font-size: 13px; color: var(--ink2); line-height: 1.65; }
+  .concept-examples { font-size: 12px; color: var(--ink3); margin-top: 8px; line-height: 1.55; }
+
+  /* Three situations */
+  .situations { display: flex; flex-direction: column; gap: 14px; margin: 20px 0; }
+  .sit { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .sit-header { padding: 12px 18px; display: flex; align-items: center; gap: 10px; }
+  .sit.s1 .sit-header { background: var(--accent-light); }
+  .sit.s2 .sit-header { background: var(--accent2-light); }
+  .sit.s3 .sit-header { background: var(--accent3-light); }
+  .sit-num { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+  .sit.s1 .sit-num { color: var(--accent); }
+  .sit.s2 .sit-num { color: var(--accent2); }
+  .sit.s3 .sit-num { color: var(--accent3); }
+  .sit-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .sit-body { padding: 16px 18px; }
+  .sit-body p { font-size: 14px; margin-bottom: 8px; }
+  .sit-verdict { font-size: 13px; font-weight: 600; padding: 8px 12px; border-radius: 6px; margin-top: 8px; }
+  .sit.s1 .sit-verdict { background: var(--accent-light); color: var(--accent); }
+  .sit.s2 .sit-verdict { background: var(--accent2-light); color: var(--accent2); }
+  .sit.s3 .sit-verdict { background: var(--accent3-light); color: var(--accent3); }
+
+  /* In/out */
+  .inout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  @media (max-width: 480px) { .inout-grid { grid-template-columns: 1fr; } }
+  .inout-card { border-radius: 10px; padding: 16px 18px; }
+  .inout-card.yes { background: var(--accent-light); border: 1px solid rgba(45,95,63,0.2); }
+  .inout-card.no  { background: #F5F5F5; border: 1px solid var(--line); }
+  .inout-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
+  .inout-card.yes .inout-label { color: var(--accent); }
+  .inout-card.no  .inout-label { color: var(--ink3); }
+  .inout-list { list-style: none; }
+  .inout-list li { font-size: 13px; color: var(--ink2); padding: 5px 0 5px 16px; position: relative; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.55; }
+  .inout-list li:last-child { border-bottom: none; }
+  .inout-list li::before { content: ''; position: absolute; left: 0; top: 12px; width: 7px; height: 7px; border-radius: 50%; }
+  .inout-card.yes .inout-list li::before { background: var(--accent); }
+  .inout-card.no  .inout-list li::before { background: var(--ink3); }
+
+  /* Posting visual */
+  .posting-block { margin: 16px 0; }
+  .posting-label-text { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); margin-bottom: 6px; }
+  .posting { display: flex; align-items: stretch; gap: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); margin-bottom: 10px; }
+  .posting-dt { flex: 1; background: var(--accent-light); padding: 12px 16px; }
+  .posting-kt { flex: 1; background: var(--accent2-light); padding: 12px 16px; }
+  .posting-arrow { display: flex; align-items: center; justify-content: center; background: var(--tag-bg); padding: 0 12px; font-size: 18px; color: var(--ink3); flex-shrink: 0; }
+  .p-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 3px; }
+  .posting-dt .p-label { color: var(--accent); }
+  .posting-kt .p-label { color: var(--accent2); }
+  .p-account { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .p-comment { font-size: 11px; color: var(--ink3); margin-top: 2px; line-height: 1.4; }
+  .posting-sum { background: var(--ink); padding: 12px 14px; display: flex; align-items: center; justify-content: center; flex-direction: column; min-width: 100px; flex-shrink: 0; }
+  .ps-label { font-size: 9px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: rgba(247,244,238,0.4); margin-bottom: 3px; }
+  .ps-value { font-size: 13px; font-weight: 600; color: #A8C4B0; text-align: center; }
+
+  /* Complex posting */
+  .complex-posting { background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 10px 0; }
+  .cp-header { display: grid; grid-template-columns: 1fr 1fr 110px; background: var(--tag-bg); }
+  .cp-header span { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); padding: 8px 14px; }
+  .cp-row { display: grid; grid-template-columns: 1fr 1fr 110px; border-top: 1px solid var(--line); }
+  .cp-row .dt { padding: 10px 14px; font-size: 13px; color: var(--accent); font-weight: 600; background: rgba(45,95,63,0.04); }
+  .cp-row .kt { padding: 10px 14px; font-size: 13px; color: var(--accent2); font-weight: 600; background: rgba(139,74,28,0.04); }
+  .cp-row .sm { padding: 10px 14px; font-size: 13px; color: var(--ink); font-weight: 500; text-align: right; }
+
+  /* Business types */
+  .biz-types { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+  .biz-type { display: flex; gap: 14px; background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; align-items: flex-start; }
+  .biz-icon { font-size: 22px; flex-shrink: 0; }
+  .biz-body { flex: 1; }
+  .biz-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .biz-desc { font-size: 13px; color: var(--ink2); line-height: 1.65; }
+  .biz-moment { font-size: 12px; color: var(--accent); font-weight: 500; margin-top: 4px; }
+
+  /* VAT example */
+  .vat-box { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 16px 0; }
+  .vat-row { display: flex; justify-content: space-between; padding: 11px 18px; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .vat-row:last-child { border-bottom: none; }
+  .vat-row .vn { color: var(--ink2); }
+  .vat-row .vv { font-weight: 600; color: var(--ink); }
+  .vat-row.highlight-row { background: var(--accent-light); }
+  .vat-row.highlight-row .vn { color: var(--accent); font-weight: 600; }
+  .vat-row.highlight-row .vv { color: var(--accent); }
+
+  /* Example table */
+  .ex-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  .ex-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .ex-table td { padding: 11px 14px; border-bottom: 1px solid var(--line); color: var(--ink2); background: var(--card-bg); line-height: 1.5; vertical-align: top; }
+  .ex-table tr:last-child td { border-bottom: none; }
+  .ex-table .yes { color: var(--accent); font-weight: 600; }
+  .ex-table .no  { color: var(--ink3); }
+  .ex-table .total td { font-weight: 600; color: var(--ink); background: var(--tag-bg); }
+
+  .bigquote { text-align: center; padding: 48px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 48px 0; }
+  .bigquote p { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic; color: var(--ink); line-height: 1.5; max-width: 560px; margin: 0 auto; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_3_day_plan.html">← К плану</a>
+  <span class="topnav-center">День 1 · Блок 3 · Пункт 1</span>
+  <a href="https://logart33-netizen.github.io/Buxuchet/den1_blok3_punkt2.html">Пункт 2 →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 1 · Блок 3 · Пункт 1</div>
+  <h1>Доход (выручка) — компания <em>продала товар</em> или оказала услугу</h1>
+  <p class="hero-sub">Выручка признаётся в момент продажи — не когда получены деньги. Разбираем почему это принципиально важно.</p>
+</div>
+
+<div class="container">
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Что такое доход</div>
+    </div>
+    <p>Доход — это увеличение экономических выгод компании в результате её основной деятельности. Проще говоря: компания что-то сделала для кого-то — продала товар, оказала услугу, выполнила работу. За это она получает право на деньги.</p>
+    <p>Сразу разделим два понятия которые часто путают:</p>
+    <div class="two-concepts">
+      <div class="concept main">
+        <div class="concept-label">Выручка</div>
+        <div class="concept-title">Доход от основной деятельности</div>
+        <div class="concept-desc">То что компания зарабатывает своим основным делом — продажей товаров, оказанием услуг, выполнением работ.</div>
+        <div class="concept-examples">Продал товар · Оказал услугу · Выполнил работу</div>
+      </div>
+      <div class="concept other">
+        <div class="concept-label">Прочие доходы</div>
+        <div class="concept-title">Доход не от основной деятельности</div>
+        <div class="concept-desc">То что пришло как побочный эффект — не от основной работы компании.</div>
+        <div class="concept-examples">Продал старый станок · Проценты по депозиту · Курсовая разница в плюс</div>
+      </div>
+    </div>
+    <div class="highlight">
+      <p>Когда говорят «выручка» — имеют в виду доход именно от основной деятельности. Это главная цифра в отчёте о прибылях.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Когда признаётся доход — принцип начисления в действии</div>
+    </div>
+    <p>Это самый важный момент пункта. <strong>Доход признаётся в момент когда товар отгружен или услуга оказана. Не когда получены деньги.</strong></p>
+    <p>Почему это так принципиально? Иначе компании могли бы манипулировать показателями: хочешь показать хороший месяц — попроси всех клиентов заплатить до конца месяца. Принцип начисления делает это невозможным.</p>
+
+    <div class="situations">
+      <div class="sit s1">
+        <div class="sit-header">
+          <span class="sit-num">Ситуация 1</span>
+          <span class="sit-title">Продажа с отсрочкой платежа</span>
+        </div>
+        <div class="sit-body">
+          <p>Компания 20 марта отгрузила товар клиенту на 10 000 000 сум. Клиент заплатит 20 апреля.</p>
+          <div class="sit-verdict">→ Доход признаётся 20 марта — в момент отгрузки. В апреле деньги просто придут — нового дохода нет.</div>
+        </div>
+      </div>
+      <div class="sit s2">
+        <div class="sit-header">
+          <span class="sit-num">Ситуация 2</span>
+          <span class="sit-title">Получение аванса</span>
+        </div>
+        <div class="sit-body">
+          <p>Клиент 1 февраля заплатил аванс 8 000 000 сум. Товар будет отгружен 1 марта.</p>
+          <div class="sit-verdict">→ 1 февраля — дохода нет. Это пассив (авансы полученные). Доход появится 1 марта при отгрузке.</div>
+        </div>
+      </div>
+      <div class="sit s3">
+        <div class="sit-header">
+          <span class="sit-num">Ситуация 3</span>
+          <span class="sit-title">Услуга оказывается постепенно</span>
+        </div>
+        <div class="sit-body">
+          <p>Дизайнер заключил договор на разработку сайта за 12 000 000 сум. Работа идёт 3 месяца. Клиент заплатил всё вперёд.</p>
+          <div class="sit-verdict">→ Доход признаётся равномерно: по 4 000 000 сум в месяц по мере выполнения работы. Не сразу в момент оплаты.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Что входит в выручку — и что нет</div>
+    </div>
+    <div class="inout-grid">
+      <div class="inout-card yes">
+        <div class="inout-label">✓ Входит в выручку</div>
+        <ul class="inout-list">
+          <li>Стоимость проданных товаров</li>
+          <li>Стоимость оказанных услуг</li>
+          <li>Стоимость выполненных работ</li>
+        </ul>
+      </div>
+      <div class="inout-card no">
+        <div class="inout-label">✗ Не входит в выручку</div>
+        <ul class="inout-list">
+          <li>НДС — это деньги государства, не компании</li>
+          <li>Авансы полученные — товар ещё не отгружен</li>
+          <li>Возвраты от покупателей — уменьшают выручку</li>
+          <li>Прочие доходы — не от основной деятельности</li>
+        </ul>
+      </div>
+    </div>
+    <div class="highlight highlight-warm">
+      <p>В профессиональных отчётах всегда указывается «выручка без НДС» или «чистая выручка». НДС компания только собирает и передаёт государству — её деньгами он не является.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Как выручка записывается в бухгалтерии</div>
+    </div>
+
+    <div class="posting-block">
+      <div class="posting-label-text">При реализации товара в кредит (отгрузка без оплаты)</div>
+      <div class="posting">
+        <div class="posting-dt"><div class="p-label">Дебет</div><div class="p-account">Расчёты с покупателями</div><div class="p-comment">Покупатель должен нам → актив вырос</div></div>
+        <div class="posting-arrow">→</div>
+        <div class="posting-kt"><div class="p-label">Кредит</div><div class="p-account">Выручка</div><div class="p-comment">Доход признан в момент отгрузки</div></div>
+        <div class="posting-sum"><div class="ps-label">Сумма</div><div class="ps-value">10 000 000 сум</div></div>
+      </div>
+    </div>
+
+    <div class="posting-block">
+      <div class="posting-label-text">Когда деньги пришли от покупателя (погашение долга)</div>
+      <div class="posting">
+        <div class="posting-dt"><div class="p-label">Дебет</div><div class="p-account">Расчётный счёт</div><div class="p-comment">Деньги пришли → актив вырос</div></div>
+        <div class="posting-arrow">→</div>
+        <div class="posting-kt"><div class="p-label">Кредит</div><div class="p-account">Расчёты с покупателями</div><div class="p-comment">Долг погашен → актив уменьшился</div></div>
+        <div class="posting-sum"><div class="ps-label">Сумма</div><div class="ps-value">10 000 000 сум</div></div>
+      </div>
+      <div class="callout">
+        <div class="callout-label">Важно</div>
+        <p>В P&L этого месяца — ничего нового. Выручка уже была признана раньше при отгрузке.</p>
+      </div>
+    </div>
+
+    <div class="posting-block">
+      <div class="posting-label-text">При получении аванса от клиента</div>
+      <div class="posting">
+        <div class="posting-dt"><div class="p-label">Дебет</div><div class="p-account">Расчётный счёт</div><div class="p-comment">Деньги пришли</div></div>
+        <div class="posting-arrow">→</div>
+        <div class="posting-kt"><div class="p-label">Кредит</div><div class="p-account">Авансы полученные</div><div class="p-comment">Долг перед клиентом — не доход!</div></div>
+        <div class="posting-sum"><div class="ps-label">Сумма</div><div class="ps-value">8 000 000 сум</div></div>
+      </div>
+    </div>
+
+    <div class="posting-block">
+      <div class="posting-label-text">При отгрузке товара под аванс</div>
+      <div class="posting">
+        <div class="posting-dt"><div class="p-label">Дебет</div><div class="p-account">Авансы полученные</div><div class="p-comment">Долг перед клиентом закрыт</div></div>
+        <div class="posting-arrow">→</div>
+        <div class="posting-kt"><div class="p-label">Кредит</div><div class="p-account">Выручка</div><div class="p-comment">Вот теперь признаётся доход</div></div>
+        <div class="posting-sum"><div class="ps-label">Сумма</div><div class="ps-value">8 000 000 сум</div></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Виды выручки по типу бизнеса</div>
+    </div>
+    <p>Разные компании получают выручку по-разному. Момент признания зависит от типа деятельности:</p>
+    <div class="biz-types">
+      <div class="biz-type">
+        <div class="biz-icon">🏪</div>
+        <div class="biz-body">
+          <div class="biz-title">Торговые компании</div>
+          <div class="biz-desc">Выручка признаётся в момент передачи товара покупателю — физически товар перешёл или отгружен со склада.</div>
+          <div class="biz-moment">Момент: дата накладной</div>
+        </div>
+      </div>
+      <div class="biz-type">
+        <div class="biz-icon">🔧</div>
+        <div class="biz-body">
+          <div class="biz-title">Сервисные компании (услуги)</div>
+          <div class="biz-desc">Выручка признаётся когда услуга оказана и подтверждена актом подписанным обеими сторонами.</div>
+          <div class="biz-moment">Момент: дата акта выполненных работ</div>
+        </div>
+      </div>
+      <div class="biz-type">
+        <div class="biz-icon">🏗️</div>
+        <div class="biz-body">
+          <div class="biz-title">Строительные и проектные компании</div>
+          <div class="biz-desc">Выручка признаётся по мере выполнения работ — пропорционально степени готовности. Сдали 40% объекта → признали 40% от суммы контракта.</div>
+          <div class="biz-moment">Момент: поэтапно по актам или по степени готовности</div>
+        </div>
+      </div>
+      <div class="biz-type">
+        <div class="biz-icon">💻</div>
+        <div class="biz-body">
+          <div class="biz-title">Подписочный бизнес (SaaS, абонементы)</div>
+          <div class="biz-desc">Выручка признаётся равномерно в течение срока подписки — независимо от того когда получена оплата. Оплата за год → 1/12 в месяц.</div>
+          <div class="biz-moment">Момент: равномерно в течение периода подписки</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Выручка и НДС — как это работает</div>
+    </div>
+    <p>Этот момент часто вызывает путаницу. Разберём на примере.</p>
+    <p>Компания продала товар за <strong>12 000 000 сум включая НДС</strong> (ставка 12%).</p>
+
+    <div class="vat-box">
+      <div class="vat-row"><span class="vn">Сумма с НДС (заплатил покупатель)</span><span class="vv">12 000 000 сум</span></div>
+      <div class="vat-row"><span class="vn">НДС к передаче государству</span><span class="vv">1 285 714 сум</span></div>
+      <div class="vat-row highlight-row"><span class="vn">Выручка компании (без НДС)</span><span class="vv">10 714 286 сум</span></div>
+    </div>
+
+    <p>В отчёте о прибылях показывается выручка <strong>без НДС</strong> — 10 714 286 сум. НДС компании не принадлежит — она просто агент государства по его сбору.</p>
+
+    <div class="callout">
+      <div class="callout-label">Проводка при реализации с НДС</div>
+    </div>
+    <div class="complex-posting">
+      <div class="cp-header"><span>Дебет</span><span>Кредит</span><span style="text-align:right;">Сумма</span></div>
+      <div class="cp-row"><div class="dt">Расчёты с покупателями</div><div class="kt">—</div><div class="sm">12 000 000</div></div>
+      <div class="cp-row"><div class="dt">—</div><div class="kt">Выручка (без НДС)</div><div class="sm">10 714 286</div></div>
+      <div class="cp-row"><div class="dt">—</div><div class="kt">НДС к уплате</div><div class="sm">1 285 714</div></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 7 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-title">Практический пример — выручка за месяц</div>
+    </div>
+    <p>ООО «Торговля» за март. Определи что является выручкой марта:</p>
+
+    <table class="ex-table">
+      <thead>
+        <tr><th>Операция</th><th>Дата</th><th>Сумма</th><th>Выручка марта?</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Отгрузили товар клиенту А (оплата в апреле)</td>
+          <td>15 марта</td>
+          <td>5 000 000</td>
+          <td class="yes">Да — отгрузка в марте</td>
+        </tr>
+        <tr>
+          <td>Получили аванс от клиента Б (отгрузка в апреле)</td>
+          <td>20 марта</td>
+          <td>3 000 000</td>
+          <td class="no">Нет — товар ещё не отгружен</td>
+        </tr>
+        <tr>
+          <td>Отгрузили товар клиенту В под февральский аванс</td>
+          <td>25 марта</td>
+          <td>7 000 000</td>
+          <td class="yes">Да — отгрузка в марте</td>
+        </tr>
+        <tr>
+          <td>Клиент А заплатил долг за февральскую отгрузку</td>
+          <td>28 марта</td>
+          <td>4 000 000</td>
+          <td class="no">Нет — выручка была в феврале</td>
+        </tr>
+        <tr class="total">
+          <td colspan="2"><strong>Выручка марта</strong></td>
+          <td colspan="2"><strong>5 000 000 + 7 000 000 = 12 000 000 сум</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight highlight-blue">
+      <p>Не 15 000 000 (всё что отгружено и оплачено), не 8 000 000 (только деньги пришедшие в марте). Именно 12 000 000 — только то что было отгружено в марте.</p>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Выручка — это не деньги которые пришли. Выручка — это то что заработано. Заработано в момент когда выполнено обязательство перед покупателем.»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>День 1 · Блок 3 · Пункт 1</span>
+    <strong>Следующий: Расход — затраты для получения дохода</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_3_day_plan.html">← К плану</a>
+    <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/den1_blok3_punkt2.html">Пункт 2 →</a>
+  </div>
+</div>
+
+</body>
+</html>
