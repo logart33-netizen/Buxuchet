@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>День 1 · Блок 3 · Пункт 5 — Операционные расходы</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: 'О'; position: absolute; right: -10px; top: -20px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 24px 28px; margin: 20px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { color: var(--ink2); margin: 0 0 12px; font-size: 15px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* COGS vs OPEX comparison */
+  .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  @media (max-width: 560px) { .comp-grid { grid-template-columns: 1fr; } }
+  .comp-card { border-radius: 12px; padding: 18px 20px; }
+  .comp-card.cogs { background: var(--accent2-light); border: 1px solid rgba(139,74,28,0.2); }
+  .comp-card.opex { background: var(--accent3-light); border: 1px solid rgba(28,63,110,0.2); }
+  .comp-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+  .comp-card.cogs .comp-label { color: var(--accent2); }
+  .comp-card.opex .comp-label { color: var(--accent3); }
+  .comp-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .comp-desc { font-size: 13px; color: var(--ink2); line-height: 1.65; }
+
+  /* OPEX items grid */
+  .opex-items { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+  @media (max-width: 560px) { .opex-items { grid-template-columns: 1fr; } }
+  .opex-item { background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; }
+  .opex-icon { font-size: 20px; flex-shrink: 0; }
+  .opex-body { flex: 1; }
+  .opex-name { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .opex-desc { font-size: 12px; color: var(--ink3); line-height: 1.5; }
+
+  /* P&L structure */
+  .pl-structure { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 16px 0; }
+  .pl-row { display: flex; justify-content: space-between; padding: 11px 20px; border-bottom: 1px solid var(--line); }
+  .pl-row:last-child { border-bottom: none; }
+  .pl-row .pl-n { font-size: 14px; color: var(--ink2); }
+  .pl-row .pl-v { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .pl-row.rev .pl-n { font-weight: 600; color: var(--ink); }
+  .pl-row.cogs-row .pl-v { color: var(--accent2); }
+  .pl-row.gross { background: var(--accent-light); }
+  .pl-row.gross .pl-n { font-weight: 600; color: var(--accent); }
+  .pl-row.gross .pl-v { font-weight: 700; color: var(--accent); }
+  .pl-row.opex-header { background: var(--tag-bg); }
+  .pl-row.opex-header .pl-n { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); }
+  .pl-row.opex-item-row .pl-n { padding-left: 12px; color: var(--ink3); font-size: 14px; }
+  .pl-row.opex-item-row .pl-v { color: var(--accent3); }
+  .pl-row.opex-total { background: var(--accent3-light); }
+  .pl-row.opex-total .pl-n { font-weight: 600; color: var(--accent3); }
+  .pl-row.opex-total .pl-v { font-weight: 700; color: var(--accent3); }
+  .pl-row.ebit { background: var(--ink); }
+  .pl-row.ebit .pl-n { font-weight: 600; color: rgba(247,244,238,0.8); font-size: 15px; }
+  .pl-row.ebit .pl-v { font-weight: 700; color: #A8C4B0; font-size: 16px; }
+
+  /* Management principles */
+  .principles { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+  .principle { display: flex; gap: 14px; background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; align-items: flex-start; }
+  .pr-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .pr-body { flex: 1; }
+  .pr-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .pr-desc { font-size: 13px; color: var(--ink2); line-height: 1.65; }
+
+  /* Breakeven formula */
+  .be-box { background: var(--ink); border-radius: 12px; padding: 24px 28px; margin: 16px 0; }
+  .be-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: rgba(247,244,238,0.4); margin-bottom: 10px; }
+  .be-formula { font-family: 'Playfair Display', serif; font-size: clamp(15px, 2.5vw, 20px); font-weight: 700; color: #A8C4B0; margin-bottom: 14px; }
+  .be-calc { font-size: 14px; color: rgba(247,244,238,0.65); line-height: 1.7; }
+  .be-result { font-size: 16px; font-weight: 600; color: #FAC775; margin-top: 8px; }
+
+  /* Scale table */
+  .scale-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  .scale-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .scale-table td { padding: 11px 14px; border-bottom: 1px solid var(--line); color: var(--ink2); background: var(--card-bg); }
+  .scale-table tr:last-child td { border-bottom: none; }
+  .scale-table .loss td { background: var(--accent2-light); }
+  .scale-table .be td { background: var(--tag-bg); font-weight: 500; color: var(--ink); }
+  .scale-table .profit td { background: var(--accent-light); }
+  .scale-table .best td { background: var(--accent-light); }
+  .profit-val { color: var(--accent); font-weight: 600; }
+  .loss-val { color: var(--accent2); font-weight: 600; }
+  .zero-val { color: var(--ink3); font-weight: 500; }
+
+  /* Postings */
+  .posting-step { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); margin: 12px 0 5px; }
+  .posting { display: flex; align-items: stretch; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); margin-bottom: 8px; }
+  .p-dt { flex: 1; background: var(--accent-light); padding: 11px 14px; }
+  .p-kt { flex: 1; background: var(--accent2-light); padding: 11px 14px; }
+  .p-arrow { display: flex; align-items: center; justify-content: center; background: var(--tag-bg); padding: 0 10px; font-size: 16px; color: var(--ink3); flex-shrink: 0; }
+  .p-lbl { font-size: 9px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 2px; }
+  .p-dt .p-lbl { color: var(--accent); }
+  .p-kt .p-lbl { color: var(--accent2); }
+  .p-acc { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .p-cmt { font-size: 11px; color: var(--ink3); margin-top: 1px; }
+  .p-sum { background: var(--ink); padding: 11px 12px; display: flex; align-items: center; justify-content: center; flex-direction: column; min-width: 90px; flex-shrink: 0; }
+  .p-sum-lbl { font-size: 9px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(247,244,238,0.4); margin-bottom: 2px; }
+  .p-sum-val { font-size: 12px; font-weight: 600; color: #A8C4B0; text-align: center; }
+
+  /* Example table */
+  .ex-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  .ex-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .ex-table td { padding: 11px 14px; border-bottom: 1px solid var(--line); color: var(--ink2); background: var(--card-bg); }
+  .ex-table tr:last-child td { border-bottom: none; }
+  .ex-table .total td { font-weight: 600; color: var(--ink); background: var(--tag-bg); }
+
+  /* Result summary */
+  .result-summary { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 16px 0; }
+  .rs-row { display: flex; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid var(--line); }
+  .rs-row:last-child { border-bottom: none; }
+  .rs-row .rn { font-size: 14px; color: var(--ink2); }
+  .rs-row .rv { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .rs-row.result-row { background: var(--ink); }
+  .rs-row.result-row .rn { font-weight: 600; color: rgba(247,244,238,0.7); font-size: 15px; }
+  .rs-row.result-row .rv { font-weight: 700; color: #A8C4B0; font-size: 16px; }
+
+  .bigquote { text-align: center; padding: 48px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 48px 0; }
+  .bigquote p { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic; color: var(--ink); line-height: 1.5; max-width: 560px; margin: 0 auto; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+
+  @media (max-width: 560px) {
+    .topnav, .foot-nav { padding: 12px 20px; }
+    .hero { padding: 48px 20px 36px; }
+    .container { padding: 36px 20px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/den1_blok3_punkt4.html">← Пункт 4</a>
+  <span class="topnav-center">День 1 · Блок 3 · Пункт 5</span>
+  <a href="https://logart33-netizen.github.io/Buxuchet/den1_blok3_punkt6.html">Пункт 6 →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 1 · Блок 3 · Пункт 5</div>
+  <h1>Операционные расходы — <em>аренда, зарплата, реклама</em></h1>
+  <p class="hero-sub">Затраты на существование бизнеса — не привязанные к конкретному товару. Разбираем структуру, управление и точку безубыточности.</p>
+</div>
+
+<div class="container">
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Что такое операционные расходы</div>
+    </div>
+    <p>Операционные расходы (OPEX — Operating Expenses) — это затраты на ведение бизнеса которые <strong>не входят в себестоимость</strong> конкретного товара.</p>
+    <p>Разница с себестоимостью принципиальная:</p>
+    <div class="comp-grid">
+      <div class="comp-card cogs">
+        <div class="comp-label">Себестоимость (COGS)</div>
+        <div class="comp-title">Привязана к товару</div>
+        <div class="comp-desc">Продал больше → себестоимость выросла. Продал меньше → себестоимость упала. Переменный расход.</div>
+      </div>
+      <div class="comp-card opex">
+        <div class="comp-label">Операционные расходы (OPEX)</div>
+        <div class="comp-title">Не зависят от объёма продаж</div>
+        <div class="comp-desc">Аренда офиса одинакова в любой месяц — хоть продали на 10 млн, хоть на 65 млн. В основном постоянные расходы.</div>
+      </div>
+    </div>
+    <div class="highlight">
+      <p>Именно поэтому операционные расходы вычитаются из валовой прибыли отдельно — после себестоимости. Это два разных уровня P&L.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Что входит в операционные расходы</div>
+    </div>
+    <div class="opex-items">
+      <div class="opex-item">
+        <div class="opex-icon">🏢</div>
+        <div class="opex-body">
+          <div class="opex-name">Аренда</div>
+          <div class="opex-desc">Офис, склад, торговая точка. Платится ежемесячно независимо от выручки.</div>
+        </div>
+      </div>
+      <div class="opex-item">
+        <div class="opex-icon">👥</div>
+        <div class="opex-body">
+          <div class="opex-name">Зарплата административного персонала</div>
+          <div class="opex-desc">Директор, бухгалтер, менеджеры, маркетологи. Не производственные рабочие — их зарплата в себестоимости.</div>
+        </div>
+      </div>
+      <div class="opex-item">
+        <div class="opex-icon">📢</div>
+        <div class="opex-body">
+          <div class="opex-name">Реклама и маркетинг</div>
+          <div class="opex-desc">Контекст, SMM, наружка, PR, выставки. Всё на привлечение клиентов.</div>
+        </div>
+      </div>
+      <div class="opex-item">
+        <div class="opex-icon">💻</div>
+        <div class="opex-body">
+          <div class="opex-name">Амортизация офисного оборудования</div>
+          <div class="opex-desc">Компьютеры, мебель, оргтехника офиса. Не производственное оборудование.</div>
+        </div>
+      </div>
+      <div class="opex-item">
+        <div class="opex-icon">⚡</div>
+        <div class="opex-body">
+          <div class="opex-name">Коммунальные услуги</div>
+          <div class="opex-desc">Электричество, вода, интернет, телефония офиса.</div>
+        </div>
+      </div>
+      <div class="opex-item">
+        <div class="opex-icon">⚖️</div>
+        <div class="opex-body">
+          <div class="opex-name">Профессиональные услуги</div>
+          <div class="opex-desc">Бухгалтерское и юридическое сопровождение, аудит, консультации.</div>
+        </div>
+      </div>
+      <div class="opex-item">
+        <div class="opex-icon">✈️</div>
+        <div class="opex-body">
+          <div class="opex-name">Командировки</div>
+          <div class="opex-desc">Транспорт, проживание, суточные сотрудников в поездках.</div>
+        </div>
+      </div>
+      <div class="opex-item">
+        <div class="opex-icon">📋</div>
+        <div class="opex-body">
+          <div class="opex-name">Прочие налоги</div>
+          <div class="opex-desc">Налог на имущество, земельный налог, транспортный налог. Кроме налога на прибыль.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Структура P&L с операционными расходами</div>
+    </div>
+    <p>Вот как выглядит отчёт о прибылях от выручки до операционной прибыли:</p>
+    <div class="pl-structure">
+      <div class="pl-row rev"><span class="pl-n">Выручка</span><span class="pl-v">100 000 000</span></div>
+      <div class="pl-row cogs-row"><span class="pl-n">Себестоимость продаж</span><span class="pl-v">(65 000 000)</span></div>
+      <div class="pl-row gross"><span class="pl-n">Валовая прибыль (35%)</span><span class="pl-v">35 000 000</span></div>
+      <div class="pl-row opex-header"><span class="pl-n">Операционные расходы</span><span class="pl-v"></span></div>
+      <div class="pl-row opex-item-row"><span class="pl-n">Зарплата и социальные взносы</span><span class="pl-v">(10 000 000)</span></div>
+      <div class="pl-row opex-item-row"><span class="pl-n">Аренда</span><span class="pl-v">(3 000 000)</span></div>
+      <div class="pl-row opex-item-row"><span class="pl-n">Реклама и маркетинг</span><span class="pl-v">(2 500 000)</span></div>
+      <div class="pl-row opex-item-row"><span class="pl-n">Амортизация</span><span class="pl-v">(1 000 000)</span></div>
+      <div class="pl-row opex-item-row"><span class="pl-n">Прочие операционные расходы</span><span class="pl-v">(1 500 000)</span></div>
+      <div class="pl-row opex-total"><span class="pl-n">Итого операционных расходов</span><span class="pl-v">(18 000 000)</span></div>
+      <div class="pl-row ebit"><span class="pl-n">Операционная прибыль (EBIT) — 17%</span><span class="pl-v">17 000 000</span></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Как управлять операционными расходами</div>
+    </div>
+    <div class="principles">
+      <div class="principle">
+        <div class="pr-num">1</div>
+        <div class="pr-body">
+          <div class="pr-title">Знать структуру расходов</div>
+          <div class="pr-desc">Каждая статья должна быть под контролем. Бюджет составляется в начале года — и каждый месяц сравнивается факт с планом. Превышение по любой статье — сигнал для разбора.</div>
+        </div>
+      </div>
+      <div class="principle">
+        <div class="pr-num">2</div>
+        <div class="pr-body">
+          <div class="pr-title">Разделять постоянные и переменные</div>
+          <div class="pr-desc">Постоянные операционные расходы создают «точку безубыточности» — минимальный объём продаж при котором компания не уходит в убыток. Чем меньше постоянных расходов — тем ниже порог.</div>
+        </div>
+      </div>
+      <div class="principle">
+        <div class="pr-num">3</div>
+        <div class="pr-body">
+          <div class="pr-title">Использовать эффект масштаба</div>
+          <div class="pr-desc">При росте выручки операционные расходы растут медленнее — аренда та же, а продали больше. Именно поэтому при росте бизнеса операционная маржа обычно растёт.</div>
+        </div>
+      </div>
+      <div class="principle">
+        <div class="pr-num">4</div>
+        <div class="pr-body">
+          <div class="pr-title">Оценивать отдачу от каждого расхода</div>
+          <div class="pr-desc">Реклама которая не приносит клиентов — потеря. Зарплата которая не создаёт ценность — тоже. Операционные расходы нужно регулярно пересматривать с точки зрения их отдачи.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Точка безубыточности</div>
+    </div>
+    <p>Точка безубыточности — это объём выручки при котором валовая прибыль равна операционным расходам. Операционная прибыль = 0. Компания не зарабатывает, но и не теряет.</p>
+
+    <div class="be-box">
+      <div class="be-label">Формула точки безубыточности</div>
+      <div class="be-formula">Точка безубыточности = Операционные расходы ÷ Валовая маржа</div>
+      <div class="be-calc">Операционные расходы = 18 000 000 сум · Валовая маржа = 35%</div>
+      <div class="be-result">18 000 000 ÷ 0.35 = 51 428 571 сум</div>
+    </div>
+
+    <p>Это значит: компания должна продать как минимум на <strong>51 428 571 сум</strong> чтобы покрыть все операционные расходы. Выше этой точки — каждые 100 сум выручки приносят 35 сум операционной прибыли.</p>
+
+    <table class="scale-table">
+      <thead><tr><th>Выручка</th><th>Вал. прибыль (35%)</th><th>Операц. расходы</th><th>EBIT</th></tr></thead>
+      <tbody>
+        <tr class="loss"><td>40 000 000</td><td>14 000 000</td><td>18 000 000</td><td class="loss-val">−4 000 000</td></tr>
+        <tr class="be"><td>51 400 000</td><td>18 000 000</td><td>18 000 000</td><td class="zero-val">0 (точка)</td></tr>
+        <tr class="profit"><td>60 000 000</td><td>21 000 000</td><td>18 000 000</td><td class="profit-val">+3 000 000</td></tr>
+        <tr class="profit best"><td>80 000 000</td><td>28 000 000</td><td>18 000 000</td><td class="profit-val">+10 000 000</td></tr>
+        <tr class="profit best"><td>100 000 000</td><td>35 000 000</td><td>18 000 000</td><td class="profit-val">+17 000 000</td></tr>
+      </tbody>
+    </table>
+
+    <div class="highlight highlight-blue">
+      <p>Выручка удвоилась с 40 до 80 млн — операционная прибыль выросла с −4 до +10 млн. Операционные расходы остались теми же. Вот что такое эффект масштаба в действии.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Как операционные расходы отражаются в бухгалтерии</div>
+    </div>
+
+    <div class="posting-step">Начисление аренды</div>
+    <div class="posting">
+      <div class="p-dt"><div class="p-lbl">Дебет</div><div class="p-acc">Расходы на аренду</div><div class="p-cmt">Расход признан</div></div>
+      <div class="p-arrow">→</div>
+      <div class="p-kt"><div class="p-lbl">Кредит</div><div class="p-acc">Расчёты с арендодателем</div><div class="p-cmt">Долг перед арендодателем</div></div>
+      <div class="p-sum"><div class="p-sum-lbl">Сумма</div><div class="p-sum-val">3 000 000 сум</div></div>
+    </div>
+
+    <div class="posting-step">Начисление зарплаты</div>
+    <div class="posting">
+      <div class="p-dt"><div class="p-lbl">Дебет</div><div class="p-acc">Расходы на зарплату</div><div class="p-cmt">Расход признан</div></div>
+      <div class="p-arrow">→</div>
+      <div class="p-kt"><div class="p-lbl">Кредит</div><div class="p-acc">Расчёты по зарплате</div><div class="p-cmt">Долг перед сотрудниками</div></div>
+      <div class="p-sum"><div class="p-sum-lbl">Сумма</div><div class="p-sum-val">10 000 000 сум</div></div>
+    </div>
+
+    <div class="posting-step">Оплата рекламы</div>
+    <div class="posting">
+      <div class="p-dt"><div class="p-lbl">Дебет</div><div class="p-acc">Расходы на рекламу</div><div class="p-cmt">Расход признан</div></div>
+      <div class="p-arrow">→</div>
+      <div class="p-kt"><div class="p-lbl">Кредит</div><div class="p-acc">Расчётный счёт</div><div class="p-cmt">Деньги ушли</div></div>
+      <div class="p-sum"><div class="p-sum-lbl">Сумма</div><div class="p-sum-val">2 500 000 сум</div></div>
+    </div>
+
+    <div class="posting-step">Начисление амортизации</div>
+    <div class="posting">
+      <div class="p-dt"><div class="p-lbl">Дебет</div><div class="p-acc">Амортизация</div><div class="p-cmt">Расход — стоимость актива снижается</div></div>
+      <div class="p-arrow">→</div>
+      <div class="p-kt"><div class="p-lbl">Кредит</div><div class="p-acc">Накопленная амортизация</div><div class="p-cmt">Актив уменьшается постепенно</div></div>
+      <div class="p-sum"><div class="p-sum-lbl">Сумма</div><div class="p-sum-val">1 000 000 сум</div></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 7 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-title">Практический пример — операционные расходы за март</div>
+    </div>
+    <p>ООО «Торговля» за март. Валовая прибыль = 23 700 000 сум:</p>
+
+    <table class="ex-table">
+      <thead><tr><th>Статья расходов</th><th>Сумма</th><th>% от выручки</th></tr></thead>
+      <tbody>
+        <tr><td>Зарплата и социальные взносы</td><td>8 000 000</td><td>12.3%</td></tr>
+        <tr><td>Аренда офиса и склада</td><td>2 500 000</td><td>3.8%</td></tr>
+        <tr><td>Реклама и маркетинг</td><td>1 800 000</td><td>2.8%</td></tr>
+        <tr><td>Амортизация офисного оборудования</td><td>600 000</td><td>0.9%</td></tr>
+        <tr><td>Коммунальные услуги</td><td>400 000</td><td>0.6%</td></tr>
+        <tr><td>Прочие операционные расходы</td><td>700 000</td><td>1.1%</td></tr>
+        <tr class="total"><td><strong>Итого операционных расходов</strong></td><td><strong>14 000 000</strong></td><td><strong>21.5%</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="result-summary">
+      <div class="rs-row"><span class="rn">Валовая прибыль</span><span class="rv">23 700 000 сум</span></div>
+      <div class="rs-row"><span class="rn">Операционные расходы</span><span class="rv">(14 000 000) сум</span></div>
+      <div class="rs-row result-row"><span class="rn">Операционная прибыль (EBIT)</span><span class="rv">9 700 000 сум · 14.9%</span></div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">Читаем результат</div>
+      <p>Из 65 000 000 сум выручки до операционной прибыли дошло 9 700 000 — около 15 копеек с каждого рубля. Это нормальный показатель для торговли. Следующий шаг — вычесть финансовые расходы (проценты по кредиту) и налог на прибыль. Это разберём в следующем пункте.</p>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Операционные расходы — это цена за то что бизнес существует. Компания с низкими операционными расходами более гибкая — ей нужно меньше продавать чтобы оставаться прибыльной.»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>День 1 · Блок 3 · Пункт 5</span>
+    <strong>Следующий: Операционная прибыль (EBIT)</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/den1_blok3_punkt4.html">← Пункт 4</a>
+    <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/den1_blok3_punkt6.html">Пункт 6 →</a>
+  </div>
+</div>
+
+</body>
+</html>
