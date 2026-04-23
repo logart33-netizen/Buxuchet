@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Практическая задача — ЗАО «Пончик»</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: '🍩'; position: absolute; right: 40px; top: 40px; font-size: 180px; opacity: 0.06; line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  .container { max-width: 780px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); padding-top: 6px; }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 14px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 20px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 22px 26px; margin: 16px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { font-size: 15px; color: var(--ink2); margin: 0 0 10px; }
+  .callout p:last-child { margin: 0; }
+
+  /* Task box */
+  .task-box { background: var(--card-bg); border: 2px solid var(--ink); border-radius: 16px; overflow: hidden; margin: 24px 0; }
+  .task-header { background: var(--ink); padding: 16px 24px; }
+  .task-header-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.5); margin-bottom: 6px; }
+  .task-header-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--bg); }
+  .task-body { padding: 22px 24px; }
+  .task-body p { font-size: 15px; color: var(--ink2); margin-bottom: 12px; }
+  .task-body p:last-child { margin-bottom: 0; }
+
+  /* Answer toggle */
+  .answer-block { margin-top: 16px; }
+  .answer-toggle { width: 100%; padding: 13px 20px; background: var(--tag-bg); border: none; border-radius: 10px; font-size: 14px; font-weight: 600; color: var(--ink2); cursor: pointer; font-family: 'Golos Text', sans-serif; display: flex; align-items: center; gap: 10px; transition: background .15s; text-align: left; }
+  .answer-toggle:hover { background: #E0DCD4; }
+  .answer-toggle .arrow { font-size: 11px; transition: transform .2s; flex-shrink: 0; }
+  .answer-toggle.open .arrow { transform: rotate(90deg); }
+  .answer-content { display: none; margin-top: 14px; }
+  .answer-content.visible { display: block; }
+
+  /* Balance table */
+  .balance { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 14px 0; }
+  .balance-side-header { padding: 11px 16px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+  .balance-side-header.asset { background: var(--accent-light); color: var(--accent); }
+  .balance-side-header.pasv  { background: var(--accent2-light); color: var(--accent2); }
+  .balance-section { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); padding: 8px 16px 4px; background: var(--bg); border-top: 1px solid var(--line); }
+  .bal-row { display: flex; justify-content: space-between; padding: 9px 16px; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .bal-row:last-child { border-bottom: none; }
+  .bal-row .bn { color: var(--ink2); }
+  .bal-row .bv { font-weight: 600; color: var(--ink); }
+  .bal-total { display: flex; justify-content: space-between; padding: 12px 16px; background: var(--ink); }
+  .bal-total .bn { font-size: 14px; font-weight: 600; color: rgba(247,244,238,0.7); }
+  .bal-total .bv { font-size: 15px; font-weight: 700; color: #A8C4B0; }
+
+  /* Calculation box */
+  .calc-box { background: var(--tag-bg); border-radius: 10px; padding: 18px 20px; margin: 12px 0; }
+  .calc-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .calc-rows { display: flex; flex-direction: column; gap: 5px; }
+  .calc-row { display: flex; justify-content: space-between; font-size: 14px; padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .calc-row:last-child { border-bottom: none; }
+  .calc-row .cn { color: var(--ink2); }
+  .calc-row .cv { font-weight: 500; color: var(--ink); }
+  .calc-row.result .cn { font-weight: 600; color: var(--accent); }
+  .calc-row.result .cv { font-weight: 700; color: var(--accent); font-size: 15px; }
+
+  /* Variable vs fixed */
+  .var-fix { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  @media (max-width: 560px) { .var-fix { grid-template-columns: 1fr; } }
+  .vf-card { border-radius: 10px; padding: 16px 18px; }
+  .vf-card.var { background: var(--accent2-light); border: 1px solid rgba(139,74,28,0.2); }
+  .vf-card.fix { background: var(--accent3-light); border: 1px solid rgba(28,63,110,0.2); }
+  .vf-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
+  .vf-card.var .vf-label { color: var(--accent2); }
+  .vf-card.fix .vf-label { color: var(--accent3); }
+  .vf-list { list-style: none; }
+  .vf-list li { font-size: 13px; color: var(--ink2); padding: 5px 0 5px 14px; position: relative; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.5; }
+  .vf-list li:last-child { border-bottom: none; }
+  .vf-list li::before { content: '→'; position: absolute; left: 0; color: var(--ink3); font-size: 11px; }
+  .vf-total { font-size: 14px; font-weight: 600; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); }
+  .vf-card.var .vf-total { color: var(--accent2); }
+  .vf-card.fix .vf-total { color: var(--accent3); }
+
+  /* BEP formula */
+  .bep-box { background: var(--ink); border-radius: 12px; padding: 22px 26px; margin: 14px 0; }
+  .bep-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: rgba(247,244,238,0.4); margin-bottom: 10px; }
+  .bep-formula { font-family: 'Playfair Display', serif; font-size: clamp(15px, 2.5vw, 20px); font-weight: 700; color: #A8C4B0; margin-bottom: 12px; }
+  .bep-steps { font-size: 14px; color: rgba(247,244,238,0.65); line-height: 1.8; }
+  .bep-result { font-size: 16px; font-weight: 600; color: #FAC775; margin-top: 10px; }
+
+  /* Cash flow table */
+  .cf-table { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 14px 0; }
+  .cf-row { display: flex; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .cf-row:last-child { border-bottom: none; }
+  .cf-row .fn { color: var(--ink2); flex: 1; }
+  .cf-row .fv { font-weight: 500; min-width: 120px; text-align: right; }
+  .cf-row.income .fv { color: var(--accent); font-weight: 600; }
+  .cf-row.expense .fv { color: var(--accent2); }
+  .cf-row.section-row { background: var(--tag-bg); }
+  .cf-row.section-row .fn { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); }
+  .cf-row.result-row { background: var(--ink); }
+  .cf-row.result-row .fn { font-weight: 600; color: rgba(247,244,238,0.7); }
+  .cf-row.result-row .fv { font-weight: 700; color: #A8C4B0; font-size: 15px; }
+
+  /* Answer summary */
+  .answers-summary { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 24px 0; }
+  .as-row { display: flex; gap: 0; border-bottom: 1px solid var(--line); }
+  .as-row:last-child { border-bottom: none; }
+  .as-q { flex: 1; padding: 13px 16px; font-size: 14px; color: var(--ink2); background: var(--bg); border-right: 1px solid var(--line); }
+  .as-a { flex: 1; padding: 13px 16px; font-size: 14px; font-weight: 600; color: var(--accent); background: var(--card-bg); }
+
+  /* Key insight */
+  .key-insight { background: var(--accent-light); border: 1px solid rgba(45,95,63,0.2); border-radius: 12px; padding: 20px 24px; margin: 20px 0; display: flex; gap: 14px; align-items: flex-start; }
+  .ki-icon { font-size: 22px; flex-shrink: 0; }
+  .ki-body { flex: 1; }
+  .ki-title { font-size: 15px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+  .ki-desc { font-size: 14px; color: var(--ink2); line-height: 1.65; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  @media (max-width: 560px) {
+    .topnav, .foot-nav { padding: 12px 20px; }
+    .hero { padding: 48px 20px 36px; }
+    .container { padding: 36px 20px 60px; }
+    .as-row { flex-direction: column; }
+    .as-q { border-right: none; border-bottom: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_3_day_plan.html">← К плану обучения</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">Практическая задача · Блок 3</div>
+  <h1>ЗАО <em>«Пончик»</em></h1>
+  <p class="hero-sub">Комплексная задача на составление баланса, расчёт амортизации, точки безубыточности и анализ денежных потоков.</p>
+</div>
+
+<div class="container">
+
+  <!-- Условие задачи -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">📋</div>
+      <div class="section-title">Условие задачи</div>
+    </div>
+
+    <div class="task-box">
+      <div class="task-header">
+        <div class="task-header-label">Вводные данные</div>
+        <div class="task-header-title">История ЗАО «Пончик»</div>
+      </div>
+      <div class="task-body">
+        <p>1 декабря прошлого года Вова Пончиков выиграл <strong>1 000 000 руб.</strong> в игре «Как стать миллионером». На полученные деньги он решил открыть ЗАО «Пончик» — производство и продажа пончиков. Уставный капитал 1 000 000 руб. был внесён наличными.</p>
+        <p>В декабре прошлого года произошло следующее:</p>
+        <p>— Приобретён <strong>пончиковый агрегат</strong> за 250 000 руб. Срок эксплуатации — 5 лет, ликвидационная стоимость — 10 000 руб.</p>
+        <p>— Оборудование <strong>застраховано</strong> на весь следующий год. Годовая страховая премия — 24 000 руб., оплачена в декабре.</p>
+        <p>— Куплено <strong>10 000 пластиковых упаковок</strong> по цене 1 руб./шт. = 10 000 руб.</p>
+        <p>— Арендован павильон у метро «Менделеевская». <strong>Годовая аренда 120 000 руб.</strong> оплачена в декабре за весь следующий год.</p>
+        <p>ЗАО «Пончик» <strong>открылось 1 января</strong> текущего года. После открытия ежемесячные расходы:</p>
+        <p>— Зарплата персонала: 50 000 руб. · Электроэнергия: 10 000 руб. · Коммунальные услуги: 5 000 руб. · Техобслуживание агрегата: 5 000 руб. Оплачиваются в конце каждого месяца.</p>
+        <p>Ежемесячно продаётся <strong>50 000 пончиков</strong> в упаковках по 5 штук. На одну упаковку расходуется сырья на <strong>6 руб.</strong> (плюс упаковка 1 руб. = итого 7 руб./упаковку).</p>
+      </div>
+    </div>
+
+    <p style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:12px;">Вопросы задачи:</p>
+    <div class="callout">
+      <div class="callout-label">Что требуется рассчитать</div>
+      <p><strong>1.</strong> Составить баланс на 1 января с указанием: основное средство, текущие активы, сумма инвестированная собственником.</p>
+      <p><strong>2.</strong> Рассчитать годовую амортизацию агрегата.</p>
+      <p><strong>3.</strong> Определить какие расходы переменные, а какие постоянные.</p>
+      <p><strong>4.</strong> Рассчитать минимальную цену за упаковку при которой компания выходит на точку нулевой прибыли.</p>
+      <p><strong>5.</strong> Рассчитать остаток денег на 31 декабря если цена упаковки = 15 руб. (в конце года снова оплачивается страховка 24 000 руб. и аренда 120 000 руб.).</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Задание 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Баланс на 1 января</div>
+    </div>
+    <p>Сначала разберём все операции декабря — до открытия:</p>
+    <div class="calc-box">
+      <div class="calc-label">Движение денег в декабре</div>
+      <div class="calc-rows">
+        <div class="calc-row"><span class="cn">Уставный капитал внесён наличными</span><span class="cv">+1 000 000</span></div>
+        <div class="calc-row"><span class="cn">Куплен пончиковый агрегат</span><span class="cv">−250 000</span></div>
+        <div class="calc-row"><span class="cn">Оплачена страховка на год</span><span class="cv">−24 000</span></div>
+        <div class="calc-row"><span class="cn">Куплены упаковки (10 000 × 1 руб.)</span><span class="cv">−10 000</span></div>
+        <div class="calc-row"><span class="cn">Оплачена аренда на год</span><span class="cv">−120 000</span></div>
+        <div class="calc-row result"><span class="cn">Остаток денег на 1 января</span><span class="cv">596 000 руб.</span></div>
+      </div>
+    </div>
+
+    <div class="balance">
+      <div class="balance-side-header asset">Актив — что есть у компании</div>
+      <div class="balance-section">Внеоборотные активы</div>
+      <div class="bal-row"><span class="bn">Пончиковый агрегат (основное средство)</span><span class="bv">250 000 руб.</span></div>
+      <div class="balance-section">Оборотные активы (текущие)</div>
+      <div class="bal-row"><span class="bn">Расходы будущих периодов — аренда</span><span class="bv">120 000 руб.</span></div>
+      <div class="bal-row"><span class="bn">Расходы будущих периодов — страховка</span><span class="bv">24 000 руб.</span></div>
+      <div class="bal-row"><span class="bn">Материалы (упаковки на складе)</span><span class="bv">10 000 руб.</span></div>
+      <div class="bal-row"><span class="bn">Денежные средства</span><span class="bv">596 000 руб.</span></div>
+      <div class="bal-total"><span class="bn">ИТОГО АКТИВ</span><span class="bv">1 000 000 руб. ✓</span></div>
+    </div>
+
+    <div class="balance" style="margin-top:12px;">
+      <div class="balance-side-header pasv">Пассив — откуда взялось</div>
+      <div class="balance-section">Капитал (сумма инвестированная собственником)</div>
+      <div class="bal-row"><span class="bn">Уставный капитал — взнос Вовы Пончикова</span><span class="bv">1 000 000 руб.</span></div>
+      <div class="bal-total"><span class="bn">ИТОГО ПАССИВ</span><span class="bv">1 000 000 руб. ✓</span></div>
+    </div>
+
+    <div class="highlight">
+      <p>Аренда и страховка уже оплачены — но расходом ещё не стали. Деньги ушли, но право пользования на весь год впереди. Поэтому оба — активы (расходы будущих периодов). Баланс сошёлся: 1 000 000 = 1 000 000 ✓</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Задание 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Годовая амортизация агрегата</div>
+    </div>
+    <p>Агрегат куплен за 250 000 руб., через 5 лет продадут за 10 000 руб. Амортизируется только та часть стоимости которая будет «потреблена».</p>
+    <div class="calc-box">
+      <div class="calc-label">Расчёт амортизации (линейный метод)</div>
+      <div class="calc-rows">
+        <div class="calc-row"><span class="cn">Первоначальная стоимость</span><span class="cv">250 000 руб.</span></div>
+        <div class="calc-row"><span class="cn">Ликвидационная стоимость (продажа через 5 лет)</span><span class="cv">10 000 руб.</span></div>
+        <div class="calc-row"><span class="cn">Амортизируемая стоимость = 250 000 − 10 000</span><span class="cv">240 000 руб.</span></div>
+        <div class="calc-row"><span class="cn">Срок службы</span><span class="cv">5 лет</span></div>
+        <div class="calc-row result"><span class="cn">Годовая амортизация = 240 000 ÷ 5</span><span class="cv">48 000 руб./год</span></div>
+        <div class="calc-row"><span class="cn">Ежемесячная амортизация = 48 000 ÷ 12</span><span class="cv">4 000 руб./мес</span></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Задание 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Переменные и постоянные расходы</div>
+    </div>
+    <p>Объём продаж: 50 000 пончиков ÷ 5 штук = <strong>10 000 упаковок в месяц</strong>.</p>
+
+    <div class="var-fix">
+      <div class="vf-card var">
+        <div class="vf-label">Переменные расходы</div>
+        <ul class="vf-list">
+          <li>Сырьё на пончики: 10 000 × 6 руб. = 60 000 руб.</li>
+          <li>Упаковки: 10 000 × 1 руб. = 10 000 руб.</li>
+        </ul>
+        <div class="vf-total">Итого: 70 000 руб./мес · 7 руб./упаковку</div>
+      </div>
+      <div class="vf-card fix">
+        <div class="vf-label">Постоянные и условно-постоянные</div>
+        <ul class="vf-list">
+          <li>Зарплата персонала: 50 000 руб.</li>
+          <li>Электроэнергия: 10 000 руб.</li>
+          <li>Коммунальные услуги: 5 000 руб.</li>
+          <li>Техобслуживание: 5 000 руб.</li>
+          <li>Амортизация: 4 000 руб.</li>
+          <li>Аренда (120 000 ÷ 12): 10 000 руб.</li>
+          <li>Страховка (24 000 ÷ 12): 2 000 руб.</li>
+        </ul>
+        <div class="vf-total">Итого: 86 000 руб./мес</div>
+      </div>
+    </div>
+
+    <div class="highlight highlight-blue">
+      <p>Электроэнергия и коммунальные — условно-постоянные: в них есть небольшая переменная составляющая, но в задаче заданы фиксированными суммами — считаем постоянными. Итого все расходы в месяц: 70 000 + 86 000 = 156 000 руб.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Задание 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Точка нулевой прибыли — минимальная цена</div>
+    </div>
+    <p>Точка нулевой прибыли: <strong>Выручка = Все расходы</strong> → Прибыль = 0.</p>
+
+    <div class="bep-box">
+      <div class="bep-label">Формула и расчёт</div>
+      <div class="bep-formula">Цена × Количество = Переменные расходы + Постоянные расходы</div>
+      <div class="bep-steps">
+        Цена × 10 000 = (7 × 10 000) + 86 000<br>
+        Цена × 10 000 = 70 000 + 86 000 = 156 000<br>
+        Цена = 156 000 ÷ 10 000
+      </div>
+      <div class="bep-result">Минимальная цена = 15,6 руб. за упаковку</div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">Проверка</div>
+      <p>Выручка: 10 000 × 15,6 = 156 000 руб.</p>
+      <p>Переменные расходы: 70 000 руб.</p>
+      <p>Постоянные расходы: 86 000 руб.</p>
+      <p><strong>Прибыль: 156 000 − 70 000 − 86 000 = 0 ✓</strong></p>
+    </div>
+
+    <div class="highlight highlight-warm">
+      <p>Фактическая цена в задаче — 15 руб. Это ниже точки безубыточности на 0,6 руб. с каждой упаковки. За год компания будет убыточна по P&L — но денег на счёте может быть достаточно. Проверим в следующем вопросе.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Задание 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Остаток денег на 31 декабря</div>
+    </div>
+    <p>Считаем только <strong>реальные денежные потоки</strong>. Амортизация и списание РБП — неденежные расходы, в расчёт не входят.</p>
+
+    <div class="calc-box" style="margin-bottom:16px;">
+      <div class="calc-label">Вводные для расчёта</div>
+      <div class="calc-rows">
+        <div class="calc-row"><span class="cn">Остаток денег на 1 января</span><span class="cv">596 000 руб.</span></div>
+        <div class="calc-row"><span class="cn">Упаковок в месяц</span><span class="cv">10 000 шт.</span></div>
+        <div class="calc-row"><span class="cn">Упаковок за год (× 12)</span><span class="cv">120 000 шт.</span></div>
+        <div class="calc-row"><span class="cn">Цена за упаковку</span><span class="cv">15 руб.</span></div>
+        <div class="calc-row result"><span class="cn">Выручка за год = 120 000 × 15</span><span class="cv">1 800 000 руб.</span></div>
+      </div>
+    </div>
+
+    <div class="cf-table">
+      <div class="cf-row section-row"><span class="fn">Остаток и приходы</span><span class="fv"></span></div>
+      <div class="cf-row income"><span class="fn">Остаток денег на 1 января</span><span class="fv">+596 000</span></div>
+      <div class="cf-row income"><span class="fn">Выручка за год (120 000 упаковок × 15 руб.)</span><span class="fv">+1 800 000</span></div>
+      <div class="cf-row section-row"><span class="fn">Переменные расходы за год</span><span class="fv"></span></div>
+      <div class="cf-row expense"><span class="fn">Сырьё и материалы (60 000 × 12)</span><span class="fv">−720 000</span></div>
+      <div class="cf-row expense"><span class="fn">Упаковки (10 000 × 12)</span><span class="fv">−120 000</span></div>
+      <div class="cf-row section-row"><span class="fn">Постоянные расходы за год (денежные)</span><span class="fv"></span></div>
+      <div class="cf-row expense"><span class="fn">Зарплата (50 000 × 12)</span><span class="fv">−600 000</span></div>
+      <div class="cf-row expense"><span class="fn">Электроэнергия (10 000 × 12)</span><span class="fv">−120 000</span></div>
+      <div class="cf-row expense"><span class="fn">Коммунальные услуги (5 000 × 12)</span><span class="fv">−60 000</span></div>
+      <div class="cf-row expense"><span class="fn">Техобслуживание (5 000 × 12)</span><span class="fv">−60 000</span></div>
+      <div class="cf-row section-row"><span class="fn">Платежи в конце года</span><span class="fv"></span></div>
+      <div class="cf-row expense"><span class="fn">Страховка на следующий год</span><span class="fv">−24 000</span></div>
+      <div class="cf-row expense"><span class="fn">Аренда на следующий год</span><span class="fv">−120 000</span></div>
+      <div class="cf-row result-row"><span class="fn">Остаток денег на 31 декабря</span><span class="fv">+572 000 руб.</span></div>
+    </div>
+
+    <div class="key-insight">
+      <div class="ki-icon">💡</div>
+      <div class="ki-body">
+        <div class="ki-title">Деньги ≠ Прибыль — живой пример</div>
+        <div class="ki-desc">
+          Компания <strong>убыточна по P&L</strong>: убыток = 120 000 упаковок × 0,6 руб. = −72 000 руб. за год.<br><br>
+          Но деньги уменьшились только на <strong>24 000 руб.</strong> (596 000 → 572 000).<br><br>
+          Разница = 48 000 руб. — это годовая амортизация. Амортизация — расход в P&L, но <strong>не денежный расход</strong>. Деньги на неё не уходят.<br><br>
+          Убыток по P&L: −72 000 + Амортизация: +48 000 = Изменение денег: −24 000 ✓
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Summary -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">✓</div>
+      <div class="section-title">Итоговые ответы</div>
+    </div>
+    <div class="answers-summary">
+      <div class="as-row">
+        <div class="as-q">Баланс на 1 января</div>
+        <div class="as-a">Актив = Пассив = 1 000 000 руб.</div>
+      </div>
+      <div class="as-row">
+        <div class="as-q">Годовая амортизация</div>
+        <div class="as-a">48 000 руб./год (4 000 руб./мес)</div>
+      </div>
+      <div class="as-row">
+        <div class="as-q">Переменные расходы</div>
+        <div class="as-a">7 руб./упаковку (сырьё + упаковка)</div>
+      </div>
+      <div class="as-row">
+        <div class="as-q">Постоянные расходы</div>
+        <div class="as-a">86 000 руб./месяц</div>
+      </div>
+      <div class="as-row">
+        <div class="as-q">Точка безубыточности</div>
+        <div class="as-a">15,6 руб. за упаковку</div>
+      </div>
+      <div class="as-row">
+        <div class="as-q">Деньги на 31 декабря</div>
+        <div class="as-a">572 000 руб.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>Практическая задача · Блок 3</span>
+    <strong>ЗАО «Пончик» — решено полностью</strong>
+  </div>
+  <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_3_day_plan.html">← К плану обучения</a>
+</div>
+
+<script>
+document.querySelectorAll('.answer-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const content = btn.nextElementSibling;
+    const isOpen = content.classList.contains('visible');
+    content.classList.toggle('visible', !isOpen);
+    btn.classList.toggle('open', !isOpen);
+    btn.querySelector('.arrow').textContent = isOpen ? '▶' : '▼';
+  });
+});
+</script>
+
+</body>
+</html>
