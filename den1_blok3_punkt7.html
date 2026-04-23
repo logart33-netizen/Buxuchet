@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>День 1 · Блок 3 · Пункт 7 — Чистая прибыль</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: 'Ч'; position: absolute; right: -10px; top: -20px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 24px 28px; margin: 20px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { color: var(--ink2); margin: 0 0 12px; font-size: 15px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* Formula */
+  .formula-big { background: var(--ink); border-radius: 16px; padding: 28px 32px; text-align: center; margin: 20px 0; }
+  .f-label { font-size: 10px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.4); margin-bottom: 14px; }
+  .f-main { font-family: 'Playfair Display', serif; font-size: clamp(16px, 2.5vw, 22px); font-weight: 700; color: #A8C4B0; }
+
+  /* Full PL */
+  .pl-full { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 20px 0; }
+  .pl-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 20px; border-bottom: 1px solid var(--line); }
+  .pl-row:last-child { border-bottom: none; }
+  .pl-row .pn { font-size: 14px; color: var(--ink2); }
+  .pl-row .pv { font-size: 14px; font-weight: 500; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+  .pl-row .pp { font-size: 11px; color: var(--ink3); }
+  .pl-row.section-title-row { background: var(--tag-bg); }
+  .pl-row.section-title-row .pn { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); }
+  .pl-row.rev-row .pn { font-weight: 600; color: var(--ink); }
+  .pl-row.gross-row { background: var(--accent-light); }
+  .pl-row.gross-row .pn { font-weight: 600; color: var(--accent); }
+  .pl-row.gross-row .pv { font-weight: 700; color: var(--accent); }
+  .pl-row.opex-item .pn { padding-left: 14px; font-size: 13px; color: var(--ink3); }
+  .pl-row.opex-item .pv { color: var(--accent3); font-size: 13px; }
+  .pl-row.ebit-row { background: var(--accent3-light); }
+  .pl-row.ebit-row .pn { font-weight: 600; color: var(--accent3); }
+  .pl-row.ebit-row .pv { font-weight: 700; color: var(--accent3); }
+  .pl-row.fin-item .pn { padding-left: 14px; font-size: 13px; color: var(--ink3); }
+  .pl-row.fin-item .pv { color: var(--accent2); font-size: 13px; }
+  .pl-row.ebt-row { background: var(--accent2-light); }
+  .pl-row.ebt-row .pn { font-weight: 600; color: var(--accent2); }
+  .pl-row.ebt-row .pv { font-weight: 700; color: var(--accent2); }
+  .pl-row.tax-row .pn { padding-left: 14px; font-size: 13px; color: var(--ink3); }
+  .pl-row.tax-row .pv { color: var(--accent2); font-size: 13px; }
+  .pl-row.net-row { background: var(--ink); }
+  .pl-row.net-row .pn { font-weight: 700; color: rgba(247,244,238,0.9); font-size: 15px; }
+  .pl-row.net-row .pv { font-weight: 700; color: #A8C4B0; font-size: 16px; }
+  .pl-row.net-row .pp { color: rgba(168,196,176,0.6); }
+
+  /* Two companies */
+  .two-co { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  @media (max-width: 560px) { .two-co { grid-template-columns: 1fr; } }
+  .co-card { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .co-header { padding: 12px 16px; font-size: 13px; font-weight: 600; }
+  .co-card.a .co-header { background: var(--accent-light); color: var(--accent); }
+  .co-card.b .co-header { background: var(--accent2-light); color: var(--accent2); }
+  .co-row { display: flex; justify-content: space-between; padding: 9px 16px; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .co-row:last-child { border-bottom: none; }
+  .co-row .cn { color: var(--ink3); }
+  .co-row .cv { font-weight: 500; color: var(--ink); }
+  .co-row.net { background: var(--tag-bg); }
+  .co-row.net .cn { font-weight: 600; color: var(--ink); }
+  .co-card.a .co-row.net .cv { color: var(--accent); font-weight: 700; font-size: 15px; }
+  .co-card.b .co-row.net .cv { color: var(--accent2); font-weight: 700; font-size: 15px; }
+
+  /* Tax calculation */
+  .tax-calc { background: var(--tag-bg); border-radius: 12px; padding: 20px 24px; margin: 16px 0; }
+  .tc-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .tc-rows { display: flex; flex-direction: column; gap: 6px; }
+  .tc-row { display: flex; justify-content: space-between; font-size: 14px; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .tc-row:last-child { border-bottom: none; }
+  .tc-row .tn { color: var(--ink2); }
+  .tc-row .tv { font-weight: 500; color: var(--ink); }
+  .tc-row.result .tn { font-weight: 600; color: var(--accent); }
+  .tc-row.result .tv { font-weight: 700; color: var(--accent); font-size: 15px; }
+
+  /* Profit destiny */
+  .destiny { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+  .dest-item { display: flex; gap: 14px; background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; align-items: flex-start; }
+  .dest-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .dest-body { flex: 1; }
+  .dest-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .dest-desc { font-size: 13px; color: var(--ink2); line-height: 1.65; }
+
+  /* Posting */
+  .posting-step { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); margin: 12px 0 5px; }
+  .posting { display: flex; align-items: stretch; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); margin-bottom: 8px; }
+  .p-dt { flex: 1; background: var(--accent-light); padding: 11px 14px; }
+  .p-kt { flex: 1; background: var(--accent2-light); padding: 11px 14px; }
+  .p-arrow { display: flex; align-items: center; justify-content: center; background: var(--tag-bg); padding: 0 10px; font-size: 16px; color: var(--ink3); flex-shrink: 0; }
+  .p-lbl { font-size: 9px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 2px; }
+  .p-dt .p-lbl { color: var(--accent); }
+  .p-kt .p-lbl { color: var(--accent2); }
+  .p-acc { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .p-cmt { font-size: 11px; color: var(--ink3); margin-top: 1px; }
+  .p-sum { background: var(--ink); padding: 11px 12px; display: flex; align-items: center; justify-content: center; flex-direction: column; min-width: 90px; flex-shrink: 0; }
+  .p-sum-lbl { font-size: 9px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(247,244,238,0.4); margin-bottom: 2px; }
+  .p-sum-val { font-size: 12px; font-weight: 600; color: #A8C4B0; text-align: center; }
+
+  /* Quarterly table */
+  .q-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  .q-table th { text-align: left; padding: 9px 12px; font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .q-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); color: var(--ink2); background: var(--card-bg); }
+  .q-table tr:last-child td { border-bottom: none; }
+  .q-table .total td { font-weight: 600; color: var(--ink); background: var(--tag-bg); }
+  .pos { color: var(--accent); font-weight: 600; }
+  .neg { color: var(--accent2); font-weight: 600; }
+  .zero { color: var(--ink3); }
+
+  /* Summary levels */
+  .pl-levels { display: flex; flex-direction: column; gap: 8px; margin: 20px 0; }
+  .level-item { display: flex; gap: 14px; align-items: center; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--line); background: var(--card-bg); }
+  .level-name { font-size: 14px; font-weight: 600; color: var(--ink); width: 200px; flex-shrink: 0; }
+  .level-arrow { font-size: 12px; color: var(--ink3); flex-shrink: 0; }
+  .level-question { font-size: 13px; color: var(--ink2); flex: 1; }
+  .level-item.gross { border-left: 3px solid var(--accent2); }
+  .level-item.ebit  { border-left: 3px solid var(--accent3); }
+  .level-item.ebt   { border-left: 3px solid #7B5EA7; }
+  .level-item.net   { border-left: 3px solid var(--accent); }
+
+  .bigquote { text-align: center; padding: 48px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 48px 0; }
+  .bigquote p { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic; color: var(--ink); line-height: 1.5; max-width: 560px; margin: 0 auto; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+
+  @media (max-width: 560px) {
+    .topnav, .foot-nav { padding: 12px 20px; }
+    .hero { padding: 48px 20px 36px; }
+    .container { padding: 36px 20px 60px; }
+    .level-name { width: 140px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/den1_blok3_punkt6.html">← Пункт 6</a>
+  <span class="topnav-center">День 1 · Блок 3 · Пункт 7</span>
+  <a href="https://logart33-netizen.github.io/Buxuchet/den1_blok3_punkt8.html">Пункт 8 →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 1 · Блок 3 · Пункт 7</div>
+  <h1>Чистая прибыль = EBIT − <em>Налоги − Проценты</em></h1>
+  <p class="hero-sub">Финальная строка P&L. То что реально осталось у компании после всех расходов — и что принадлежит владельцам.</p>
+</div>
+
+<div class="container">
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Что такое чистая прибыль</div>
+    </div>
+    <p>Чистая прибыль — это то что остаётся у компании после того как она заплатила <strong>абсолютно все расходы</strong>: себестоимость, операционные расходы, проценты по кредитам и налог на прибыль.</p>
+    <div class="formula-big">
+      <div class="f-label">Формула чистой прибыли</div>
+      <div class="f-main">Чистая прибыль = EBIT − Проценты по кредитам − Налог на прибыль</div>
+    </div>
+    <p>Это финальная строка отчёта о прибылях. Именно эту цифру имеют в виду когда говорят «компания заработала» или «компания в убытке». Чистая прибыль принадлежит владельцам — они решают оставить её в компании или выплатить как дивиденды.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Путь от EBIT до чистой прибыли</div>
+    </div>
+    <p>Между операционной прибылью и чистой прибылью находятся два вычета:</p>
+
+    <div class="callout">
+      <div class="callout-label">Вычет 1 — Проценты по кредитам</div>
+      <p>Компания взяла кредит — нужно платить проценты. Это финансовый расход. Он не связан с операционной деятельностью — это плата за использование заёмного капитала.</p>
+      <p><strong>Важно:</strong> погашение тела кредита — не расход в P&L. В P&L попадают только проценты. Погашение тела — уменьшение обязательств в балансе.</p>
+      <p>Пример: кредит 30 000 000 сум по ставке 20% годовых. Проценты в месяц = 30 000 000 × 20% ÷ 12 = <strong>500 000 сум</strong>.</p>
+    </div>
+
+    <div class="posting-step">Проводка начисления процентов</div>
+    <div class="posting">
+      <div class="p-dt"><div class="p-lbl">Дебет</div><div class="p-acc">Расходы по процентам</div><div class="p-cmt">Финансовый расход признан</div></div>
+      <div class="p-arrow">→</div>
+      <div class="p-kt"><div class="p-lbl">Кредит</div><div class="p-acc">Задолженность по процентам</div><div class="p-cmt">Долг перед банком</div></div>
+      <div class="p-sum"><div class="p-sum-lbl">Сумма</div><div class="p-sum-val">500 000 сум</div></div>
+    </div>
+
+    <div class="callout" style="margin-top:20px;">
+      <div class="callout-label">Вычет 2 — Налог на прибыль</div>
+      <p>Считается от налогооблагаемой прибыли по ставке установленной государством. В Узбекистане базовая ставка — <strong>15%</strong> для большинства компаний.</p>
+      <p>Налогооблагаемая прибыль может отличаться от бухгалтерской EBIT — из-за разных правил в бухгалтерском и налоговом учёте (разбирали в Блоке 1).</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Полный P&L — от выручки до чистой прибыли</div>
+    </div>
+    <p>Теперь видим весь отчёт о прибылях целиком. Данные ООО «Торговля» за март:</p>
+    <div class="pl-full">
+      <div class="pl-row rev-row"><span class="pn">Выручка</span><span class="pv">65 000 000 <span class="pp">100%</span></span></div>
+      <div class="pl-row"><span class="pn">Себестоимость продаж</span><span class="pv">(41 300 000) <span class="pp">63.5%</span></span></div>
+      <div class="pl-row gross-row"><span class="pn">Валовая прибыль</span><span class="pv">23 700 000 <span class="pp">36.5%</span></span></div>
+      <div class="pl-row section-title-row"><span class="pn">Операционные расходы</span><span class="pv"></span></div>
+      <div class="pl-row opex-item"><span class="pn">Зарплата и соцвзносы</span><span class="pv">(8 000 000) <span class="pp">12.3%</span></span></div>
+      <div class="pl-row opex-item"><span class="pn">Аренда</span><span class="pv">(2 500 000) <span class="pp">3.8%</span></span></div>
+      <div class="pl-row opex-item"><span class="pn">Реклама и маркетинг</span><span class="pv">(1 800 000) <span class="pp">2.8%</span></span></div>
+      <div class="pl-row opex-item"><span class="pn">Амортизация</span><span class="pv">(600 000) <span class="pp">0.9%</span></span></div>
+      <div class="pl-row opex-item"><span class="pn">Прочие</span><span class="pv">(1 100 000) <span class="pp">1.7%</span></span></div>
+      <div class="pl-row ebit-row"><span class="pn">EBIT (операционная прибыль)</span><span class="pv">9 700 000 <span class="pp">14.9%</span></span></div>
+      <div class="pl-row section-title-row"><span class="pn">Финансовые расходы</span><span class="pv"></span></div>
+      <div class="pl-row fin-item"><span class="pn">Проценты по кредиту</span><span class="pv">(500 000) <span class="pp">0.8%</span></span></div>
+      <div class="pl-row ebt-row"><span class="pn">EBT (прибыль до налогов)</span><span class="pv">9 200 000 <span class="pp">14.1%</span></span></div>
+      <div class="pl-row section-title-row"><span class="pn">Налоги</span><span class="pv"></span></div>
+      <div class="pl-row tax-row"><span class="pn">Налог на прибыль (15%)</span><span class="pv">(1 380 000) <span class="pp">2.1%</span></span></div>
+      <div class="pl-row net-row"><span class="pn">Чистая прибыль</span><span class="pv">7 820 000 <span class="pp">12%</span></span></div>
+    </div>
+    <div class="highlight">
+      <p>Из каждых 100 сум выручки компании остаётся 12 сум чистой прибыли. Остальные 88 сум ушли на себестоимость, операционные расходы, проценты и налоги.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Как долговая нагрузка влияет на чистую прибыль</div>
+    </div>
+    <p>Это один из важнейших практических уроков. Две компании с одинаковым EBIT = 10 000 000 сум — но разная долговая нагрузка:</p>
+    <div class="two-co">
+      <div class="co-card a">
+        <div class="co-header">Компания А — без кредитов</div>
+        <div class="co-row"><span class="cn">EBIT</span><span class="cv">10 000 000</span></div>
+        <div class="co-row"><span class="cn">Проценты</span><span class="cv">0</span></div>
+        <div class="co-row"><span class="cn">EBT</span><span class="cv">10 000 000</span></div>
+        <div class="co-row"><span class="cn">Налог 15%</span><span class="cv">(1 500 000)</span></div>
+        <div class="co-row net"><span class="cn">Чистая прибыль</span><span class="cv">8 500 000</span></div>
+      </div>
+      <div class="co-card b">
+        <div class="co-header">Компания Б — с большим кредитом</div>
+        <div class="co-row"><span class="cn">EBIT</span><span class="cv">10 000 000</span></div>
+        <div class="co-row"><span class="cn">Проценты</span><span class="cv">(4 000 000)</span></div>
+        <div class="co-row"><span class="cn">EBT</span><span class="cv">6 000 000</span></div>
+        <div class="co-row"><span class="cn">Налог 15%</span><span class="cv">(900 000)</span></div>
+        <div class="co-row net"><span class="cn">Чистая прибыль</span><span class="cv">5 100 000</span></div>
+      </div>
+    </div>
+    <div class="highlight highlight-warm">
+      <p>Одинаковый бизнес — разница в чистой прибыли почти вдвое. При падении EBIT до 3 000 000 компания А всё ещё в прибыли, а Б уходит в убыток (3 000 000 − 4 000 000 процентов = −1 000 000). Именно поэтому инвесторы так внимательно смотрят на долговую нагрузку.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Расчёт налога на прибыль</div>
+    </div>
+    <div class="tax-calc">
+      <div class="tc-label">Расчёт для ООО «Торговля» за март</div>
+      <div class="tc-rows">
+        <div class="tc-row"><span class="tn">EBT (прибыль до налогов)</span><span class="tv">9 200 000 сум</span></div>
+        <div class="tc-row"><span class="tn">Ставка налога на прибыль (Узбекистан)</span><span class="tv">15%</span></div>
+        <div class="tc-row"><span class="tn">Налог: 9 200 000 × 15%</span><span class="tv">1 380 000 сум</span></div>
+        <div class="tc-row result"><span class="tn">Чистая прибыль: 9 200 000 − 1 380 000</span><span class="tv">7 820 000 сум</span></div>
+      </div>
+    </div>
+    <div class="highlight highlight-blue">
+      <p>При убытке (отрицательный EBT) налог на прибыль не платится — налогооблагаемая база отсутствует. Убытки могут переноситься на будущие периоды и уменьшать налоговую базу следующих лет.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Что происходит с чистой прибылью</div>
+    </div>
+    <div class="destiny">
+      <div class="dest-item">
+        <div class="dest-num">1</div>
+        <div class="dest-body">
+          <div class="dest-title">Реинвестировать в бизнес</div>
+          <div class="dest-desc">Прибыль остаётся в компании как нераспределённая прибыль. Капитал растёт. Деньги используются для развития — новые товары, оборудование, открытие новых точек.</div>
+        </div>
+      </div>
+      <div class="dest-item">
+        <div class="dest-num">2</div>
+        <div class="dest-body">
+          <div class="dest-title">Выплатить дивиденды</div>
+          <div class="dest-desc">Владельцы принимают решение о распределении прибыли. Начисляются дивиденды (Дт «НП» — Кт «Расчёты с учредителями»). Затем выплачиваются (Дт «Расчёты с учредителями» — Кт «Расчётный счёт»).</div>
+        </div>
+      </div>
+      <div class="dest-item">
+        <div class="dest-num">3</div>
+        <div class="dest-body">
+          <div class="dest-title">Частично реинвестировать, частично выплатить</div>
+          <div class="dest-desc">Самый распространённый вариант — часть прибыли остаётся в компании для развития, часть выплачивается владельцам как дивиденды.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 7 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-title">Практический пример — чистая прибыль за квартал</div>
+    </div>
+    <p>ООО «Торговля», Q1. Кредит 25 000 000 сум по ставке 24% годовых = 500 000 сум процентов в месяц:</p>
+    <table class="q-table">
+      <thead><tr><th>Показатель</th><th>Январь</th><th>Февраль</th><th>Март</th><th>Q1</th></tr></thead>
+      <tbody>
+        <tr><td>EBIT</td><td class="zero">500 000</td><td class="neg">(2 500 000)</td><td class="pos">9 700 000</td><td class="pos">7 700 000</td></tr>
+        <tr><td>Проценты</td><td>(500 000)</td><td>(500 000)</td><td>(500 000)</td><td>(1 500 000)</td></tr>
+        <tr><td>EBT</td><td class="zero">0</td><td class="neg">(3 000 000)</td><td class="pos">9 200 000</td><td class="pos">6 200 000</td></tr>
+        <tr><td>Налог (15%)</td><td class="zero">0</td><td class="zero">0</td><td>(1 380 000)</td><td>(930 000)</td></tr>
+        <tr class="total"><td><strong>Чистая прибыль</strong></td><td class="zero"><strong>0</strong></td><td class="neg"><strong>(3 000 000)</strong></td><td class="pos"><strong>7 820 000</strong></td><td class="pos"><strong>5 270 000</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <div class="callout-label">Читаем результат</div>
+      <p><strong>Январь:</strong> EBIT 500 000 − проценты 500 000 = ровно ноль. Кредит съел всю операционную прибыль.</p>
+      <p><strong>Февраль:</strong> убыток 3 000 000 сум. При убытке налог не платится.</p>
+      <p><strong>Март:</strong> чистая прибыль 7 820 000 — сильный месяц который покрыл февральский убыток.</p>
+      <p><strong>Q1:</strong> чистая прибыль 5 270 000 при выручке 148 000 000 — чистая маржа <strong>3.6%</strong>.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 8 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <div class="section-title">Четыре уровня прибыли — каждый отвечает на свой вопрос</div>
+    </div>
+    <div class="pl-levels">
+      <div class="level-item gross">
+        <div class="level-name">Валовая прибыль</div>
+        <div class="level-arrow">→</div>
+        <div class="level-question">Эффективно ли мы покупаем и продаём основной продукт?</div>
+      </div>
+      <div class="level-item ebit">
+        <div class="level-name">EBIT</div>
+        <div class="level-arrow">→</div>
+        <div class="level-question">Эффективно ли работает бизнес в целом — до влияния долга?</div>
+      </div>
+      <div class="level-item ebt">
+        <div class="level-name">EBT</div>
+        <div class="level-arrow">→</div>
+        <div class="level-question">Как влияет долговая нагрузка на прибыль?</div>
+      </div>
+      <div class="level-item net">
+        <div class="level-name">Чистая прибыль</div>
+        <div class="level-arrow">→</div>
+        <div class="level-question">Сколько реально заработали после всех расходов?</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Чистая прибыль — это финальный результат. Всё что заработала компания после абсолютно всех расходов. То что принадлежит владельцам.»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>День 1 · Блок 3 · Пункт 7</span>
+    <strong>Следующий: Деньги ≠ Прибыль</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/den1_blok3_punkt6.html">← Пункт 6</a>
+    <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/den1_blok3_punkt8.html">Пункт 8 →</a>
+  </div>
+</div>
+
+</body>
+</html>
