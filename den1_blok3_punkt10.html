@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>День 1 · Блок 3 · Пункт 10 — Рентабельность</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: '%'; position: absolute; right: -10px; top: -20px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 24px 28px; margin: 20px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { color: var(--ink2); margin: 0 0 12px; font-size: 15px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* Margin types */
+  .margin-types { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+  .margin-type { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .mt-header { padding: 12px 18px; display: flex; align-items: center; gap: 12px; }
+  .margin-type.gross .mt-header { background: var(--accent2-light); }
+  .margin-type.ebit  .mt-header { background: var(--accent3-light); }
+  .margin-type.net   .mt-header { background: var(--accent-light); }
+  .margin-type.roa   .mt-header { background: #F5F0FB; }
+  .margin-type.roe   .mt-header { background: var(--tag-bg); }
+  .mt-badge { font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 20px; flex-shrink: 0; }
+  .margin-type.gross .mt-badge { background: var(--accent2); color: #fff; }
+  .margin-type.ebit  .mt-badge { background: var(--accent3); color: #fff; }
+  .margin-type.net   .mt-badge { background: var(--accent); color: #fff; }
+  .margin-type.roa   .mt-badge { background: #7B5EA7; color: #fff; }
+  .margin-type.roe   .mt-badge { background: var(--ink); color: var(--bg); }
+  .mt-title { font-size: 14px; font-weight: 600; color: var(--ink); flex: 1; }
+  .mt-body { padding: 14px 18px; }
+  .mt-formula { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+  .mt-question { font-size: 13px; color: var(--accent); font-weight: 500; margin-bottom: 6px; }
+  .mt-example { font-size: 13px; color: var(--ink3); line-height: 1.55; }
+  .mt-result { font-size: 15px; font-weight: 600; margin-top: 6px; }
+  .margin-type.gross .mt-result { color: var(--accent2); }
+  .margin-type.ebit  .mt-result { color: var(--accent3); }
+  .margin-type.net   .mt-result { color: var(--accent); }
+  .margin-type.roa   .mt-result { color: #7B5EA7; }
+  .margin-type.roe   .mt-result { color: var(--ink); }
+
+  /* Summary table */
+  .sum-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  .sum-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .sum-table td { padding: 11px 14px; border-bottom: 1px solid var(--line); color: var(--ink2); background: var(--card-bg); }
+  .sum-table tr:last-child td { border-bottom: none; }
+  .sum-table .highlight-row td { background: var(--accent-light); font-weight: 600; color: var(--accent); }
+
+  /* How to use */
+  .use-cases { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  @media (max-width: 560px) { .use-cases { grid-template-columns: 1fr; } }
+  .use-card { background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
+  .use-icon { font-size: 22px; margin-bottom: 8px; }
+  .use-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .use-desc { font-size: 13px; color: var(--ink2); line-height: 1.6; }
+
+  /* Waterfall - cascade from gross to net */
+  .cascade { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 20px 0; }
+  .cascade-row { display: flex; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--line); gap: 14px; }
+  .cascade-row:last-child { border-bottom: none; }
+  .cascade-pct { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; width: 60px; flex-shrink: 0; text-align: right; }
+  .cascade-row.rev .cascade-pct { color: var(--ink); }
+  .cascade-row.gross .cascade-pct { color: var(--accent2); }
+  .cascade-row.ebit  .cascade-pct { color: var(--accent3); }
+  .cascade-row.net   .cascade-pct { color: var(--accent); }
+  .cascade-bar-wrap { flex: 1; height: 10px; background: var(--line); border-radius: 5px; overflow: hidden; }
+  .cascade-bar { height: 100%; border-radius: 5px; }
+  .cascade-row.rev .cascade-bar { background: var(--ink); }
+  .cascade-row.gross .cascade-bar { background: var(--accent2); }
+  .cascade-row.ebit  .cascade-bar { background: var(--accent3); }
+  .cascade-row.net   .cascade-bar { background: var(--accent); }
+  .cascade-name { font-size: 13px; color: var(--ink2); width: 200px; flex-shrink: 0; }
+  .cascade-diff { font-size: 11px; color: var(--ink3); width: 120px; text-align: right; flex-shrink: 0; }
+
+  /* Quarterly table */
+  .q-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  .q-table th { text-align: left; padding: 9px 12px; font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .q-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); color: var(--ink2); background: var(--card-bg); }
+  .q-table tr:last-child td { border-bottom: none; }
+  .q-table .section-row td { background: var(--tag-bg); font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); }
+  .q-table .best-row td { background: var(--accent-light); }
+  .q-table .worst-row td { background: var(--accent2-light); }
+  .q-table .total-row td { font-weight: 600; color: var(--ink); background: var(--tag-bg); }
+  .pos  { color: var(--accent); font-weight: 600; }
+  .neg  { color: var(--accent2); font-weight: 600; }
+  .zero { color: var(--ink3); }
+
+  /* Block complete */
+  .block-complete { background: var(--ink); border-radius: 16px; padding: 36px 32px; text-align: center; margin: 32px 0; }
+  .bc-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 12px; }
+  .bc-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--bg); margin-bottom: 10px; }
+  .bc-desc { font-size: 15px; color: rgba(247,244,238,0.6); line-height: 1.7; max-width: 480px; margin: 0 auto 24px; }
+  .bc-pills { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .bc-pill { background: rgba(168,196,176,0.15); border: 1px solid rgba(168,196,176,0.25); color: #A8C4B0; font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 20px; }
+
+  .bigquote { text-align: center; padding: 48px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 48px 0; }
+  .bigquote p { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic; color: var(--ink); line-height: 1.5; max-width: 560px; margin: 0 auto; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+
+  @media (max-width: 560px) {
+    .topnav, .foot-nav { padding: 12px 20px; }
+    .hero { padding: 48px 20px 36px; }
+    .container { padding: 36px 20px 60px; }
+    .cascade-name { width: 130px; font-size: 12px; }
+    .cascade-diff { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/den1_blok3_punkt9.html">← Пункт 9</a>
+  <span class="topnav-center">День 1 · Блок 3 · Пункт 10</span>
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_3_day_plan.html">К плану →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 1 · Блок 3 · Пункт 10 — Последний пункт блока</div>
+  <h1>Рентабельность = <em>Прибыль ÷ Выручка × 100%</em></h1>
+  <p class="hero-sub">Единый язык сравнения эффективности. Валовая, операционная, чистая, ROA, ROE — каждый показатель отвечает на свой вопрос.</p>
+</div>
+
+<div class="container">
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Зачем нужна рентабельность</div>
+    </div>
+    <p>Рентабельность отвечает на вопрос: <strong>сколько копеек прибыли приносит каждый рубль выручки?</strong></p>
+    <p>Почему нельзя просто смотреть на абсолютную прибыль? Потому что 1 000 000 руб. прибыли — это много или мало? Зависит от того сколько для этого пришлось продать.</p>
+    <div class="callout">
+      <div class="callout-label">Пример</div>
+      <p><strong>Компания А:</strong> прибыль 1 000 000 при выручке 5 000 000 = <strong>20%</strong></p>
+      <p><strong>Компания Б:</strong> прибыль 1 000 000 при выручке 50 000 000 = <strong>2%</strong></p>
+      <p>Одинаковая прибыль — но компания А в 10 раз эффективнее. Рентабельность — единый язык сравнения.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Пять видов рентабельности</div>
+    </div>
+    <div class="margin-types">
+
+      <div class="margin-type gross">
+        <div class="mt-header">
+          <span class="mt-badge">Gross Margin</span>
+          <span class="mt-title">Валовая рентабельность</span>
+        </div>
+        <div class="mt-body">
+          <div class="mt-formula">Валовая прибыль ÷ Выручка × 100%</div>
+          <div class="mt-question">Насколько эффективно компания закупает и продаёт товар?</div>
+          <div class="mt-example">ООО «Торговля» за март: 23 700 000 ÷ 65 000 000 × 100%</div>
+          <div class="mt-result">= 36.5%</div>
+        </div>
+      </div>
+
+      <div class="margin-type ebit">
+        <div class="mt-header">
+          <span class="mt-badge">EBIT Margin</span>
+          <span class="mt-title">Операционная рентабельность</span>
+        </div>
+        <div class="mt-body">
+          <div class="mt-formula">EBIT ÷ Выручка × 100%</div>
+          <div class="mt-question">Насколько эффективен сам бизнес — без долгов и налогов?</div>
+          <div class="mt-example">ООО «Торговля» за март: 9 700 000 ÷ 65 000 000 × 100%</div>
+          <div class="mt-result">= 14.9%</div>
+        </div>
+      </div>
+
+      <div class="margin-type net">
+        <div class="mt-header">
+          <span class="mt-badge">Net Margin</span>
+          <span class="mt-title">Чистая рентабельность</span>
+        </div>
+        <div class="mt-body">
+          <div class="mt-formula">Чистая прибыль ÷ Выручка × 100%</div>
+          <div class="mt-question">Сколько реально остаётся после всех расходов?</div>
+          <div class="mt-example">ООО «Торговля» за март: 7 820 000 ÷ 65 000 000 × 100%</div>
+          <div class="mt-result">= 12%</div>
+        </div>
+      </div>
+
+      <div class="margin-type roa">
+        <div class="mt-header">
+          <span class="mt-badge">ROA</span>
+          <span class="mt-title">Рентабельность активов</span>
+        </div>
+        <div class="mt-body">
+          <div class="mt-formula">Чистая прибыль ÷ Активы × 100%</div>
+          <div class="mt-question">Насколько эффективно компания использует свои активы?</div>
+          <div class="mt-example">Если ROA = 10% — каждые 100 руб. активов приносят 10 руб. чистой прибыли.</div>
+        </div>
+      </div>
+
+      <div class="margin-type roe">
+        <div class="mt-header">
+          <span class="mt-badge">ROE</span>
+          <span class="mt-title">Рентабельность капитала</span>
+        </div>
+        <div class="mt-body">
+          <div class="mt-formula">Чистая прибыль ÷ Собственный капитал × 100%</div>
+          <div class="mt-question">Какую отдачу получают владельцы на вложенные деньги?</div>
+          <div class="mt-example">Если ROE = 15% — на каждые 100 руб. вложенных бизнес приносит 15 руб. Сравнивается с альтернативами: банковский депозит, другие инвестиции.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Каскад рентабельности — от выручки до чистой прибыли</div>
+    </div>
+    <p>Три уровня рентабельности образуют каскад. Каждый уровень ниже предыдущего — и разрыв между ними показывает «вес» расходов:</p>
+
+    <div class="cascade">
+      <div class="cascade-row rev">
+        <span class="cascade-pct">100%</span>
+        <div class="cascade-bar-wrap"><div class="cascade-bar" style="width:100%"></div></div>
+        <span class="cascade-name">Выручка</span>
+        <span class="cascade-diff">65 000 000 сум</span>
+      </div>
+      <div class="cascade-row gross">
+        <span class="cascade-pct">36.5%</span>
+        <div class="cascade-bar-wrap"><div class="cascade-bar" style="width:36.5%"></div></div>
+        <span class="cascade-name">Валовая рентабельность</span>
+        <span class="cascade-diff">−63.5% себестоимость</span>
+      </div>
+      <div class="cascade-row ebit">
+        <span class="cascade-pct">14.9%</span>
+        <div class="cascade-bar-wrap"><div class="cascade-bar" style="width:14.9%"></div></div>
+        <span class="cascade-name">Операционная рентабельность</span>
+        <span class="cascade-diff">−21.6% операц. расходы</span>
+      </div>
+      <div class="cascade-row net">
+        <span class="cascade-pct">12%</span>
+        <div class="cascade-bar-wrap"><div class="cascade-bar" style="width:12%"></div></div>
+        <span class="cascade-name">Чистая рентабельность</span>
+        <span class="cascade-diff">−2.9% проценты+налоги</span>
+      </div>
+    </div>
+
+    <div class="highlight highlight-blue">
+      <p>Разрыв между уровнями: 36.5% → 14.9% → 12%. Самый большой «провал» — между валовой и операционной (21.6%). Это операционные расходы компании. Именно там нужно работать чтобы поднять рентабельность.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Как использовать рентабельность на практике</div>
+    </div>
+    <div class="use-cases">
+      <div class="use-card">
+        <div class="use-icon">📉</div>
+        <div class="use-title">Динамика — сравнение периодов</div>
+        <div class="use-desc">Рентабельность упала с 15% до 10%? Что изменилось? Выросли затраты? Упали цены? Первый сигнал что нужно разобраться.</div>
+      </div>
+      <div class="use-card">
+        <div class="use-icon">🏆</div>
+        <div class="use-title">Бенчмарк — сравнение с конкурентами</div>
+        <div class="use-desc">У конкурента чистая рентабельность 8%, у нас 5%. Мы менее эффективны. Где именно теряем — на себестоимости, операционных расходах или финансовых?</div>
+      </div>
+      <div class="use-card">
+        <div class="use-icon">🏷️</div>
+        <div class="use-title">Планирование цен</div>
+        <div class="use-desc">Если хотим чистую рентабельность не ниже 10% — зная структуру расходов можно рассчитать минимальную цену. Именно это мы делали в задаче с пончиками.</div>
+      </div>
+      <div class="use-card">
+        <div class="use-icon">💰</div>
+        <div class="use-title">Оценка инвестиций (ROE)</div>
+        <div class="use-desc">ROE = 5% при инфляции 10% — реально капитал обесценивается. Нужно либо улучшать бизнес, либо искать другое применение деньгам.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Практический пример — рентабельность за квартал</div>
+    </div>
+    <p>ООО «Торговля», Q1 — полная картина по всем уровням рентабельности:</p>
+
+    <table class="q-table">
+      <thead><tr><th>Показатель</th><th>Январь</th><th>Февраль</th><th>Март</th><th>Q1</th></tr></thead>
+      <tbody>
+        <tr class="section-row"><td colspan="5">Выручка и валовая прибыль</td></tr>
+        <tr><td>Выручка</td><td>45 000 000</td><td>38 000 000</td><td>65 000 000</td><td>148 000 000</td></tr>
+        <tr><td>Валовая прибыль</td><td>14 000 000</td><td>11 000 000</td><td>23 700 000</td><td>48 700 000</td></tr>
+        <tr class="worst-row"><td>Валовая рентабельность</td><td>31.1%</td><td class="neg">28.9%</td><td class="pos">36.5%</td><td>32.9%</td></tr>
+        <tr class="section-row"><td colspan="5">Операционная прибыль</td></tr>
+        <tr><td>EBIT</td><td class="zero">500 000</td><td class="neg">(2 500 000)</td><td class="pos">9 700 000</td><td class="pos">7 700 000</td></tr>
+        <tr class="worst-row"><td>Операц. рентабельность</td><td class="zero">1.1%</td><td class="neg">−6.6%</td><td class="pos">14.9%</td><td>5.2%</td></tr>
+        <tr class="section-row"><td colspan="5">Чистая прибыль</td></tr>
+        <tr><td>Чистая прибыль</td><td class="zero">0</td><td class="neg">(3 000 000)</td><td class="pos">7 820 000</td><td class="pos">5 270 000</td></tr>
+        <tr class="best-row total-row"><td>Чистая рентабельность</td><td class="zero">0%</td><td class="neg">−7.9%</td><td class="pos">12%</td><td>3.6%</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <div class="callout-label">Читаем динамику</div>
+      <p><strong>Февраль — провальный месяц.</strong> Валовая рентабельность 28.9% — самая низкая. Выручки не хватило покрыть постоянные расходы. Стоит разобраться что именно продавалось в феврале и почему упала выручка.</p>
+      <p><strong>Март — сильный месяц.</strong> Все три уровня рентабельности максимальные. Выручка выросла, постоянные расходы остались — операционный рычаг сработал в плюс.</p>
+      <p><strong>Q1 в целом:</strong> чистая рентабельность 3.6% — низкий показатель для торговли. Основная зона роста — сократить разрыв между валовой (32.9%) и операционной (5.2%) рентабельностью, то есть снизить операционные расходы или нарастить выручку.</p>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Абсолютная прибыль говорит сколько заработали. Рентабельность говорит насколько эффективно. Следи за динамикой — если рентабельность падает, где-то в P&L появилась проблема.»</p>
+  </div>
+
+  <!-- Block complete -->
+  <div class="block-complete">
+    <div class="bc-label">Блок 3 завершён</div>
+    <div class="bc-title">Доходы, Расходы, Прибыль — пройдено полностью</div>
+    <div class="bc-desc">Ты разобрал весь путь от выручки до чистой прибыли — и научился читать отчёт о прибылях.</div>
+    <div class="bc-pills">
+      <span class="bc-pill">Выручка</span>
+      <span class="bc-pill">Расход</span>
+      <span class="bc-pill">Себестоимость</span>
+      <span class="bc-pill">Валовая прибыль</span>
+      <span class="bc-pill">OPEX</span>
+      <span class="bc-pill">EBIT</span>
+      <span class="bc-pill">Чистая прибыль</span>
+      <span class="bc-pill">Деньги ≠ Прибыль</span>
+      <span class="bc-pill">Убыток</span>
+      <span class="bc-pill">Рентабельность</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>День 1 · Блок 3 · Пункт 10 — Финиш блока</span>
+    <strong>Блок 3 пройден полностью</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/den1_blok3_punkt9.html">← Пункт 9</a>
+    <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_3_day_plan.html">К плану →</a>
+  </div>
+</div>
+
+</body>
+</html>
