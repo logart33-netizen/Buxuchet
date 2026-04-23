@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>День 1 · Блок 4 — Практика: бизнес-сценарии</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: '→'; position: absolute; right: 20px; top: -20px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  /* Progress nav */
+  .scenario-nav { display: flex; gap: 8px; padding: 16px 40px; background: var(--card-bg); border-bottom: 1px solid var(--line); overflow-x: auto; }
+  .sn-item { flex-shrink: 0; padding: 7px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; font-family: 'Golos Text', sans-serif; transition: all .15s; background: var(--tag-bg); color: var(--ink3); }
+  .sn-item.active { background: var(--ink); color: var(--bg); }
+  .sn-item:hover:not(.active) { background: var(--line); color: var(--ink); }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 48px 40px 80px; }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 14px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 18px 22px; margin: 20px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  /* Scenario card */
+  .scenario { display: none; }
+  .scenario.active { display: block; }
+
+  .scenario-header { background: var(--ink); border-radius: 16px; padding: 28px 32px; margin-bottom: 28px; }
+  .sc-letter { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 700; color: rgba(247,244,238,0.15); line-height: 1; margin-bottom: 10px; }
+  .sc-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 8px; }
+  .sc-title { font-family: 'Playfair Display', serif; font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: var(--bg); margin-bottom: 10px; }
+  .sc-desc { font-size: 15px; color: rgba(247,244,238,0.65); line-height: 1.65; }
+
+  /* What happened */
+  .what-happened { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; }
+  .wh-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .wh-text { font-size: 15px; color: var(--ink2); line-height: 1.75; margin-bottom: 14px; }
+  .wh-text:last-child { margin-bottom: 0; }
+
+  /* Posting */
+  .posting-wrap { margin: 14px 0; }
+  .posting-label-text { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); margin-bottom: 5px; }
+  .posting { display: flex; align-items: stretch; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); margin-bottom: 6px; }
+  .p-dt { flex: 1; background: var(--accent-light); padding: 11px 14px; }
+  .p-kt { flex: 1; background: var(--accent2-light); padding: 11px 14px; }
+  .p-arrow { display: flex; align-items: center; justify-content: center; background: var(--tag-bg); padding: 0 10px; font-size: 16px; color: var(--ink3); flex-shrink: 0; }
+  .p-lbl { font-size: 9px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 2px; }
+  .p-dt .p-lbl { color: var(--accent); }
+  .p-kt .p-lbl { color: var(--accent2); }
+  .p-acc { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .p-cmt { font-size: 11px; color: var(--ink3); margin-top: 1px; line-height: 1.35; }
+  .p-sum { background: var(--ink); padding: 11px 12px; display: flex; align-items: center; justify-content: center; flex-direction: column; min-width: 90px; flex-shrink: 0; }
+  .p-sum-lbl { font-size: 9px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(247,244,238,0.4); margin-bottom: 2px; }
+  .p-sum-val { font-size: 13px; font-weight: 600; color: #A8C4B0; text-align: center; }
+
+  /* Delta table */
+  .delta { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 16px 0; }
+  .delta-header { display: grid; grid-template-columns: 1fr 1fr; }
+  .delta-col-header { padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+  .delta-col-header.asset { background: var(--accent-light); color: var(--accent); }
+  .delta-col-header.pasv  { background: var(--accent2-light); color: var(--accent2); border-left: 1px solid var(--line); }
+  .delta-row { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line); }
+  .delta-cell { padding: 10px 14px; font-size: 14px; }
+  .delta-cell.asset-cell { background: var(--card-bg); color: var(--ink2); }
+  .delta-cell.pasv-cell  { background: var(--card-bg); color: var(--ink2); border-left: 1px solid var(--line); }
+  .delta-cell .change { font-weight: 600; }
+  .delta-cell .change.up   { color: var(--accent); }
+  .delta-cell .change.down { color: var(--accent2); }
+  .delta-cell .change.none { color: var(--ink3); }
+
+  /* Balance state */
+  .balance-state { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+  @media (max-width: 560px) { .balance-state { grid-template-columns: 1fr; } }
+  .bs-side { background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .bs-header { padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+  .bs-side.asset .bs-header { background: var(--accent-light); color: var(--accent); }
+  .bs-side.pasv  .bs-header { background: var(--accent2-light); color: var(--accent2); }
+  .bs-row { display: flex; justify-content: space-between; padding: 8px 14px; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .bs-row:last-child { border-bottom: none; }
+  .bs-row .bn { color: var(--ink2); }
+  .bs-row .bv { font-weight: 600; color: var(--ink); }
+  .bs-row.new-row .bn { color: var(--accent); }
+  .bs-row.new-row .bv { color: var(--accent); }
+  .bs-row.changed .bn { color: var(--accent2); }
+  .bs-row.changed .bv { color: var(--accent2); }
+  .bs-total { display: flex; justify-content: space-between; padding: 10px 14px; background: var(--ink); }
+  .bs-total .bn { font-size: 13px; font-weight: 600; color: rgba(247,244,238,0.7); }
+  .bs-total .bv { font-size: 14px; font-weight: 700; color: #A8C4B0; }
+
+  /* Check */
+  .balance-check { display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: var(--accent-light); border-radius: 10px; margin: 12px 0; }
+  .check-icon { font-size: 20px; }
+  .check-text { font-size: 15px; font-weight: 600; color: var(--accent); }
+
+  /* Insight */
+  .insight { background: var(--tag-bg); border-radius: 10px; padding: 14px 18px; margin: 16px 0; display: flex; gap: 10px; align-items: flex-start; }
+  .insight-icon { font-size: 18px; flex-shrink: 0; }
+  .insight-text { font-size: 14px; color: var(--ink2); line-height: 1.65; }
+
+  /* Nav buttons */
+  .scenario-nav-btns { display: flex; gap: 12px; justify-content: space-between; margin-top: 32px; }
+  .nav-btn { padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Golos Text', sans-serif; border: none; transition: opacity .15s; }
+  .nav-btn.prev { background: var(--tag-bg); color: var(--ink2); }
+  .nav-btn.next { background: var(--ink); color: var(--bg); }
+  .nav-btn:hover { opacity: 0.8; }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+  /* Final summary */
+  .final-section { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 20px 0; }
+  .final-header { padding: 12px 18px; background: var(--tag-bg); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); }
+  .final-row { display: flex; justify-content: space-between; padding: 11px 18px; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .final-row:last-child { border-bottom: none; }
+  .final-row .fn { color: var(--ink2); }
+  .final-row .fv { font-weight: 600; color: var(--ink); }
+  .final-row.profit-row { background: var(--accent-light); }
+  .final-row.profit-row .fn { color: var(--accent); font-weight: 600; }
+  .final-row.profit-row .fv { color: var(--accent); font-size: 16px; }
+  .final-row.cash-row { background: var(--accent3-light); }
+  .final-row.cash-row .fn { color: var(--accent3); font-weight: 600; }
+  .final-row.cash-row .fv { color: var(--accent3); font-size: 16px; }
+
+  /* Dynamic balance table */
+  .dyn-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; }
+  .dyn-table th { text-align: left; padding: 8px 12px; font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .dyn-table td { padding: 9px 12px; border-bottom: 1px solid var(--line); color: var(--ink2); background: var(--card-bg); }
+  .dyn-table tr:last-child td { border-bottom: none; }
+  .dyn-table .total-row td { font-weight: 600; color: var(--ink); background: var(--tag-bg); }
+  .dyn-table .match { color: var(--accent); font-weight: 600; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  @media (max-width: 560px) {
+    .topnav, .foot-nav { padding: 12px 20px; }
+    .hero { padding: 48px 20px 36px; }
+    .scenario-nav { padding: 12px 20px; }
+    .container { padding: 28px 20px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_3_day_plan.html">← К плану</a>
+  <span class="topnav-center">День 1 · Блок 4</span>
+  <span style="font-size:13px;color:var(--ink3);" id="progress-label">Сценарий 1 из 6</span>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 1 · Блок 4 — Практика</div>
+  <h1>Бизнес-сценарии <em>на бумаге</em></h1>
+  <p class="hero-sub">Никакой теории — только практика. Пять операций, пять балансов. После каждой проверяем: Активы = Пассивы?</p>
+</div>
+
+<div class="scenario-nav" id="scenario-nav">
+  <button class="sn-item active" onclick="goTo(0)">Сценарий А</button>
+  <button class="sn-item" onclick="goTo(1)">Сценарий Б</button>
+  <button class="sn-item" onclick="goTo(2)">Сценарий В</button>
+  <button class="sn-item" onclick="goTo(3)">Сценарий Г</button>
+  <button class="sn-item" onclick="goTo(4)">Сценарий Д</button>
+  <button class="sn-item" onclick="goTo(5)">Итоги</button>
+</div>
+
+<div class="container">
+
+  <!-- СЦЕНАРИЙ А -->
+  <div class="scenario active" id="sc-0">
+    <div class="scenario-header">
+      <div class="sc-letter">А</div>
+      <div class="sc-label">Сценарий А · Старт бизнеса</div>
+      <div class="sc-title">Вложили 10 000$ в бизнес</div>
+      <div class="sc-desc">Владелец внёс 10 000$ наличными как уставный капитал. Компания только создана.</div>
+    </div>
+
+    <div class="what-happened">
+      <div class="wh-label">Что произошло</div>
+      <div class="wh-text">Владелец вложил 10 000$ в компанию наличными. Деньги пришли на счёт компании. Одновременно возник уставный капитал — долг компании перед владельцем (в хорошем смысле: это его доля).</div>
+    </div>
+
+    <div class="posting-wrap">
+      <div class="posting-label-text">Проводка</div>
+      <div class="posting">
+        <div class="p-dt"><div class="p-lbl">Дебет</div><div class="p-acc">Денежные средства</div><div class="p-cmt">Деньги пришли — актив вырос</div></div>
+        <div class="p-arrow">→</div>
+        <div class="p-kt"><div class="p-lbl">Кредит</div><div class="p-acc">Уставный капитал</div><div class="p-cmt">Появился капитал — пассив вырос</div></div>
+        <div class="p-sum"><div class="p-sum-lbl">Сумма</div><div class="p-sum-val">10 000 $</div></div>
+      </div>
+    </div>
+
+    <div class="delta">
+      <div class="delta-header">
+        <div class="delta-col-header asset">Что изменилось в активах</div>
+        <div class="delta-col-header pasv">Что изменилось в пассивах</div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell asset-cell">Денежные средства <span class="change up">+10 000</span></div>
+        <div class="delta-cell pasv-cell">Уставный капитал <span class="change up">+10 000</span></div>
+      </div>
+    </div>
+
+    <p style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:12px;">Баланс после сценария А:</p>
+    <div class="balance-state">
+      <div class="bs-side asset">
+        <div class="bs-header">Актив</div>
+        <div class="bs-row new-row"><span class="bn">Денежные средства</span><span class="bv">10 000 $</span></div>
+        <div class="bs-total"><span class="bn">Итого</span><span class="bv">10 000 $</span></div>
+      </div>
+      <div class="bs-side pasv">
+        <div class="bs-header">Пассив</div>
+        <div class="bs-row new-row"><span class="bn">Уставный капитал</span><span class="bv">10 000 $</span></div>
+        <div class="bs-total"><span class="bn">Итого</span><span class="bv">10 000 $</span></div>
+      </div>
+    </div>
+
+    <div class="balance-check">
+      <span class="check-icon">✓</span>
+      <span class="check-text">Активы (10 000) = Пассивы (10 000) — баланс сошёлся</span>
+    </div>
+
+    <div class="insight">
+      <span class="insight-icon">💡</span>
+      <span class="insight-text">Тип операции: <strong>Актив ↑ и Пассив ↑</strong> — оба выросли на одинаковую сумму. Деньги пришли извне, поэтому и та и другая сторона выросла.</span>
+    </div>
+
+    <div class="scenario-nav-btns">
+      <button class="nav-btn prev" onclick="goTo(-1)" disabled>← Назад</button>
+      <button class="nav-btn next" onclick="goTo(1)">Сценарий Б →</button>
+    </div>
+  </div>
+
+  <!-- СЦЕНАРИЙ Б -->
+  <div class="scenario" id="sc-1">
+    <div class="scenario-header">
+      <div class="sc-letter">Б</div>
+      <div class="sc-label">Сценарий Б · Закупка</div>
+      <div class="sc-title">Купили товар на 6 000$ за наличные</div>
+      <div class="sc-desc">Компания закупила товар на склад. Заплатила деньгами сразу.</div>
+    </div>
+
+    <div class="what-happened">
+      <div class="wh-label">Что произошло</div>
+      <div class="wh-text">Компания купила товар на склад за 6 000$. Деньги ушли поставщику — один актив превратился в другой. Пассив не изменился — никаких новых долгов не появилось.</div>
+      <div class="wh-text">Это НЕ расход. Деньги стали товаром — актив просто сменил форму.</div>
+    </div>
+
+    <div class="posting-wrap">
+      <div class="posting-label-text">Проводка</div>
+      <div class="posting">
+        <div class="p-dt"><div class="p-lbl">Дебет</div><div class="p-acc">Товары</div><div class="p-cmt">Товар пришёл на склад</div></div>
+        <div class="p-arrow">→</div>
+        <div class="p-kt"><div class="p-lbl">Кредит</div><div class="p-acc">Денежные средства</div><div class="p-cmt">Деньги ушли поставщику</div></div>
+        <div class="p-sum"><div class="p-sum-lbl">Сумма</div><div class="p-sum-val">6 000 $</div></div>
+      </div>
+    </div>
+
+    <div class="delta">
+      <div class="delta-header">
+        <div class="delta-col-header asset">Что изменилось в активах</div>
+        <div class="delta-col-header pasv">Что изменилось в пассивах</div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell asset-cell">Денежные средства <span class="change down">−6 000</span><br>Товары <span class="change up">+6 000</span></div>
+        <div class="delta-cell pasv-cell"><span class="change none">Не изменился</span></div>
+      </div>
+    </div>
+
+    <p style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:12px;">Баланс после сценария Б:</p>
+    <div class="balance-state">
+      <div class="bs-side asset">
+        <div class="bs-header">Актив</div>
+        <div class="bs-row changed"><span class="bn">Денежные средства</span><span class="bv">4 000 $</span></div>
+        <div class="bs-row new-row"><span class="bn">Товары</span><span class="bv">6 000 $</span></div>
+        <div class="bs-total"><span class="bn">Итого</span><span class="bv">10 000 $</span></div>
+      </div>
+      <div class="bs-side pasv">
+        <div class="bs-header">Пассив</div>
+        <div class="bs-row"><span class="bn">Уставный капитал</span><span class="bv">10 000 $</span></div>
+        <div class="bs-total"><span class="bn">Итого</span><span class="bv">10 000 $</span></div>
+      </div>
+    </div>
+
+    <div class="balance-check">
+      <span class="check-icon">✓</span>
+      <span class="check-text">Активы (10 000) = Пассивы (10 000) — баланс сошёлся</span>
+    </div>
+
+    <div class="insight">
+      <span class="insight-icon">💡</span>
+      <span class="insight-text">Тип операции: <strong>Актив ↔ Актив</strong> — один актив превратился в другой. Итог активов не изменился. Пассив не тронут.</span>
+    </div>
+
+    <div class="scenario-nav-btns">
+      <button class="nav-btn prev" onclick="goTo(0)">← Сценарий А</button>
+      <button class="nav-btn next" onclick="goTo(2)">Сценарий В →</button>
+    </div>
+  </div>
+
+  <!-- СЦЕНАРИЙ В -->
+  <div class="scenario" id="sc-2">
+    <div class="scenario-header">
+      <div class="sc-letter">В</div>
+      <div class="sc-label">Сценарий В · Продажа в кредит</div>
+      <div class="sc-title">Продали товар за 9 000$ — покупатель заплатит позже</div>
+      <div class="sc-desc">Товар отгружен. Деньги придут позже. Где доход? Где долг?</div>
+    </div>
+
+    <div class="what-happened">
+      <div class="wh-label">Что произошло</div>
+      <div class="wh-text">Компания отгрузила весь товар клиенту на 9 000$. Оплата придёт позже — появилась дебиторская задолженность. Одновременно нужно списать себестоимость — товар ушёл со склада.</div>
+      <div class="wh-text">Два события одновременно: признание выручки + списание себестоимости.</div>
+    </div>
+
+    <div class="posting-wrap">
+      <div class="posting-label-text">Проводка 1 — признание выручки</div>
+      <div class="posting">
+        <div class="p-dt"><div class="p-lbl">Дебет</div><div class="p-acc">Дебиторская задолженность</div><div class="p-cmt">Клиент нам должен</div></div>
+        <div class="p-arrow">→</div>
+        <div class="p-kt"><div class="p-lbl">Кредит</div><div class="p-acc">Выручка</div><div class="p-cmt">Доход признан</div></div>
+        <div class="p-sum"><div class="p-sum-lbl">Сумма</div><div class="p-sum-val">9 000 $</div></div>
+      </div>
+      <div class="posting-label-text" style="margin-top:10px;">Проводка 2 — списание себестоимости</div>
+      <div class="posting">
+        <div class="p-dt"><div class="p-lbl">Дебет</div><div class="p-acc">Себестоимость продаж</div><div class="p-cmt">Расход признан</div></div>
+        <div class="p-arrow">→</div>
+        <div class="p-kt"><div class="p-lbl">Кредит</div><div class="p-acc">Товары</div><div class="p-cmt">Товар ушёл со склада</div></div>
+        <div class="p-sum"><div class="p-sum-lbl">Сумма</div><div class="p-sum-val">6 000 $</div></div>
+      </div>
+    </div>
+
+    <div class="delta">
+      <div class="delta-header">
+        <div class="delta-col-header asset">Что изменилось в активах</div>
+        <div class="delta-col-header pasv">Что изменилось в пассивах</div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell asset-cell">Дебиторка <span class="change up">+9 000</span><br>Товары <span class="change down">−6 000</span><br>Итого: <span class="change up">+3 000</span></div>
+        <div class="delta-cell pasv-cell">Нераспред. прибыль <span class="change up">+3 000</span><br>(9 000 выручка − 6 000 себест.)</div>
+      </div>
+    </div>
+
+    <p style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:12px;">Баланс после сценария В:</p>
+    <div class="balance-state">
+      <div class="bs-side asset">
+        <div class="bs-header">Актив</div>
+        <div class="bs-row"><span class="bn">Денежные средства</span><span class="bv">4 000 $</span></div>
+        <div class="bs-row new-row"><span class="bn">Дебиторская задолженность</span><span class="bv">9 000 $</span></div>
+        <div class="bs-row changed"><span class="bn">Товары</span><span class="bv">0 $</span></div>
+        <div class="bs-total"><span class="bn">Итого</span><span class="bv">13 000 $</span></div>
+      </div>
+      <div class="bs-side pasv">
+        <div class="bs-header">Пассив</div>
+        <div class="bs-row"><span class="bn">Уставный капитал</span><span class="bv">10 000 $</span></div>
+        <div class="bs-row new-row"><span class="bn">Нераспред. прибыль</span><span class="bv">3 000 $</span></div>
+        <div class="bs-total"><span class="bn">Итого</span><span class="bv">13 000 $</span></div>
+      </div>
+    </div>
+
+    <div class="balance-check">
+      <span class="check-icon">✓</span>
+      <span class="check-text">Активы (13 000) = Пассивы (13 000) — баланс сошёлся</span>
+    </div>
+
+    <div class="insight">
+      <span class="insight-icon">💡</span>
+      <span class="insight-text"><strong>Прибыль есть — денег нет.</strong> Выручка 9 000$ признана, прибыль 3 000$ появилась в балансе. Но деньги на счёте всё ещё 4 000$ — клиент ещё не заплатил. Это живой пример «Деньги ≠ Прибыль».</span>
+    </div>
+
+    <div class="scenario-nav-btns">
+      <button class="nav-btn prev" onclick="goTo(1)">← Сценарий Б</button>
+      <button class="nav-btn next" onclick="goTo(3)">Сценарий Г →</button>
+    </div>
+  </div>
+
+  <!-- СЦЕНАРИЙ Г -->
+  <div class="scenario" id="sc-3">
+    <div class="scenario-header">
+      <div class="sc-letter">Г</div>
+      <div class="sc-label">Сценарий Г · Получение оплаты</div>
+      <div class="sc-title">Получили 5 000$ от покупателя</div>
+      <div class="sc-desc">Клиент частично погасил долг. Что изменилось?</div>
+    </div>
+
+    <div class="what-happened">
+      <div class="wh-label">Что произошло</div>
+      <div class="wh-text">Клиент заплатил 5 000$ из 9 000$ долга. Деньги пришли на счёт. Дебиторка уменьшилась. Никакого нового дохода — выручка уже была признана в сценарии В.</div>
+    </div>
+
+    <div class="posting-wrap">
+      <div class="posting-label-text">Проводка</div>
+      <div class="posting">
+        <div class="p-dt"><div class="p-lbl">Дебет</div><div class="p-acc">Денежные средства</div><div class="p-cmt">Деньги пришли</div></div>
+        <div class="p-arrow">→</div>
+        <div class="p-kt"><div class="p-lbl">Кредит</div><div class="p-acc">Дебиторская задолженность</div><div class="p-cmt">Долг клиента погашен частично</div></div>
+        <div class="p-sum"><div class="p-sum-lbl">Сумма</div><div class="p-sum-val">5 000 $</div></div>
+      </div>
+    </div>
+
+    <div class="delta">
+      <div class="delta-header">
+        <div class="delta-col-header asset">Что изменилось в активах</div>
+        <div class="delta-col-header pasv">Что изменилось в пассивах</div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell asset-cell">Денежные средства <span class="change up">+5 000</span><br>Дебиторка <span class="change down">−5 000</span><br>Итого: <span class="change none">0</span></div>
+        <div class="delta-cell pasv-cell"><span class="change none">Не изменился</span></div>
+      </div>
+    </div>
+
+    <p style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:12px;">Баланс после сценария Г:</p>
+    <div class="balance-state">
+      <div class="bs-side asset">
+        <div class="bs-header">Актив</div>
+        <div class="bs-row new-row"><span class="bn">Денежные средства</span><span class="bv">9 000 $</span></div>
+        <div class="bs-row changed"><span class="bn">Дебиторская задолженность</span><span class="bv">4 000 $</span></div>
+        <div class="bs-row"><span class="bn">Товары</span><span class="bv">0 $</span></div>
+        <div class="bs-total"><span class="bn">Итого</span><span class="bv">13 000 $</span></div>
+      </div>
+      <div class="bs-side pasv">
+        <div class="bs-header">Пассив</div>
+        <div class="bs-row"><span class="bn">Уставный капитал</span><span class="bv">10 000 $</span></div>
+        <div class="bs-row"><span class="bn">Нераспред. прибыль</span><span class="bv">3 000 $</span></div>
+        <div class="bs-total"><span class="bn">Итого</span><span class="bv">13 000 $</span></div>
+      </div>
+    </div>
+
+    <div class="balance-check">
+      <span class="check-icon">✓</span>
+      <span class="check-text">Активы (13 000) = Пассивы (13 000) — баланс сошёлся</span>
+    </div>
+
+    <div class="insight">
+      <span class="insight-icon">💡</span>
+      <span class="insight-text">Тип операции: <strong>Актив ↔ Актив</strong>. Дебиторка превратилась в деньги. В P&L этого периода — ничего нового. Прибыль была признана ещё в сценарии В.</span>
+    </div>
+
+    <div class="scenario-nav-btns">
+      <button class="nav-btn prev" onclick="goTo(2)">← Сценарий В</button>
+      <button class="nav-btn next" onclick="goTo(4)">Сценарий Д →</button>
+    </div>
+  </div>
+
+  <!-- СЦЕНАРИЙ Д -->
+  <div class="scenario" id="sc-4">
+    <div class="scenario-header">
+      <div class="sc-letter">Д</div>
+      <div class="sc-label">Сценарий Д · Операционный расход</div>
+      <div class="sc-title">Заплатили аренду 1 000$</div>
+      <div class="sc-desc">Это расход? Куда уходит в отчётности?</div>
+    </div>
+
+    <div class="what-happened">
+      <div class="wh-label">Что произошло</div>
+      <div class="wh-text">Компания оплатила аренду офиса за месяц — 1 000$. Деньги ушли безвозвратно. Это расход — услуга потреблена, взамен ничего не получено.</div>
+      <div class="wh-text">Расход уменьшает прибыль → уменьшает нераспределённую прибыль → уменьшает пассив (капитал). Одновременно уменьшились деньги (актив). Обе стороны уменьшились.</div>
+    </div>
+
+    <div class="posting-wrap">
+      <div class="posting-label-text">Проводка</div>
+      <div class="posting">
+        <div class="p-dt"><div class="p-lbl">Дебет</div><div class="p-acc">Расходы на аренду</div><div class="p-cmt">Расход признан — услуга потреблена</div></div>
+        <div class="p-arrow">→</div>
+        <div class="p-kt"><div class="p-lbl">Кредит</div><div class="p-acc">Денежные средства</div><div class="p-cmt">Деньги ушли арендодателю</div></div>
+        <div class="p-sum"><div class="p-sum-lbl">Сумма</div><div class="p-sum-val">1 000 $</div></div>
+      </div>
+    </div>
+
+    <div class="delta">
+      <div class="delta-header">
+        <div class="delta-col-header asset">Что изменилось в активах</div>
+        <div class="delta-col-header pasv">Что изменилось в пассивах</div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell asset-cell">Денежные средства <span class="change down">−1 000</span></div>
+        <div class="delta-cell pasv-cell">Нераспред. прибыль <span class="change down">−1 000</span><br>(расход уменьшил прибыль)</div>
+      </div>
+    </div>
+
+    <p style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:12px;">Баланс после сценария Д:</p>
+    <div class="balance-state">
+      <div class="bs-side asset">
+        <div class="bs-header">Актив</div>
+        <div class="bs-row changed"><span class="bn">Денежные средства</span><span class="bv">8 000 $</span></div>
+        <div class="bs-row"><span class="bn">Дебиторская задолженность</span><span class="bv">4 000 $</span></div>
+        <div class="bs-total"><span class="bn">Итого</span><span class="bv">12 000 $</span></div>
+      </div>
+      <div class="bs-side pasv">
+        <div class="bs-header">Пассив</div>
+        <div class="bs-row"><span class="bn">Уставный капитал</span><span class="bv">10 000 $</span></div>
+        <div class="bs-row changed"><span class="bn">Нераспред. прибыль</span><span class="bv">2 000 $</span></div>
+        <div class="bs-total"><span class="bn">Итого</span><span class="bv">12 000 $</span></div>
+      </div>
+    </div>
+
+    <div class="balance-check">
+      <span class="check-icon">✓</span>
+      <span class="check-text">Активы (12 000) = Пассивы (12 000) — баланс сошёлся</span>
+    </div>
+
+    <div class="insight">
+      <span class="insight-icon">💡</span>
+      <span class="insight-text">Тип операции: <strong>Актив ↓ и Пассив ↓</strong>. Обе стороны уменьшились на одинаковую сумму. Итог баланса стал меньше — компания «потратила» часть стоимости.</span>
+    </div>
+
+    <div class="scenario-nav-btns">
+      <button class="nav-btn prev" onclick="goTo(3)">← Сценарий Г</button>
+      <button class="nav-btn next" onclick="goTo(5)">Итоги →</button>
+    </div>
+  </div>
+
+  <!-- ИТОГИ -->
+  <div class="scenario" id="sc-5">
+    <div class="scenario-header">
+      <div class="sc-letter">∑</div>
+      <div class="sc-label">Финал · Итоги всех сценариев</div>
+      <div class="sc-title">Прибыль, деньги и финальный баланс</div>
+      <div class="sc-desc">Считаем прибыль по P&L и сравниваем с деньгами на счёте.</div>
+    </div>
+
+    <p style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:12px;">Отчёт о прибылях (P&L):</p>
+    <div class="final-section">
+      <div class="final-header">P&L — все сценарии</div>
+      <div class="final-row"><span class="fn">Выручка (сценарий В)</span><span class="fv">+9 000 $</span></div>
+      <div class="final-row"><span class="fn">Себестоимость (сценарий В)</span><span class="fv">−6 000 $</span></div>
+      <div class="final-row"><span class="fn">Валовая прибыль</span><span class="fv">3 000 $</span></div>
+      <div class="final-row"><span class="fn">Аренда (сценарий Д)</span><span class="fv">−1 000 $</span></div>
+      <div class="final-row profit-row"><span class="fn">Чистая прибыль</span><span class="fv">2 000 $</span></div>
+    </div>
+
+    <p style="font-size:15px;font-weight:600;color:var(--ink);margin: 20px 0 12px;">Деньги на счёте:</p>
+    <div class="final-section">
+      <div class="final-header">Движение денег</div>
+      <div class="final-row"><span class="fn">Начальный взнос (сценарий А)</span><span class="fv">+10 000 $</span></div>
+      <div class="final-row"><span class="fn">Купили товар (сценарий Б)</span><span class="fv">−6 000 $</span></div>
+      <div class="final-row"><span class="fn">Получили от клиента (сценарий Г)</span><span class="fv">+5 000 $</span></div>
+      <div class="final-row"><span class="fn">Заплатили аренду (сценарий Д)</span><span class="fv">−1 000 $</span></div>
+      <div class="final-row cash-row"><span class="fn">Деньги на счёте</span><span class="fv">8 000 $</span></div>
+    </div>
+
+    <div class="highlight highlight-warm">
+      <p>Прибыль: 2 000$ · Деньги: 8 000$ · Разница: 6 000$</p>
+    </div>
+
+    <div class="what-happened" style="margin-top:16px;">
+      <div class="wh-label">Почему деньги (8 000$) больше чем прибыль (2 000$)?</div>
+      <div class="wh-text">Деньги на счёте включают начальный взнос владельца (10 000$) — это не прибыль, это капитал. Плюс деньги только частично получены от клиента (5 000$ из 9 000$). Ещё 4 000$ клиент должен — это дебиторка.</div>
+      <div class="wh-text">Прибыль — это только то что заработано операциями: 9 000 выручка − 6 000 себестоимость − 1 000 аренда = 2 000$.</div>
+    </div>
+
+    <p style="font-size:15px;font-weight:600;color:var(--ink);margin: 20px 0 12px;">Динамика баланса по всем сценариям:</p>
+    <table class="dyn-table">
+      <thead><tr><th>Показатель</th><th>После А</th><th>После Б</th><th>После В</th><th>После Г</th><th>После Д</th></tr></thead>
+      <tbody>
+        <tr><td>Деньги</td><td>10 000</td><td>4 000</td><td>4 000</td><td>9 000</td><td>8 000</td></tr>
+        <tr><td>Дебиторка</td><td>—</td><td>—</td><td>9 000</td><td>4 000</td><td>4 000</td></tr>
+        <tr><td>Товары</td><td>—</td><td>6 000</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr class="total-row"><td><strong>Итого активов</strong></td><td>10 000</td><td>10 000</td><td>13 000</td><td>13 000</td><td>12 000</td></tr>
+        <tr><td>Уставный капитал</td><td>10 000</td><td>10 000</td><td>10 000</td><td>10 000</td><td>10 000</td></tr>
+        <tr><td>Нераспред. прибыль</td><td>—</td><td>—</td><td>3 000</td><td>3 000</td><td>2 000</td></tr>
+        <tr class="total-row"><td><strong>Итого пассивов</strong></td><td class="match">10 000 ✓</td><td class="match">10 000 ✓</td><td class="match">13 000 ✓</td><td class="match">13 000 ✓</td><td class="match">12 000 ✓</td></tr>
+      </tbody>
+    </table>
+
+    <div class="highlight">
+      <p>Уравнение Актив = Пассив соблюдается во всех пяти точках. Это и есть двойная запись в действии.</p>
+    </div>
+
+    <div class="scenario-nav-btns">
+      <button class="nav-btn prev" onclick="goTo(4)">← Сценарий Д</button>
+      <button class="nav-btn next" onclick="window.location.href='https://logart33-netizen.github.io/Buxuchet/bukhuchet_3_day_plan.html'">К плану →</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>День 1 · Блок 4</span>
+    <strong>Практика: пять бизнес-сценариев</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_3_day_plan.html">← К плану</a>
+  </div>
+</div>
+
+<script>
+let current = 0;
+const total = 6;
+
+function goTo(idx) {
+  if (idx < 0 || idx >= total) return;
+  document.getElementById('sc-' + current).classList.remove('active');
+  document.querySelectorAll('.sn-item')[current].classList.remove('active');
+  current = idx;
+  document.getElementById('sc-' + current).classList.add('active');
+  document.querySelectorAll('.sn-item')[current].classList.add('active');
+  document.getElementById('progress-label').textContent = 'Сценарий ' + (current + 1) + ' из ' + total;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
