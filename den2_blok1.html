@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>День 2 · Блок 1 — Бухгалтерский счёт</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: 'Т'; position: absolute; right: -10px; top: -20px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 24px 28px; margin: 20px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { color: var(--ink2); margin: 0 0 12px; font-size: 15px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* Accounts table */
+  .accounts-table { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 20px 0; }
+  .at-header { display: grid; grid-template-columns: 80px 1fr 60px; background: var(--tag-bg); padding: 10px 16px; }
+  .at-header span { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); }
+  .at-section { padding: 8px 16px; background: var(--ink); }
+  .at-section span { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(247,244,238,0.5); }
+  .at-row { display: grid; grid-template-columns: 80px 1fr 60px; padding: 10px 16px; border-bottom: 1px solid var(--line); align-items: center; }
+  .at-row:last-child { border-bottom: none; }
+  .at-row:hover { background: #F5F2EC; }
+  .at-num { font-size: 14px; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--ink); }
+  .at-name { font-size: 14px; color: var(--ink2); }
+  .at-type { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; text-align: center; }
+  .at-type.A  { background: var(--accent-light); color: var(--accent); }
+  .at-type.P  { background: var(--accent2-light); color: var(--accent2); }
+  .at-type.AP { background: var(--accent3-light); color: var(--accent3); }
+  .at-type.KA { background: var(--tag-bg); color: var(--ink3); }
+
+  /* T-account visual */
+  .t-account { background: var(--card-bg); border: 2px solid var(--ink); border-radius: 12px; overflow: hidden; margin: 20px 0; max-width: 480px; }
+  .t-account-title { background: var(--ink); padding: 12px 20px; text-align: center; }
+  .t-account-title-text { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--bg); }
+  .t-account-title-num { font-size: 12px; color: rgba(247,244,238,0.5); margin-top: 2px; }
+  .t-account-cols { display: grid; grid-template-columns: 1fr 1fr; }
+  .t-col { padding: 12px 16px; }
+  .t-col.dt { border-right: 2px solid var(--ink); }
+  .t-col-header { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; text-align: center; }
+  .t-col.dt .t-col-header { color: var(--accent); }
+  .t-col.kt .t-col-header { color: var(--accent2); }
+  .t-entry { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; border-bottom: 1px solid var(--line); color: var(--ink2); }
+  .t-entry:last-child { border-bottom: none; }
+  .t-entry .te-desc { flex: 1; }
+  .t-entry .te-sum { font-weight: 600; color: var(--ink); }
+  .t-totals { display: grid; grid-template-columns: 1fr 1fr; border-top: 2px solid var(--ink); }
+  .t-total-cell { padding: 10px 16px; }
+  .t-total-cell.dt { border-right: 2px solid var(--ink); }
+  .t-total-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); margin-bottom: 3px; }
+  .t-total-value { font-size: 15px; font-weight: 700; }
+  .t-total-cell.dt .t-total-value { color: var(--accent); }
+  .t-total-cell.kt .t-total-value { color: var(--accent2); }
+  .t-saldo { display: grid; grid-template-columns: 1fr 1fr; background: var(--tag-bg); border-top: 1px solid var(--line); }
+  .t-saldo-cell { padding: 10px 16px; }
+  .t-saldo-cell.dt { border-right: 1px solid var(--line); }
+  .t-saldo-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); margin-bottom: 3px; }
+  .t-saldo-value { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .t-saldo-value.result { color: var(--accent); }
+
+  /* Saldo formula */
+  .formula-box { background: var(--ink); border-radius: 12px; padding: 22px 28px; text-align: center; margin: 20px 0; }
+  .f-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: rgba(247,244,238,0.4); margin-bottom: 10px; }
+  .f-main { font-family: 'Playfair Display', serif; font-size: clamp(15px, 2.5vw, 20px); font-weight: 700; color: #A8C4B0; }
+
+  /* Three types */
+  .three-types { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 20px 0; }
+  .type-item { border-bottom: 1px solid var(--line); }
+  .type-item:last-child { border-bottom: none; }
+  .type-header { padding: 14px 18px; display: flex; align-items: center; gap: 12px; }
+  .type-item.active-type .type-header { background: var(--accent-light); }
+  .type-item.passive-type .type-header { background: var(--accent2-light); }
+  .type-item.ap-type .type-header { background: var(--accent3-light); }
+  .type-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; flex-shrink: 0; }
+  .type-item.active-type .type-badge { background: var(--accent); color: #fff; }
+  .type-item.passive-type .type-badge { background: var(--accent2); color: #fff; }
+  .type-item.ap-type .type-badge { background: var(--accent3); color: #fff; }
+  .type-title { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .type-body { padding: 14px 18px; background: var(--card-bg); }
+  .type-body p { font-size: 14px; margin-bottom: 8px; }
+  .type-rule { display: flex; gap: 12px; margin: 8px 0; }
+  .type-rule-item { flex: 1; padding: 8px 12px; border-radius: 8px; font-size: 13px; text-align: center; }
+  .active-type .type-rule-item.dt { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+  .active-type .type-rule-item.kt { background: #F5F5F5; color: var(--ink3); }
+  .passive-type .type-rule-item.kt { background: var(--accent2-light); color: var(--accent2); font-weight: 600; }
+  .passive-type .type-rule-item.dt { background: #F5F5F5; color: var(--ink3); }
+  .ap-type .type-rule-item.dt { background: var(--accent3-light); color: var(--accent3); font-weight: 600; }
+  .ap-type .type-rule-item.kt { background: var(--accent3-light); color: var(--accent3); font-weight: 600; }
+  .type-accounts { font-size: 12px; color: var(--ink3); margin-top: 8px; line-height: 1.6; }
+
+  /* Period example */
+  .period-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  .period-table th { text-align: left; padding: 9px 12px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .period-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); color: var(--ink2); background: var(--card-bg); }
+  .period-table tr:last-child td { border-bottom: none; }
+  .period-table .dt-entry { color: var(--accent); font-weight: 500; }
+  .period-table .kt-entry { color: var(--accent2); font-weight: 500; }
+  .period-table .total td { font-weight: 600; color: var(--ink); background: var(--tag-bg); }
+
+  /* OSV */
+  .osv { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 16px 0; }
+  .osv-header { display: grid; grid-template-columns: 60px 1fr 90px 90px 90px 90px 90px 90px; background: var(--tag-bg); padding: 8px 12px; gap: 4px; }
+  .osv-header span { font-size: 9px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); text-align: right; }
+  .osv-header span:first-child { text-align: left; }
+  .osv-header span:nth-child(2) { text-align: left; }
+  .osv-row { display: grid; grid-template-columns: 60px 1fr 90px 90px 90px 90px 90px 90px; padding: 9px 12px; border-bottom: 1px solid var(--line); gap: 4px; align-items: center; font-size: 13px; }
+  .osv-row:last-child { border-bottom: none; }
+  .osv-row .num { color: var(--ink3); font-weight: 600; }
+  .osv-row .name { color: var(--ink2); }
+  .osv-row .val { text-align: right; color: var(--ink); }
+  .osv-row .val.dt { color: var(--accent); font-weight: 500; }
+  .osv-row .val.kt { color: var(--accent2); font-weight: 500; }
+  .osv-row.total { background: var(--tag-bg); }
+  .osv-row.total .name { font-weight: 600; color: var(--ink); }
+  .osv-row.total .val { font-weight: 600; color: var(--ink); }
+
+  .bigquote { text-align: center; padding: 48px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 48px 0; }
+  .bigquote p { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic; color: var(--ink); line-height: 1.5; max-width: 560px; margin: 0 auto; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+
+  @media (max-width: 600px) {
+    .topnav, .foot-nav { padding: 12px 20px; }
+    .hero { padding: 48px 20px 36px; }
+    .container { padding: 36px 20px 60px; }
+    .osv-header, .osv-row { grid-template-columns: 50px 1fr 70px 70px 70px 70px; font-size: 11px; }
+    .osv-header span:nth-child(5), .osv-header span:nth-child(6),
+    .osv-row .val:nth-child(5), .osv-row .val:nth-child(6) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_3_day_plan.html">← К плану</a>
+  <span class="topnav-center">День 2 · Блок 1</span>
+  <span style="font-size:13px;color:var(--ink3);">Счета РУз</span>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 2 · Блок 1</div>
+  <h1>Бухгалтерский счёт — <em>что это такое</em></h1>
+  <p class="hero-sub">Счёт — это «ячейка» для хранения информации об одном виде ценностей. Разбираем Т-таблицу, сальдо и три типа счетов по плану счетов РУз.</p>
+</div>
+
+<div class="container">
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Зачем нужны счета</div>
+    </div>
+    <p>В бухгалтерии тысячи операций. Деньги приходят и уходят. Товары закупаются и продаются. Зарплата начисляется и выплачивается. Кредиты берутся и погашаются.</p>
+    <p>Как в этом не потеряться? Ответ: всё раскладывается по <strong>счетам</strong>. Счёт — это отдельная «ячейка» для хранения информации об одном виде ценностей или обязательств.</p>
+    <div class="highlight">
+      <p>Это как полки в шкафу. На каждой — своё. Бельё отдельно, одежда отдельно, обувь отдельно. Бухгалтерские счета — те же полки, только для финансовой информации.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Номера счетов — план счетов РУз</div>
+    </div>
+    <p>В Узбекистане счета имеют стандартные номера — установленные национальным планом счетов. Это единая система которую используют все компании страны.</p>
+
+    <div class="accounts-table">
+      <div class="at-header">
+        <span>Счёт</span><span>Название</span><span>Тип</span>
+      </div>
+      <div class="at-section"><span>Активы — внеоборотные</span></div>
+      <div class="at-row"><span class="at-num">0100</span><span class="at-name">Основные средства</span><span class="at-type A">А</span></div>
+      <div class="at-row"><span class="at-num">0200</span><span class="at-name">Износ основных средств</span><span class="at-type KA">КА</span></div>
+      <div class="at-row"><span class="at-num">0400</span><span class="at-name">Нематериальные активы</span><span class="at-type A">А</span></div>
+      <div class="at-section"><span>Активы — текущие (оборотные)</span></div>
+      <div class="at-row"><span class="at-num">1000</span><span class="at-name">Материалы (сырьё, материалы)</span><span class="at-type A">А</span></div>
+      <div class="at-row"><span class="at-num">2800</span><span class="at-name">Готовая продукция</span><span class="at-type A">А</span></div>
+      <div class="at-row"><span class="at-num">2900</span><span class="at-name">Товары</span><span class="at-type A">А</span></div>
+      <div class="at-row"><span class="at-num">4000</span><span class="at-name">Текущие платежи к получению (дебиторка покупателей)</span><span class="at-type A">А</span></div>
+      <div class="at-row"><span class="at-num">4300</span><span class="at-name">Авансы выданные поставщикам</span><span class="at-type A">А</span></div>
+      <div class="at-row"><span class="at-num">5000</span><span class="at-name">Денежные средства в кассе</span><span class="at-type A">А</span></div>
+      <div class="at-row"><span class="at-num">5100</span><span class="at-name">Денежные средства на расчётном счёте</span><span class="at-type A">А</span></div>
+      <div class="at-section"><span>Обязательства — текущие</span></div>
+      <div class="at-row"><span class="at-num">6000</span><span class="at-name">Расчёты с поставщиками (кредиторка)</span><span class="at-type P">П</span></div>
+      <div class="at-row"><span class="at-num">6300</span><span class="at-name">Авансы полученные от покупателей</span><span class="at-type P">П</span></div>
+      <div class="at-row"><span class="at-num">6400</span><span class="at-name">Задолженность по платежам в бюджет (налоги)</span><span class="at-type P">П</span></div>
+      <div class="at-row"><span class="at-num">6700</span><span class="at-name">Расчёты с персоналом по оплате труда</span><span class="at-type P">П</span></div>
+      <div class="at-row"><span class="at-num">6800</span><span class="at-name">Краткосрочные кредиты и займы</span><span class="at-type P">П</span></div>
+      <div class="at-section"><span>Обязательства — долгосрочные</span></div>
+      <div class="at-row"><span class="at-num">7800</span><span class="at-name">Долгосрочные кредиты и займы</span><span class="at-type P">П</span></div>
+      <div class="at-section"><span>Собственный капитал</span></div>
+      <div class="at-row"><span class="at-num">8300</span><span class="at-name">Уставный капитал</span><span class="at-type P">П</span></div>
+      <div class="at-row"><span class="at-num">8400</span><span class="at-name">Добавленный капитал</span><span class="at-type P">П</span></div>
+      <div class="at-row"><span class="at-num">8700</span><span class="at-name">Нераспределённая прибыль (непокрытый убыток)</span><span class="at-type P">П</span></div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">Типы счетов</div>
+      <p><strong>А</strong> — активный счёт · <strong>П</strong> — пассивный счёт · <strong>КА</strong> — контрарный активный (уменьшает актив) · <strong>АП</strong> — активно-пассивный</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Т-образная таблица — как выглядит счёт</div>
+    </div>
+    <p>Каждый бухгалтерский счёт изображается в виде Т-образной таблицы — «самолётика». Левая сторона всегда называется <strong>Дебет (Дт)</strong>, правая — <strong>Кредит (Кт)</strong>. Это просто названия — ни «хорошо» ни «плохо».</p>
+
+    <div class="t-account">
+      <div class="t-account-title">
+        <div class="t-account-title-text">Расчётный счёт</div>
+        <div class="t-account-title-num">Счёт 5100</div>
+      </div>
+      <div class="t-account-cols">
+        <div class="t-col dt">
+          <div class="t-col-header">Дебет (Дт)</div>
+          <div class="t-entry"><span class="te-desc">Сн = 20 000 000</span></div>
+          <div class="t-entry"><span class="te-desc">От клиента А</span><span class="te-sum">10 000 000</span></div>
+          <div class="t-entry"><span class="te-desc">Аванс клиент Б</span><span class="te-sum">5 000 000</span></div>
+        </div>
+        <div class="t-col kt">
+          <div class="t-col-header">Кредит (Кт)</div>
+          <div class="t-entry"><span class="te-desc">Оплата поставщику</span><span class="te-sum">8 000 000</span></div>
+          <div class="t-entry"><span class="te-desc">Зарплата</span><span class="te-sum">15 000 000</span></div>
+          <div class="t-entry"><span class="te-desc">Аренда</span><span class="te-sum">2 500 000</span></div>
+        </div>
+      </div>
+      <div class="t-totals">
+        <div class="t-total-cell dt"><div class="t-total-label">Оборот Дт</div><div class="t-total-value">15 000 000</div></div>
+        <div class="t-total-cell kt"><div class="t-total-label">Оборот Кт</div><div class="t-total-value">25 500 000</div></div>
+      </div>
+      <div class="t-saldo">
+        <div class="t-saldo-cell dt"><div class="t-saldo-label">Сальдо конечное (Дт)</div><div class="t-saldo-value result">9 500 000</div></div>
+        <div class="t-saldo-cell kt"><div class="t-saldo-label">Расчёт</div><div class="t-saldo-value" style="font-size:12px;color:var(--ink3);">20 000 + 15 000 − 25 500</div></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Сальдо — остаток на счёте</div>
+    </div>
+    <p>Сальдо — это остаток на счёте в конкретный момент. У каждого счёта три временны́х точки:</p>
+    <div class="callout">
+      <div class="callout-label">Три точки времени</div>
+      <p><strong>Сальдо начальное (Сн)</strong> — остаток на начало периода. Переносится из сальдо конечного предыдущего периода.</p>
+      <p><strong>Обороты за период</strong> — Оборот по дебету (ОД) и оборот по кредиту (ОК). Сумма всех записей за месяц.</p>
+      <p><strong>Сальдо конечное (Ск)</strong> — остаток на конец периода. Рассчитывается по формуле.</p>
+    </div>
+
+    <div class="formula-box">
+      <div class="f-label">Для активного счёта</div>
+      <div class="f-main">Ск = Сн + ОД − ОК</div>
+    </div>
+    <div class="formula-box" style="background:var(--accent2);margin-top:10px;">
+      <div class="f-label">Для пассивного счёта</div>
+      <div class="f-main">Ск = Сн + ОК − ОД</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Три типа счетов</div>
+    </div>
+
+    <div class="three-types">
+      <div class="type-item active-type">
+        <div class="type-header">
+          <span class="type-badge">А</span>
+          <span class="type-title">Активные счета — отражают активы</span>
+        </div>
+        <div class="type-body">
+          <p>Деньги, товары, основные средства, дебиторская задолженность — всё что принадлежит компании.</p>
+          <div class="type-rule">
+            <div class="type-rule-item dt">Дт = увеличение актива ↑</div>
+            <div class="type-rule-item kt">Кт = уменьшение актива ↓</div>
+          </div>
+          <p><strong>Сальдо — всегда дебетовое.</strong> Не может быть отрицательным.</p>
+          <div class="type-accounts">Примеры: 5100 «Расч. счёт» · 5000 «Касса» · 2900 «Товары» · 0100 «Основные средства» · 4000 «Дебиторка покупателей»</div>
+        </div>
+      </div>
+
+      <div class="type-item passive-type">
+        <div class="type-header">
+          <span class="type-badge">П</span>
+          <span class="type-title">Пассивные счета — отражают источники</span>
+        </div>
+        <div class="type-body">
+          <p>Капитал и обязательства — всё откуда взялись активы компании.</p>
+          <div class="type-rule">
+            <div class="type-rule-item dt">Дт = уменьшение пассива ↓</div>
+            <div class="type-rule-item kt">Кт = увеличение пассива ↑</div>
+          </div>
+          <p><strong>Сальдо — всегда кредитовое.</strong></p>
+          <div class="type-accounts">Примеры: 8300 «Уставный капитал» · 8700 «Нераспред. прибыль» · 7800 «Долгоср. кредиты» · 6000 «Расчёты с поставщиками» · 6800 «Краткоср. кредиты»</div>
+        </div>
+      </div>
+
+      <div class="type-item ap-type">
+        <div class="type-header">
+          <span class="type-badge">АП</span>
+          <span class="type-title">Активно-пассивные счета</span>
+        </div>
+        <div class="type-body">
+          <p>Могут быть и активом и пассивом в зависимости от ситуации.</p>
+          <div class="type-rule">
+            <div class="type-rule-item dt">Дт — дебиторская задолженность (актив)</div>
+            <div class="type-rule-item kt">Кт — кредиторская задолженность (пассив)</div>
+          </div>
+          <p><strong>Классический пример: счёт 4000</strong> «Текущие платежи к получению».</p>
+          <p>Если покупатель нам должен — это актив, сальдо по дебету. Если мы получили аванс — это пассив, сальдо по кредиту.</p>
+          <div class="type-accounts">Также: 6300 «Авансы полученные» · расчёты с персоналом · расчёты с бюджетом</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Практический пример — ведём счёт весь месяц</div>
+    </div>
+    <p>Счёт 5100 «Расчётный счёт», март. Начальное сальдо: <strong>20 000 000 сум</strong>.</p>
+
+    <table class="period-table">
+      <thead><tr><th>Дата</th><th>Описание</th><th>Дебет</th><th>Кредит</th></tr></thead>
+      <tbody>
+        <tr><td>5 марта</td><td>Получили оплату от клиента А</td><td class="dt-entry">10 000 000</td><td>—</td></tr>
+        <tr><td>10 марта</td><td>Оплатили поставщику (сч. 6000)</td><td>—</td><td class="kt-entry">8 000 000</td></tr>
+        <tr><td>15 марта</td><td>Получили аванс от клиента Б</td><td class="dt-entry">5 000 000</td><td>—</td></tr>
+        <tr><td>25 марта</td><td>Выплатили зарплату (сч. 6700)</td><td>—</td><td class="kt-entry">15 000 000</td></tr>
+        <tr><td>28 марта</td><td>Оплатили аренду</td><td>—</td><td class="kt-entry">2 500 000</td></tr>
+        <tr class="total"><td colspan="2">Обороты за месяц</td><td>15 000 000</td><td>25 500 000</td></tr>
+      </tbody>
+    </table>
+
+    <div class="formula-box">
+      <div class="f-label">Расчёт сальдо конечного</div>
+      <div class="f-main">Ск = 20 000 000 + 15 000 000 − 25 500 000 = 9 500 000 сум</div>
+    </div>
+    <div class="highlight">
+      <p>На конец марта на расчётном счёте осталось 9 500 000 сум. Это и есть сальдо конечное — цифра которая перейдёт в апрель как сальдо начальное.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 7 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-title">Оборотно-сальдовая ведомость (ОСВ)</div>
+    </div>
+    <p>ОСВ — сводная таблица по всем счетам компании за период. Показывает по каждому счёту: сальдо начальное, обороты и сальдо конечное. Именно из неё бухгалтер видит полную финансовую картину.</p>
+
+    <div class="osv">
+      <div class="osv-header">
+        <span>Счёт</span><span>Название</span>
+        <span>Сн Дт</span><span>Сн Кт</span>
+        <span>ОД</span><span>ОК</span>
+        <span>Ск Дт</span><span>Ск Кт</span>
+      </div>
+      <div class="osv-row">
+        <span class="num">0100</span><span class="name">Основные средства</span>
+        <span class="val dt">33 000 000</span><span class="val">—</span>
+        <span class="val">—</span><span class="val kt">—</span>
+        <span class="val dt">33 000 000</span><span class="val">—</span>
+      </div>
+      <div class="osv-row">
+        <span class="num">2900</span><span class="name">Товары</span>
+        <span class="val dt">45 000 000</span><span class="val">—</span>
+        <span class="val">20 000 000</span><span class="val kt">41 300 000</span>
+        <span class="val dt">23 700 000</span><span class="val">—</span>
+      </div>
+      <div class="osv-row">
+        <span class="num">4000</span><span class="name">Дебиторка покупателей</span>
+        <span class="val dt">10 000 000</span><span class="val">—</span>
+        <span class="val">65 000 000</span><span class="val kt">57 000 000</span>
+        <span class="val dt">18 000 000</span><span class="val">—</span>
+      </div>
+      <div class="osv-row">
+        <span class="num">5100</span><span class="name">Расчётный счёт</span>
+        <span class="val dt">20 000 000</span><span class="val">—</span>
+        <span class="val">15 000 000</span><span class="val kt">25 500 000</span>
+        <span class="val dt">9 500 000</span><span class="val">—</span>
+      </div>
+      <div class="osv-row">
+        <span class="num">6000</span><span class="name">Расчёты с поставщиками</span>
+        <span class="val">—</span><span class="val kt">15 000 000</span>
+        <span class="val">8 000 000</span><span class="val kt">13 000 000</span>
+        <span class="val">—</span><span class="val kt">20 000 000</span>
+      </div>
+      <div class="osv-row">
+        <span class="num">8300</span><span class="name">Уставный капитал</span>
+        <span class="val">—</span><span class="val kt">20 000 000</span>
+        <span class="val">—</span><span class="val kt">—</span>
+        <span class="val">—</span><span class="val kt">20 000 000</span>
+      </div>
+      <div class="osv-row total">
+        <span class="num"></span><span class="name">ИТОГО</span>
+        <span class="val">108 000 000</span><span class="val">35 000 000</span>
+        <span class="val">108 000 000</span><span class="val">136 800 000</span>
+        <span class="val">84 200 000</span><span class="val">40 000 000</span>
+      </div>
+    </div>
+
+    <div class="highlight highlight-blue">
+      <p>Ключевая проверка ОСВ: сумма всех дебетовых сальдо = сумма всех кредитовых сальдо. Если не равны — где-то ошибка в проводках. В 1С ОСВ формируется нажатием одной кнопки.</p>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Счёт — это полка. Активные счета: дебет = рост. Пассивные счета: кредит = рост. Сальдо — то что есть прямо сейчас.»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>День 2 · Блок 1</span>
+    <strong>Бухгалтерский счёт — что это такое</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/bukhuchet_3_day_plan.html">← К плану</a>
+  </div>
+</div>
+
+</body>
+</html>
