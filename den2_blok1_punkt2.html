@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>День 2 · Блок 1 · Пункт 2 — Т-образная таблица</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: 'T'; position: absolute; right: 20px; top: -20px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 24px 28px; margin: 20px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { color: var(--ink2); margin: 0 0 12px; font-size: 15px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* T-account */
+  .t-account { background: var(--card-bg); border: 2px solid var(--ink); border-radius: 14px; overflow: hidden; margin: 20px auto; }
+  .t-account.wide { max-width: 100%; }
+  .t-account.narrow { max-width: 460px; }
+  .t-title { background: var(--ink); padding: 14px 20px; text-align: center; }
+  .t-title-name { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--bg); }
+  .t-title-num { font-size: 12px; color: rgba(247,244,238,0.45); margin-top: 2px; }
+  .t-cols { display: grid; grid-template-columns: 1fr 1fr; min-height: 80px; }
+  .t-col { padding: 14px 16px; }
+  .t-col.dt { border-right: 2px solid var(--ink); }
+  .t-col-hdr { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; text-align: center; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--line); }
+  .t-col.dt .t-col-hdr { color: var(--accent); }
+  .t-col.kt .t-col-hdr { color: var(--accent2); }
+  .t-entry { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--line); color: var(--ink2); }
+  .t-entry:last-child { border-bottom: none; }
+  .t-entry.saldo { font-weight: 600; color: var(--ink3); font-size: 12px; }
+  .t-entry .te-d { flex: 1; line-height: 1.4; }
+  .t-entry .te-v { font-weight: 600; color: var(--ink); white-space: nowrap; }
+  .t-entry.saldo .te-v { color: var(--ink3); }
+  .t-entry.empty { color: var(--ink3); font-style: italic; font-size: 12px; }
+  .t-totals { display: grid; grid-template-columns: 1fr 1fr; border-top: 2px solid var(--ink); }
+  .t-tot { padding: 10px 16px; }
+  .t-tot.dt { border-right: 2px solid var(--ink); }
+  .t-tot-lbl { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); margin-bottom: 3px; }
+  .t-tot-val { font-size: 16px; font-weight: 700; }
+  .t-tot.dt .t-tot-val { color: var(--accent); }
+  .t-tot.kt .t-tot-val { color: var(--accent2); }
+  .t-saldo-row { display: grid; grid-template-columns: 1fr 1fr; background: var(--tag-bg); border-top: 1px solid var(--line); }
+  .t-sk { padding: 10px 16px; }
+  .t-sk.dt { border-right: 1px solid var(--line); }
+  .t-sk-lbl { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); margin-bottom: 3px; }
+  .t-sk-val { font-size: 15px; font-weight: 700; color: var(--accent); }
+  .t-sk-val.empty { color: var(--ink3); font-size: 13px; font-weight: 400; font-style: italic; }
+
+  /* Two T-accounts side by side */
+  .t-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 560px) { .t-pair { grid-template-columns: 1fr; } }
+
+  /* Operation card */
+  .op-card { background: var(--card-bg); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin: 24px 0; }
+  .op-header { padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+  .op-card.op1 .op-header { background: var(--accent-light); }
+  .op-card.op2 .op-header { background: var(--accent2-light); }
+  .op-card.op3 .op-header { background: var(--accent3-light); }
+  .op-num { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; flex-shrink: 0; }
+  .op-card.op1 .op-num { background: var(--accent); color: #fff; }
+  .op-card.op2 .op-num { background: var(--accent2); color: #fff; }
+  .op-card.op3 .op-num { background: var(--accent3); color: #fff; }
+  .op-title { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .op-body { padding: 18px 20px; }
+  .op-posting { font-family: 'Golos Text', sans-serif; background: var(--tag-bg); border-radius: 8px; padding: 12px 16px; font-size: 14px; color: var(--ink2); margin-bottom: 14px; }
+  .op-posting strong { color: var(--ink); }
+
+  /* Steps */
+  .steps { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+  .step { display: flex; gap: 14px; background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; align-items: flex-start; }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-body { flex: 1; }
+  .step-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .step-desc { font-size: 13px; color: var(--ink2); line-height: 1.65; }
+
+  /* Why DT/KT */
+  .why-box { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  @media (max-width: 480px) { .why-box { grid-template-columns: 1fr; } }
+  .why-card { border-radius: 10px; padding: 16px 18px; }
+  .why-card.plus { background: var(--accent2-light); border: 1px solid rgba(139,74,28,0.2); }
+  .why-card.minus { background: var(--tag-bg); border: 1px solid var(--line); }
+  .why-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+  .why-card.plus .why-label { color: var(--accent2); }
+  .why-card.minus .why-label { color: var(--ink3); }
+  .why-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .why-desc { font-size: 13px; color: var(--ink2); line-height: 1.6; }
+
+  .bigquote { text-align: center; padding: 48px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 48px 0; }
+  .bigquote p { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic; color: var(--ink); line-height: 1.5; max-width: 560px; margin: 0 auto; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+
+  @media (max-width: 560px) {
+    .topnav, .foot-nav { padding: 12px 20px; }
+    .hero { padding: 48px 20px 36px; }
+    .container { padding: 36px 20px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/den2_blok1.html">← Пункт 1</a>
+  <span class="topnav-center">День 2 · Блок 1 · Пункт 2</span>
+  <a href="https://logart33-netizen.github.io/Buxuchet/den2_blok1_punkt3.html">Пункт 3 →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 2 · Блок 1 · Пункт 2</div>
+  <h1>Т-образная таблица: <em>дебет, кредит, как читать</em></h1>
+  <p class="hero-sub">Самолётик с двумя карманами. Каждая операция — в дебет одного счёта и кредит другого. Всегда на одинаковую сумму.</p>
+</div>
+
+<div class="container">
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Почему счёт выглядит именно так</div>
+    </div>
+    <p>Бухгалтеры придумали простую форму для записи операций — Т-образную таблицу. Её называют «самолётик» или просто «Т-счёт». Левая сторона — всегда <strong>Дебет (Дт)</strong>. Правая — всегда <strong>Кредит (Кт)</strong>.</p>
+    <p>Это просто названия сторон. Они не означают «хорошо» или «плохо», «плюс» или «минус». Это как в тетради две колонки — просто лево и право.</p>
+
+    <div class="t-account narrow">
+      <div class="t-title">
+        <div class="t-title-name">Название счёта</div>
+        <div class="t-title-num">Номер счёта</div>
+      </div>
+      <div class="t-cols">
+        <div class="t-col dt">
+          <div class="t-col-hdr">Дебет (Дт) — левая</div>
+          <div class="t-entry empty"><span class="te-d">Записи по левой стороне</span></div>
+        </div>
+        <div class="t-col kt">
+          <div class="t-col-hdr">Кредит (Кт) — правая</div>
+          <div class="t-entry empty"><span class="te-d">Записи по правой стороне</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight blue" style="border-left-color: var(--accent3); background: var(--accent3-light);">
+      <p style="color:var(--accent3);">Почему такая форма? Потому что она идеально отражает принцип двойной записи: каждая операция всегда затрагивает две стороны — откуда пришло и куда ушло.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Принцип двойной записи — главное</div>
+    </div>
+    <p>Каждая операция записывается <strong>сразу в два счёта</strong>: в дебет одного и в кредит другого. На одинаковую сумму. Именно поэтому принцип называется «двойная запись».</p>
+
+    <div class="callout">
+      <div class="callout-label">Пример — получили деньги от клиента 5 000 000 сум</div>
+      <p>Что произошло одновременно:</p>
+      <p><strong>Деньги на расчётном счёте прибавились</strong> → счёт 5100 «Расчётный счёт» — <strong>дебет</strong> 5 000 000</p>
+      <p><strong>Долг клиента перед нами уменьшился</strong> → счёт 4000 «Дебиторка» — <strong>кредит</strong> 5 000 000</p>
+    </div>
+
+    <div class="t-pair">
+      <div class="t-account">
+        <div class="t-title">
+          <div class="t-title-name">Расчётный счёт</div>
+          <div class="t-title-num">5100</div>
+        </div>
+        <div class="t-cols">
+          <div class="t-col dt">
+            <div class="t-col-hdr">Дт</div>
+            <div class="t-entry"><span class="te-d">От клиента</span><span class="te-v" style="color:var(--accent);">5 000 000</span></div>
+          </div>
+          <div class="t-col kt">
+            <div class="t-col-hdr">Кт</div>
+            <div class="t-entry empty"><span class="te-d">—</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="t-account">
+        <div class="t-title">
+          <div class="t-title-name">Дебиторка покупателей</div>
+          <div class="t-title-num">4000</div>
+        </div>
+        <div class="t-cols">
+          <div class="t-col dt">
+            <div class="t-col-hdr">Дт</div>
+            <div class="t-entry empty"><span class="te-d">—</span></div>
+          </div>
+          <div class="t-col kt">
+            <div class="t-col-hdr">Кт</div>
+            <div class="t-entry"><span class="te-d">Клиент заплатил</span><span class="te-v" style="color:var(--accent2);">5 000 000</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <p>Дебет одного счёта = Кредит другого счёта. Сумма всегда одинакова. Это и есть двойная запись — встроенный контроль от ошибок.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Как читать Т-счёт — шаг за шагом</div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Смотрим на начальное сальдо</div>
+          <div class="step-desc">В начале таблицы по одной из сторон стоит Сн. Это остаток который был на начало периода — с чего начинаем счёт в этом месяце.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Читаем дебетовую сторону (левая)</div>
+          <div class="step-desc">Для активных счетов (деньги, товары) — здесь всё что пришло или выросло. Каждая строка — отдельная операция с суммой.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Читаем кредитовую сторону (правая)</div>
+          <div class="step-desc">Для активных счетов — здесь всё что ушло или уменьшилось. Заплатили поставщику, выдали зарплату, оплатили аренду.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Считаем обороты</div>
+          <div class="step-desc">Суммируем все дебетовые записи → оборот по дебету (ОД). Суммируем все кредитовые записи → оборот по кредиту (ОК).</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">Считаем конечное сальдо</div>
+          <div class="step-desc">Для активного счёта: Ск = Сн + ОД − ОК. Подробнее о формуле — в следующем пункте про сальдо.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Три операции — разбираем каждую в Т-счетах</div>
+    </div>
+
+    <!-- Op 1 -->
+    <div class="op-card op1">
+      <div class="op-header">
+        <span class="op-num">Операция 1</span>
+        <span class="op-title">Получили оплату от клиента — 10 000 000 сум</span>
+      </div>
+      <div class="op-body">
+        <div class="op-posting"><strong>Дт 5100</strong> «Расчётный счёт» — <strong>Кт 4000</strong> «Дебиторка» — 10 000 000 сум</div>
+        <div class="t-pair">
+          <div class="t-account">
+            <div class="t-title"><div class="t-title-name">Расчётный счёт</div><div class="t-title-num">5100 — деньги пришли ↑</div></div>
+            <div class="t-cols">
+              <div class="t-col dt">
+                <div class="t-col-hdr">Дт</div>
+                <div class="t-entry"><span class="te-d">От клиента А</span><span class="te-v" style="color:var(--accent);">10 000 000</span></div>
+              </div>
+              <div class="t-col kt"><div class="t-col-hdr">Кт</div><div class="t-entry empty"><span class="te-d">—</span></div></div>
+            </div>
+          </div>
+          <div class="t-account">
+            <div class="t-title"><div class="t-title-name">Дебиторка покупателей</div><div class="t-title-num">4000 — долг погашен ↓</div></div>
+            <div class="t-cols">
+              <div class="t-col dt"><div class="t-col-hdr">Дт</div><div class="t-entry empty"><span class="te-d">—</span></div></div>
+              <div class="t-col kt">
+                <div class="t-col-hdr">Кт</div>
+                <div class="t-entry"><span class="te-d">Клиент заплатил</span><span class="te-v" style="color:var(--accent2);">10 000 000</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:14px;color:var(--ink2);">Деньги пришли на счёт (5100 дебет — актив вырос). Клиент погасил долг (4000 кредит — актив уменьшился, долг исчез).</p>
+      </div>
+    </div>
+
+    <!-- Op 2 -->
+    <div class="op-card op2">
+      <div class="op-header">
+        <span class="op-num">Операция 2</span>
+        <span class="op-title">Купили товар у поставщика в долг — 6 000 000 сум</span>
+      </div>
+      <div class="op-body">
+        <div class="op-posting"><strong>Дт 2900</strong> «Товары» — <strong>Кт 6000</strong> «Расчёты с поставщиками» — 6 000 000 сум</div>
+        <div class="t-pair">
+          <div class="t-account">
+            <div class="t-title"><div class="t-title-name">Товары</div><div class="t-title-num">2900 — товар на складе ↑</div></div>
+            <div class="t-cols">
+              <div class="t-col dt">
+                <div class="t-col-hdr">Дт</div>
+                <div class="t-entry"><span class="te-d">Закупка у поставщика</span><span class="te-v" style="color:var(--accent);">6 000 000</span></div>
+              </div>
+              <div class="t-col kt"><div class="t-col-hdr">Кт</div><div class="t-entry empty"><span class="te-d">—</span></div></div>
+            </div>
+          </div>
+          <div class="t-account">
+            <div class="t-title"><div class="t-title-name">Расчёты с поставщиками</div><div class="t-title-num">6000 — долг поставщику ↑</div></div>
+            <div class="t-cols">
+              <div class="t-col dt"><div class="t-col-hdr">Дт</div><div class="t-entry empty"><span class="te-d">—</span></div></div>
+              <div class="t-col kt">
+                <div class="t-col-hdr">Кт</div>
+                <div class="t-entry"><span class="te-d">Долг поставщику</span><span class="te-v" style="color:var(--accent2);">6 000 000</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:14px;color:var(--ink2);">Товар пришёл на склад (2900 дебет — актив вырос). Появился долг перед поставщиком (6000 кредит — пассив вырос).</p>
+      </div>
+    </div>
+
+    <!-- Op 3 -->
+    <div class="op-card op3">
+      <div class="op-header">
+        <span class="op-num">Операция 3</span>
+        <span class="op-title">Выплатили зарплату — 15 000 000 сум</span>
+      </div>
+      <div class="op-body">
+        <div class="op-posting"><strong>Дт 6700</strong> «Расчёты с персоналом» — <strong>Кт 5100</strong> «Расчётный счёт» — 15 000 000 сум</div>
+        <div class="t-pair">
+          <div class="t-account">
+            <div class="t-title"><div class="t-title-name">Расчёты с персоналом</div><div class="t-title-num">6700 — долг перед сотрудниками ↓</div></div>
+            <div class="t-cols">
+              <div class="t-col dt">
+                <div class="t-col-hdr">Дт</div>
+                <div class="t-entry"><span class="te-d">Выплата зарплаты</span><span class="te-v" style="color:var(--accent);">15 000 000</span></div>
+              </div>
+              <div class="t-col kt"><div class="t-col-hdr">Кт</div><div class="t-entry empty"><span class="te-d">—</span></div></div>
+            </div>
+          </div>
+          <div class="t-account">
+            <div class="t-title"><div class="t-title-name">Расчётный счёт</div><div class="t-title-num">5100 — деньги ушли ↓</div></div>
+            <div class="t-cols">
+              <div class="t-col dt"><div class="t-col-hdr">Дт</div><div class="t-entry empty"><span class="te-d">—</span></div></div>
+              <div class="t-col kt">
+                <div class="t-col-hdr">Кт</div>
+                <div class="t-entry"><span class="te-d">Зарплата выплачена</span><span class="te-v" style="color:var(--accent2);">15 000 000</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:14px;color:var(--ink2);">Погасили долг перед сотрудниками (6700 дебет — пассив уменьшился). Деньги ушли с расчётного счёта (5100 кредит — актив уменьшился).</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Полный Т-счёт за месяц — все операции вместе</div>
+    </div>
+    <p>Счёт 5100 «Расчётный счёт», март. Собираем все операции месяца в одну таблицу:</p>
+
+    <div class="t-account wide">
+      <div class="t-title">
+        <div class="t-title-name">Расчётный счёт</div>
+        <div class="t-title-num">Счёт 5100 · Март</div>
+      </div>
+      <div class="t-cols">
+        <div class="t-col dt">
+          <div class="t-col-hdr">Дт — поступления</div>
+          <div class="t-entry saldo"><span class="te-d">Сальдо начальное (1 марта)</span><span class="te-v">20 000 000</span></div>
+          <div class="t-entry"><span class="te-d">Оплата от клиента А (5 марта)</span><span class="te-v" style="color:var(--accent);">10 000 000</span></div>
+          <div class="t-entry"><span class="te-d">Аванс от клиента Б (15 марта)</span><span class="te-v" style="color:var(--accent);">5 000 000</span></div>
+        </div>
+        <div class="t-col kt">
+          <div class="t-col-hdr">Кт — списания</div>
+          <div class="t-entry"><span class="te-d">Оплата поставщику (10 марта)</span><span class="te-v" style="color:var(--accent2);">8 000 000</span></div>
+          <div class="t-entry"><span class="te-d">Зарплата (25 марта)</span><span class="te-v" style="color:var(--accent2);">15 000 000</span></div>
+          <div class="t-entry"><span class="te-d">Аренда (28 марта)</span><span class="te-v" style="color:var(--accent2);">2 500 000</span></div>
+        </div>
+      </div>
+      <div class="t-totals">
+        <div class="t-tot dt"><div class="t-tot-lbl">Оборот по дебету (ОД)</div><div class="t-tot-val">15 000 000</div></div>
+        <div class="t-tot kt"><div class="t-tot-lbl">Оборот по кредиту (ОК)</div><div class="t-tot-val">25 500 000</div></div>
+      </div>
+      <div class="t-saldo-row">
+        <div class="t-sk dt">
+          <div class="t-sk-lbl">Сальдо конечное (31 марта)</div>
+          <div class="t-sk-val">9 500 000 сум</div>
+        </div>
+        <div class="t-sk kt">
+          <div class="t-sk-lbl">Расчёт: 20 000 000 + 15 000 000 − 25 500 000</div>
+          <div class="t-sk-val empty">= 9 500 000 ✓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Почему нельзя просто писать «плюс» и «минус»</div>
+    </div>
+    <div class="why-box">
+      <div class="why-card plus">
+        <div class="why-label">Проблема с «плюс/минус»</div>
+        <div class="why-title">«Плюс» — разный для разных счетов</div>
+        <div class="why-desc">Для активного счёта дебет = плюс. Для пассивного счёта дебет = минус. Одно слово «дебет» — единое правило для всех.</div>
+      </div>
+      <div class="why-card minus">
+        <div class="why-label">Преимущество системы Дт/Кт</div>
+        <div class="why-title">Встроенный контроль ошибок</div>
+        <div class="why-desc">Сумма всех дебетов по всем счетам = сумме всех кредитов. Если не равны — где-то ошибка. Это автоматическая проверка которую даёт двойная запись.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Т-счёт — два кармана. Каждая операция идёт в дебет одного счёта и кредит другого. Всегда на одинаковую сумму. Всегда.»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>День 2 · Блок 1 · Пункт 2</span>
+    <strong>Следующий: Сальдо — начальное, конечное, обороты</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/den2_blok1.html">← Пункт 1</a>
+    <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/den2_blok1_punkt3.html">Пункт 3 →</a>
+  </div>
+</div>
+
+</body>
+</html>
