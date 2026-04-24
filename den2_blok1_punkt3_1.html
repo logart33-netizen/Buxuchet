@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>День 2 · Блок 1 · Пункт 3 — Сальдо</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: 'С'; position: absolute; right: -10px; top: -20px; font-size: 320px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 24px 28px; margin: 20px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { color: var(--ink2); margin: 0 0 12px; font-size: 15px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* Three concepts */
+  .three-concepts { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 20px 0; }
+  .concept-row { display: flex; gap: 0; border-bottom: 1px solid var(--line); }
+  .concept-row:last-child { border-bottom: none; }
+  .concept-label { width: 140px; flex-shrink: 0; padding: 14px 16px; font-size: 13px; font-weight: 600; background: var(--tag-bg); border-right: 1px solid var(--line); display: flex; align-items: center; }
+  .concept-body { flex: 1; padding: 14px 16px; background: var(--card-bg); font-size: 14px; color: var(--ink2); line-height: 1.65; }
+  .concept-row.sn .concept-label { color: var(--accent3); }
+  .concept-row.ob .concept-label { color: var(--accent2); }
+  .concept-row.sk .concept-label { color: var(--accent); }
+
+  /* Formula */
+  .formula-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  @media (max-width: 500px) { .formula-pair { grid-template-columns: 1fr; } }
+  .formula-card { border-radius: 12px; padding: 18px 20px; text-align: center; }
+  .formula-card.active { background: var(--ink); }
+  .formula-card.passive { background: var(--accent2); }
+  .f-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 8px; }
+  .f-formula { font-family: 'Playfair Display', serif; font-size: clamp(14px, 2vw, 18px); font-weight: 700; color: #A8C4B0; margin-bottom: 6px; }
+  .f-logic { font-size: 12px; color: rgba(247,244,238,0.55); line-height: 1.5; }
+
+  /* Month block */
+  .month-block { background: var(--card-bg); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin: 20px 0; }
+  .month-header { padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+  .month-block.jan .month-header { background: var(--accent3-light); }
+  .month-block.feb .month-header { background: var(--accent-light); }
+  .month-block.mar .month-header { background: var(--accent2-light); }
+  .month-badge { font-size: 12px; font-weight: 700; padding: 4px 14px; border-radius: 20px; }
+  .month-block.jan .month-badge { background: var(--accent3); color: #fff; }
+  .month-block.feb .month-badge { background: var(--accent); color: #fff; }
+  .month-block.mar .month-badge { background: var(--accent2); color: #fff; }
+  .month-title { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .month-sn { margin-left: auto; font-size: 13px; color: var(--ink3); }
+  .month-sn strong { color: var(--ink); }
+
+  /* Operations table */
+  .ops-table { width: 100%; border-collapse: collapse; }
+  .ops-table th { text-align: left; padding: 8px 16px; font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 1px solid var(--line); background: var(--bg); }
+  .ops-table td { padding: 10px 16px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--ink2); }
+  .ops-table tr:last-child td { border-bottom: none; }
+  .ops-table .dt-val { color: var(--accent); font-weight: 600; text-align: right; }
+  .ops-table .kt-val { color: var(--accent2); font-weight: 600; text-align: right; }
+  .ops-table .empty-val { color: var(--ink3); text-align: right; }
+  .ops-table th:last-child, .ops-table th:nth-child(3) { text-align: right; }
+
+  /* Month result */
+  .month-result { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0; border-top: 2px solid var(--line); }
+  @media (max-width: 500px) { .month-result { grid-template-columns: 1fr 1fr; } }
+  .mr-cell { padding: 12px 16px; border-right: 1px solid var(--line); }
+  .mr-cell:last-child { border-right: none; }
+  .mr-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); margin-bottom: 4px; }
+  .mr-value { font-size: 16px; font-weight: 700; }
+  .mr-cell.od .mr-value { color: var(--accent); }
+  .mr-cell.ok .mr-value { color: var(--accent2); }
+  .mr-cell.sk .mr-value { color: var(--ink); }
+  .mr-cell.sk-alert .mr-value { color: #A32D2D; }
+  .mr-cell.formula { background: var(--tag-bg); }
+  .mr-formula-text { font-size: 12px; color: var(--ink3); line-height: 1.5; margin-top: 2px; }
+
+  /* Arrow connector */
+  .month-arrow { text-align: center; padding: 8px 0; font-size: 13px; color: var(--ink3); display: flex; align-items: center; gap: 8px; justify-content: center; }
+  .month-arrow::before, .month-arrow::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+  /* Chain table */
+  .chain-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  .chain-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .chain-table th:not(:first-child) { text-align: right; }
+  .chain-table td { padding: 11px 14px; border-bottom: 1px solid var(--line); color: var(--ink2); background: var(--card-bg); }
+  .chain-table td:not(:first-child) { text-align: right; }
+  .chain-table tr:last-child td { border-bottom: none; }
+  .chain-table .jan td { background: var(--accent3-light); }
+  .chain-table .feb td { }
+  .chain-table .mar td { background: var(--accent2-light); }
+  .chain-table .sk-val { font-weight: 700; color: var(--accent); }
+  .chain-table .sk-zero { font-weight: 700; color: #A32D2D; }
+
+  /* Passive example */
+  .passive-example { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 16px 0; }
+  .pe-header { padding: 12px 18px; background: var(--accent2-light); display: flex; align-items: center; gap: 10px; }
+  .pe-num { font-size: 13px; font-weight: 700; color: var(--accent2); }
+  .pe-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .pe-rows { }
+  .pe-row { display: flex; justify-content: space-between; padding: 10px 18px; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .pe-row:last-child { border-bottom: none; }
+  .pe-row .pn { color: var(--ink2); }
+  .pe-row .pv { font-weight: 500; }
+  .pe-row .pv.dt { color: var(--accent); }
+  .pe-row .pv.kt { color: var(--accent2); }
+  .pe-row.result { background: var(--tag-bg); }
+  .pe-row.result .pn { font-weight: 600; color: var(--ink); }
+  .pe-row.result .pv { font-size: 16px; font-weight: 700; color: var(--accent2); }
+
+  /* Balance connection */
+  .balance-conn { display: flex; flex-direction: column; gap: 8px; margin: 20px 0; }
+  .bc-row { display: flex; gap: 12px; align-items: center; background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; }
+  .bc-account { font-size: 13px; font-weight: 600; color: var(--accent3); width: 180px; flex-shrink: 0; }
+  .bc-arrow { color: var(--ink3); flex-shrink: 0; }
+  .bc-balance { font-size: 13px; color: var(--ink2); flex: 1; }
+  .bc-side { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; }
+  .bc-side.asset { background: var(--accent-light); color: var(--accent); }
+  .bc-side.pasv  { background: var(--accent2-light); color: var(--accent2); }
+
+  /* Zero saldo block */
+  .zero-saldo { background: var(--card-bg); border: 2px solid #A32D2D; border-radius: 12px; overflow: hidden; margin: 16px 0; }
+  .zs-header { padding: 13px 18px; background: #FEF2F2; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(163,45,45,0.15); }
+  .zs-icon { font-size: 18px; }
+  .zs-title { font-size: 15px; font-weight: 600; color: #A32D2D; }
+  .zs-body { padding: 14px 18px; border-bottom: 1px solid rgba(163,45,45,0.1); }
+  .zs-body p { font-size: 14px; color: var(--ink2); margin-bottom: 10px; line-height: 1.7; }
+  .zs-body p:last-child { margin-bottom: 0; }
+  .zs-scenarios { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .zs-scenario { padding: 14px 18px; }
+  .zs-scenario.good { background: var(--accent-light); border-right: 1px solid var(--line); }
+  .zs-scenario.bad  { background: var(--accent2-light); }
+  .zs-scenario-label { font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+  .zs-scenario.good .zs-scenario-label { color: var(--accent); }
+  .zs-scenario.bad  .zs-scenario-label { color: var(--accent2); }
+  .zs-scenario-desc { font-size: 13px; color: var(--ink2); line-height: 1.55; }
+  @media (max-width: 500px) { .zs-scenarios { grid-template-columns: 1fr; } .zs-scenario.good { border-right: none; border-bottom: 1px solid var(--line); } }
+
+  .bigquote { text-align: center; padding: 48px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 48px 0; }
+  .bigquote p { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic; color: var(--ink); line-height: 1.5; max-width: 560px; margin: 0 auto; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+
+  @media (max-width: 560px) {
+    .topnav, .foot-nav { padding: 12px 20px; }
+    .hero { padding: 48px 20px 36px; }
+    .container { padding: 36px 20px 60px; }
+    .concept-label { width: 100px; font-size: 12px; }
+    .month-result { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/den2_blok1_punkt2.html">← Пункт 2</a>
+  <span class="topnav-center">День 2 · Блок 1 · Пункт 3</span>
+  <a href="https://logart33-netizen.github.io/Buxuchet/den2_blok1_punkt4.html">Пункт 4 →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 2 · Блок 1 · Пункт 3</div>
+  <h1>Сальдо: <em>начальное, конечное, обороты</em></h1>
+  <p class="hero-sub">Сальдо — остаток на счёте. Разбираем как оно считается и как перетекает из месяца в месяц на трёх реальных примерах.</p>
+</div>
+
+<div class="container">
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Что такое сальдо</div>
+    </div>
+    <p>Сальдо — это остаток на счёте в конкретный момент времени. Слово итальянское, означает «расчёт» или «остаток».</p>
+    <div class="callout">
+      <div class="callout-label">Простая аналогия</div>
+      <p>У тебя есть банковская карта. В начале месяца на ней 500 000 сум. В течение месяца получаешь зарплату и тратишь деньги. В конце месяца на карте 320 000 сум. Вот это и есть сальдо — остаток после всех операций.</p>
+      <p>В бухгалтерии то же самое — только по каждому счёту отдельно.</p>
+    </div>
+
+    <div class="three-concepts">
+      <div class="concept-row sn">
+        <div class="concept-label">Сн — Сальдо начальное</div>
+        <div class="concept-body">Остаток на <strong>начало</strong> периода. Стартовая точка. Переносится из сальдо конечного предыдущего периода. В январе — остатки на 1 января.</div>
+      </div>
+      <div class="concept-row ob">
+        <div class="concept-label">ОД / ОК — Обороты</div>
+        <div class="concept-body"><strong>Оборот по дебету (ОД)</strong> — сумма всех записей по левой стороне за период.<br><strong>Оборот по кредиту (ОК)</strong> — сумма всех записей по правой стороне за период.</div>
+      </div>
+      <div class="concept-row sk">
+        <div class="concept-label">Ск — Сальдо конечное</div>
+        <div class="concept-body">Остаток на <strong>конец</strong> периода. Считается по формуле. Станет сальдо начальным следующего периода.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Формулы сальдо конечного</div>
+    </div>
+    <div class="formula-pair">
+      <div class="formula-card active">
+        <div class="f-label">Активный счёт</div>
+        <div class="f-formula">Ск = Сн + ОД − ОК</div>
+        <div class="f-logic">Начали с остатком, добавили всё что пришло по дебету, вычли всё что ушло по кредиту.</div>
+      </div>
+      <div class="formula-card passive">
+        <div class="f-label">Пассивный счёт</div>
+        <div class="f-formula">Ск = Сн + ОК − ОД</div>
+        <div class="f-logic">Зеркальная логика: для пассивного кредит — это рост, дебет — уменьшение.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Три месяца подряд — как сальдо перетекает</div>
+    </div>
+    <p>Разберём счёт 5100 «Расчётный счёт» за три месяца. Смотрим как конечное сальдо одного месяца становится начальным следующего.</p>
+
+    <!-- ЯНВАРЬ -->
+    <div class="month-block jan">
+      <div class="month-header">
+        <span class="month-badge">Январь</span>
+        <span class="month-title">Расчётный счёт · 5100</span>
+        <span class="month-sn">Сн = <strong>10 000 000 сум</strong></span>
+      </div>
+      <table class="ops-table">
+        <thead><tr><th>Дата</th><th>Операция</th><th>Дт</th><th>Кт</th></tr></thead>
+        <tbody>
+          <tr><td>5 янв</td><td>Оплата от клиента В</td><td class="dt-val">8 000 000</td><td class="empty-val">—</td></tr>
+          <tr><td>12 янв</td><td>Оплата поставщику за товар</td><td class="empty-val">—</td><td class="kt-val">5 000 000</td></tr>
+          <tr><td>20 янв</td><td>Оплата от клиента Г</td><td class="dt-val">4 000 000</td><td class="empty-val">—</td></tr>
+          <tr><td>28 янв</td><td>Выплата зарплаты</td><td class="empty-val">—</td><td class="kt-val">7 000 000</td></tr>
+        </tbody>
+      </table>
+      <div class="month-result">
+        <div class="mr-cell od"><div class="mr-label">Оборот Дт (ОД)</div><div class="mr-value">12 000 000</div></div>
+        <div class="mr-cell ok"><div class="mr-label">Оборот Кт (ОК)</div><div class="mr-value">12 000 000</div></div>
+        <div class="mr-cell sk"><div class="mr-label">Сальдо конечное</div><div class="mr-value">10 000 000</div></div>
+        <div class="mr-cell formula"><div class="mr-label">Расчёт</div><div class="mr-formula-text">10 000 000 + 12 000 000 − 12 000 000 = 10 000 000<br>ОД = ОК → сальдо не изменилось</div></div>
+      </div>
+    </div>
+
+    <div class="month-arrow">Ск января (10 000 000) → Сн февраля</div>
+
+    <!-- ФЕВРАЛЬ -->
+    <div class="month-block feb">
+      <div class="month-header">
+        <span class="month-badge">Февраль</span>
+        <span class="month-title">Расчётный счёт · 5100</span>
+        <span class="month-sn">Сн = <strong>10 000 000 сум</strong></span>
+      </div>
+      <table class="ops-table">
+        <thead><tr><th>Дата</th><th>Операция</th><th>Дт</th><th>Кт</th></tr></thead>
+        <tbody>
+          <tr><td>3 фев</td><td>Оплата от клиента А</td><td class="dt-val">15 000 000</td><td class="empty-val">—</td></tr>
+          <tr><td>10 фев</td><td>Аренда офиса</td><td class="empty-val">—</td><td class="kt-val">2 500 000</td></tr>
+          <tr><td>15 фев</td><td>Оплата от клиента Б</td><td class="dt-val">6 000 000</td><td class="empty-val">—</td></tr>
+          <tr><td>22 фев</td><td>Погашение части кредита</td><td class="empty-val">—</td><td class="kt-val">10 000 000</td></tr>
+          <tr><td>28 фев</td><td>Выплата зарплаты</td><td class="empty-val">—</td><td class="kt-val">8 000 000</td></tr>
+        </tbody>
+      </table>
+      <div class="month-result">
+        <div class="mr-cell od"><div class="mr-label">Оборот Дт (ОД)</div><div class="mr-value">21 000 000</div></div>
+        <div class="mr-cell ok"><div class="mr-label">Оборот Кт (ОК)</div><div class="mr-value">20 500 000</div></div>
+        <div class="mr-cell sk"><div class="mr-label">Сальдо конечное</div><div class="mr-value">10 500 000</div></div>
+        <div class="mr-cell formula"><div class="mr-label">Расчёт</div><div class="mr-formula-text">10 000 000 + 21 000 000 − 20 500 000 = 10 500 000<br>ОД > ОК → денег стало чуть больше</div></div>
+      </div>
+    </div>
+
+    <div class="month-arrow">Ск февраля (10 500 000) → Сн марта</div>
+
+    <!-- МАРТ -->
+    <div class="month-block mar">
+      <div class="month-header">
+        <span class="month-badge">Март</span>
+        <span class="month-title">Расчётный счёт · 5100</span>
+        <span class="month-sn">Сн = <strong>10 500 000 сум</strong></span>
+      </div>
+      <table class="ops-table">
+        <thead><tr><th>Дата</th><th>Операция</th><th>Дт</th><th>Кт</th></tr></thead>
+        <tbody>
+          <tr><td>5 мар</td><td>Оплата от клиента А</td><td class="dt-val">10 000 000</td><td class="empty-val">—</td></tr>
+          <tr><td>10 мар</td><td>Оплата поставщику</td><td class="empty-val">—</td><td class="kt-val">8 000 000</td></tr>
+          <tr><td>15 мар</td><td>Аванс от клиента Б</td><td class="dt-val">5 000 000</td><td class="empty-val">—</td></tr>
+          <tr><td>25 мар</td><td>Выплата зарплаты</td><td class="empty-val">—</td><td class="kt-val">15 000 000</td></tr>
+          <tr><td>28 мар</td><td>Аренда офиса</td><td class="empty-val">—</td><td class="kt-val">2 500 000</td></tr>
+        </tbody>
+      </table>
+      <div class="month-result">
+        <div class="mr-cell od"><div class="mr-label">Оборот Дт (ОД)</div><div class="mr-value">15 000 000</div></div>
+        <div class="mr-cell ok"><div class="mr-label">Оборот Кт (ОК)</div><div class="mr-value">25 500 000</div></div>
+        <div class="mr-cell sk-alert"><div class="mr-label">Сальдо конечное</div><div class="mr-value">0 сум ⚠</div></div>
+        <div class="mr-cell formula"><div class="mr-label">Расчёт</div><div class="mr-formula-text">10 500 000 + 15 000 000 − 25 500 000 = 0<br>ОК >> ОД → кассовый разрыв!</div></div>
+      </div>
+    </div>
+
+    <div class="highlight-warm" style="margin-top:16px;">
+      <p>В марте расходовали денег значительно больше чем получали. Сальдо обнулилось. Но что это означает на практике?</p>
+    </div>
+
+    <div class="zero-saldo">
+      <div class="zs-header">
+        <span class="zs-icon">⚠</span>
+        <span class="zs-title">Сальдо = 0 — что происходит дальше</span>
+      </div>
+      <div class="zs-body">
+        <p>1 апреля компания просыпается с нулём на расчётном счёте. Деньги для платежей отсутствуют полностью.</p>
+        <p>Что это значит практически: нечем заплатить поставщикам за новую партию товара, нечем выдать зарплату в конце апреля, нечем оплатить аренду. Если в первые дни апреля не придут деньги от клиентов — компания не сможет работать.</p>
+      </div>
+      <div class="zs-scenarios">
+        <div class="zs-scenario good">
+          <div class="zs-scenario-label">Сценарий A — деньги пришли в апреле</div>
+          <div class="zs-scenario-desc">Клиенты заплатили в начале апреля. Компания закрыла кассовый разрыв и продолжает работать. Неприятно — но пережили.</div>
+        </div>
+        <div class="zs-scenario bad">
+          <div class="zs-scenario-label">Сценарий Б — деньги не пришли</div>
+          <div class="zs-scenario-desc">Поставщики перестают отгружать товар, сотрудники не получают зарплату, арендодатель требует долг. Компания в кризисе.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top:32px;">
+      <div class="section-num" style="background:var(--accent2);">→</div>
+      <div class="section-title">Как считать апрель и май?</div>
+    </div>
+    <p>Абсолютно так же — по той же формуле. Ск марта (= 0) становится Сн апреля.</p>
+
+    <!-- АПРЕЛЬ -->
+    <div class="month-block apr">
+      <div class="month-header">
+        <span class="month-badge" style="background:var(--accent);">Апрель</span>
+        <span class="month-title">Расчётный счёт · 5100</span>
+        <span class="month-sn">Сн = <strong style="color:#A32D2D;">0 сум</strong></span>
+      </div>
+      <table class="ops-table">
+        <thead><tr><th>Дата</th><th>Операция</th><th>Дт</th><th>Кт</th></tr></thead>
+        <tbody>
+          <tr><td>2 апр</td><td>Клиент А погасил долг (ждали с марта)</td><td class="dt-val">12 000 000</td><td class="empty-val">—</td></tr>
+          <tr><td>8 апр</td><td>Оплата поставщику</td><td class="empty-val">—</td><td class="kt-val">6 000 000</td></tr>
+          <tr><td>15 апр</td><td>Новый клиент — оплата сразу</td><td class="dt-val">8 000 000</td><td class="empty-val">—</td></tr>
+          <tr><td>28 апр</td><td>Зарплата</td><td class="empty-val">—</td><td class="kt-val">8 000 000</td></tr>
+          <tr><td>30 апр</td><td>Аренда офиса</td><td class="empty-val">—</td><td class="kt-val">2 500 000</td></tr>
+        </tbody>
+      </table>
+      <div class="month-result">
+        <div class="mr-cell od"><div class="mr-label">Оборот Дт (ОД)</div><div class="mr-value">20 000 000</div></div>
+        <div class="mr-cell ok"><div class="mr-label">Оборот Кт (ОК)</div><div class="mr-value">16 500 000</div></div>
+        <div class="mr-cell sk"><div class="mr-label">Сальдо конечное</div><div class="mr-value">3 500 000</div></div>
+        <div class="mr-cell formula"><div class="mr-label">Расчёт</div><div class="mr-formula-text">0 + 20 000 000 − 16 500 000 = 3 500 000<br>Компания восстановилась ✓</div></div>
+      </div>
+    </div>
+
+    <div class="month-arrow">Ск апреля (3 500 000) → Сн мая</div>
+
+    <!-- МАЙ -->
+    <div class="month-block may">
+      <div class="month-header">
+        <span class="month-badge" style="background:var(--accent3);">Май</span>
+        <span class="month-title">Расчётный счёт · 5100</span>
+        <span class="month-sn">Сн = <strong>3 500 000 сум</strong></span>
+      </div>
+      <table class="ops-table">
+        <thead><tr><th>Дата</th><th>Операция</th><th>Дт</th><th>Кт</th></tr></thead>
+        <tbody>
+          <tr><td>5 май</td><td>Оплата от клиентов</td><td class="dt-val">18 000 000</td><td class="empty-val">—</td></tr>
+          <tr><td>12 май</td><td>Закуп товара у поставщика</td><td class="empty-val">—</td><td class="kt-val">9 000 000</td></tr>
+          <tr><td>25 май</td><td>Зарплата</td><td class="empty-val">—</td><td class="kt-val">8 000 000</td></tr>
+          <tr><td>30 май</td><td>Аренда офиса</td><td class="empty-val">—</td><td class="kt-val">2 500 000</td></tr>
+        </tbody>
+      </table>
+      <div class="month-result">
+        <div class="mr-cell od"><div class="mr-label">Оборот Дт (ОД)</div><div class="mr-value">18 000 000</div></div>
+        <div class="mr-cell ok"><div class="mr-label">Оборот Кт (ОК)</div><div class="mr-value">19 500 000</div></div>
+        <div class="mr-cell sk"><div class="mr-label">Сальдо конечное</div><div class="mr-value">2 000 000</div></div>
+        <div class="mr-cell formula"><div class="mr-label">Расчёт</div><div class="mr-formula-text">3 500 000 + 18 000 000 − 19 500 000 = 2 000 000<br>Небольшой запас. Нужно следить.</div></div>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <p>Апрель и май считаются точно так же — Ск = Сн + ОД − ОК. Сн каждого месяца = Ск предыдущего. Формула не меняется никогда.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Цепочка сальдо — полная картина за 5 месяцев</div>
+    </div>
+
+    <table class="chain-table">
+      <thead><tr><th>Месяц</th><th>Сн</th><th>ОД</th><th>ОК</th><th>Ск</th></tr></thead>
+      <tbody>
+        <tr class="jan"><td>Январь</td><td>10 000 000</td><td>12 000 000</td><td>12 000 000</td><td class="sk-val">10 000 000</td></tr>
+        <tr class="feb"><td>Февраль</td><td>10 000 000</td><td>21 000 000</td><td>20 500 000</td><td class="sk-val">10 500 000</td></tr>
+        <tr class="mar"><td>Март ⚠</td><td>10 500 000</td><td>15 000 000</td><td>25 500 000</td><td class="sk-zero">0</td></tr>
+        <tr><td>Апрель</td><td style="color:#A32D2D;font-weight:600;">0</td><td>20 000 000</td><td>16 500 000</td><td class="sk-val">3 500 000</td></tr>
+        <tr><td>Май</td><td>3 500 000</td><td>18 000 000</td><td>19 500 000</td><td class="sk-val">2 000 000</td></tr>
+      </tbody>
+    </table>
+
+    <div class="highlight highlight-blue">
+      <p>Ск одного месяца всегда становится Сн следующего. Это непрерывная цепочка — учёт никогда не начинается с нуля. Компания упала в ноль в марте, восстановилась в апреле и работает дальше.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Сальдо по пассивному счёту — разбор</div>
+    </div>
+    <p>Разберём счёт 6800 «Краткосрочные кредиты» — пассивный счёт. Для него формула зеркальная: <strong>Ск = Сн + ОК − ОД</strong>.</p>
+
+    <div class="passive-example">
+      <div class="pe-header">
+        <span class="pe-num">6800</span>
+        <span class="pe-name">Краткосрочные кредиты и займы</span>
+      </div>
+      <div class="pe-rows">
+        <div class="pe-row"><span class="pn">Сальдо начальное (кредитовое) — долг банку</span><span class="pv kt">30 000 000</span></div>
+        <div class="pe-row"><span class="pn">Взяли новый кредит → Кт (долг вырос)</span><span class="pv kt">+10 000 000</span></div>
+        <div class="pe-row"><span class="pn">Погасили часть → Дт (долг уменьшился)</span><span class="pv dt">−5 000 000</span></div>
+        <div class="pe-row"><span class="pn">Погасили ещё → Дт (долг уменьшился)</span><span class="pv dt">−8 000 000</span></div>
+        <div class="pe-row"><span class="pn">ОД = 13 000 000 · ОК = 10 000 000</span><span class="pv" style="color:var(--ink3);">—</span></div>
+        <div class="pe-row result">
+          <span class="pn">Ск = 30 000 000 + 10 000 000 − 13 000 000</span>
+          <span class="pv">27 000 000</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <p>Долг банку уменьшился с 30 до 27 млн сум — компания активнее гасила чем брала. Сальдо кредитовое — что и ожидается для пассивного счёта.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Сальдо → это и есть баланс</div>
+    </div>
+    <p>Именно сальдо конечное по всем счетам формирует баланс компании на конкретную дату.</p>
+
+    <div class="balance-conn">
+      <div class="bc-row"><span class="bc-account">Сальдо 5100</span><span class="bc-arrow">→</span><span class="bc-balance">Строка «Расчётный счёт» в балансе</span><span class="bc-side asset">Актив</span></div>
+      <div class="bc-row"><span class="bc-account">Сальдо 2900</span><span class="bc-arrow">→</span><span class="bc-balance">Строка «Товары на складе» в балансе</span><span class="bc-side asset">Актив</span></div>
+      <div class="bc-row"><span class="bc-account">Сальдо 4000</span><span class="bc-arrow">→</span><span class="bc-balance">Строка «Дебиторская задолженность» в балансе</span><span class="bc-side asset">Актив</span></div>
+      <div class="bc-row"><span class="bc-account">Сальдо 6800</span><span class="bc-arrow">→</span><span class="bc-balance">Строка «Краткосрочные кредиты» в балансе</span><span class="bc-side pasv">Пассив</span></div>
+      <div class="bc-row"><span class="bc-account">Сальдо 8300</span><span class="bc-arrow">→</span><span class="bc-balance">Строка «Уставный капитал» в балансе</span><span class="bc-side pasv">Пассив</span></div>
+    </div>
+
+    <div class="highlight blue" style="border-left-color:var(--accent3);background:var(--accent3-light);">
+      <p style="color:var(--accent3);">Баланс — это снимок сальдо по всем счетам на конкретную дату. Научился читать сальдо — научился читать баланс.</p>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    <p>«Ск одного месяца — это Сн следующего. Учёт никогда не начинается с нуля. Это непрерывная цепочка.»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>День 2 · Блок 1 · Пункт 3</span>
+    <strong>Следующий: Три типа счетов с разбором операций</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/den2_blok1_punkt2.html">← Пункт 2</a>
+    <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/den2_blok1_punkt4.html">Пункт 4 →</a>
+  </div>
+</div>
+
+</body>
+</html>
