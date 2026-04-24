@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>День 1 · Блок 3 · Пункт 2 — Расход</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --ink: #1C1A14;
+    --ink2: #4A4740;
+    --ink3: #8A8780;
+    --accent: #2D5F3F;
+    --accent-light: #E8F0EB;
+    --accent2: #8B4A1C;
+    --accent2-light: #F5EDE5;
+    --accent3: #1C3F6E;
+    --accent3-light: #E5EDF5;
+    --line: rgba(28,26,20,0.12);
+    --card-bg: #FFFFFF;
+    --tag-bg: #EEEAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Golos Text', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; border-bottom: 1px solid var(--line); background: var(--card-bg); }
+  .topnav a { font-size: 13px; color: var(--ink3); text-decoration: none; transition: color .15s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav-center { font-size: 13px; color: var(--ink3); }
+
+  .hero { background: var(--ink); color: var(--bg); padding: 80px 40px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: '−'; position: absolute; right: 20px; top: -60px; font-size: 400px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(247,244,238,0.45); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 48px); font-weight: 700; line-height: 1.15; max-width: 640px; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: #A8C4B0; }
+  .hero-sub { font-size: 16px; color: rgba(247,244,238,0.6); max-width: 500px; line-height: 1.7; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 56px 40px 80px; }
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: 'Playfair Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+  p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { border-left: 3px solid var(--accent); background: var(--accent-light); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+  .highlight-warm { border-left-color: var(--accent2); background: var(--accent2-light); }
+  .highlight-warm p { color: var(--accent2); }
+  .highlight-blue { border-left-color: var(--accent3); background: var(--accent3-light); }
+  .highlight-blue p { color: var(--accent3); }
+
+  .callout { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 24px 28px; margin: 20px 0; }
+  .callout-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+  .callout p { color: var(--ink2); margin: 0 0 12px; font-size: 15px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* Conditions */
+  .conditions { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+  .cond-item { display: flex; gap: 14px; background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; align-items: flex-start; }
+  .cond-num { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .cond-body { flex: 1; }
+  .cond-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .cond-desc { font-size: 14px; color: var(--ink2); line-height: 1.65; }
+
+  /* Is/is not expense */
+  .yes-no { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  @media (max-width: 560px) { .yes-no { grid-template-columns: 1fr; } }
+  .yn-card { border-radius: 12px; padding: 18px 20px; }
+  .yn-card.yes { background: var(--accent2-light); border: 1px solid rgba(139,74,28,0.2); }
+  .yn-card.no  { background: var(--accent-light); border: 1px solid rgba(45,95,63,0.2); }
+  .yn-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
+  .yn-card.yes .yn-label { color: var(--accent2); }
+  .yn-card.no  .yn-label { color: var(--accent); }
+  .yn-list { list-style: none; }
+  .yn-list li { font-size: 13px; color: var(--ink2); padding: 6px 0 6px 16px; position: relative; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.55; }
+  .yn-list li:last-child { border-bottom: none; }
+  .yn-list li::before { content: ''; position: absolute; left: 0; top: 13px; width: 8px; height: 8px; border-radius: 50%; }
+  .yn-card.yes .yn-list li::before { background: var(--accent2); }
+  .yn-card.no  .yn-list li::before { background: var(--accent); }
+
+  /* Expense types */
+  .exp-types { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 20px 0; }
+  .exp-type { border-bottom: 1px solid var(--line); }
+  .exp-type:last-child { border-bottom: none; }
+  .exp-type-header { padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+  .exp-type.cogs .exp-type-header { background: var(--accent2-light); }
+  .exp-type.opex .exp-type-header { background: var(--accent3-light); }
+  .exp-type.fin  .exp-type-header { background: #F5F0FB; }
+  .exp-type.tax  .exp-type-header { background: var(--tag-bg); }
+  .exp-type-badge { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
+  .exp-type.cogs .exp-type-badge { background: var(--accent2); color: #fff; }
+  .exp-type.opex .exp-type-badge { background: var(--accent3); color: #fff; }
+  .exp-type.fin  .exp-type-badge { background: #7B5EA7; color: #fff; }
+  .exp-type.tax  .exp-type-badge { background: var(--ink); color: var(--bg); }
+  .exp-type-name { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .exp-type-body { padding: 16px 20px; background: var(--card-bg); }
+  .exp-type-body p { font-size: 14px; margin-bottom: 8px; }
+  .exp-examples { font-size: 12px; color: var(--ink3); line-height: 1.6; margin-top: 6px; }
+
+  /* Fixed/variable */
+  .fix-var { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  @media (max-width: 560px) { .fix-var { grid-template-columns: 1fr; } }
+  .fv-card { border-radius: 12px; padding: 18px 20px; }
+  .fv-card.fixed    { background: var(--accent3-light); border: 1px solid rgba(28,63,110,0.2); }
+  .fv-card.variable { background: var(--accent2-light); border: 1px solid rgba(139,74,28,0.2); }
+  .fv-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+  .fv-card.fixed    .fv-label { color: var(--accent3); }
+  .fv-card.variable .fv-label { color: var(--accent2); }
+  .fv-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .fv-desc { font-size: 13px; color: var(--ink2); line-height: 1.65; margin-bottom: 8px; }
+  .fv-examples { font-size: 12px; color: var(--ink3); line-height: 1.55; }
+
+  /* Postings */
+  .posting-block { margin: 16px 0; }
+  .posting-step-label { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); margin-bottom: 6px; }
+  .posting { display: flex; align-items: stretch; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); margin-bottom: 8px; }
+  .p-dt { flex: 1; background: var(--accent-light); padding: 12px 14px; }
+  .p-kt { flex: 1; background: var(--accent2-light); padding: 12px 14px; }
+  .p-arrow { display: flex; align-items: center; justify-content: center; background: var(--tag-bg); padding: 0 10px; font-size: 16px; color: var(--ink3); flex-shrink: 0; }
+  .p-lbl { font-size: 9px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 2px; }
+  .p-dt .p-lbl { color: var(--accent); }
+  .p-kt .p-lbl { color: var(--accent2); }
+  .p-acc { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .p-cmt { font-size: 11px; color: var(--ink3); margin-top: 1px; line-height: 1.4; }
+  .p-sum { background: var(--ink); padding: 12px 12px; display: flex; align-items: center; justify-content: center; flex-direction: column; min-width: 90px; flex-shrink: 0; }
+  .p-sum-lbl { font-size: 9px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(247,244,238,0.4); margin-bottom: 2px; }
+  .p-sum-val { font-size: 12px; font-weight: 600; color: #A8C4B0; text-align: center; }
+
+  /* Not in PL */
+  .not-pl { display: flex; flex-direction: column; gap: 8px; margin: 20px 0; }
+  .not-pl-item { display: flex; gap: 12px; background: var(--card-bg); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; align-items: flex-start; }
+  .not-pl-icon { font-size: 18px; flex-shrink: 0; }
+  .not-pl-body { flex: 1; }
+  .not-pl-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .not-pl-desc { font-size: 13px; color: var(--ink2); line-height: 1.6; }
+
+  /* Example table */
+  .ex-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  .ex-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); border-bottom: 2px solid var(--line); background: var(--card-bg); }
+  .ex-table td { padding: 11px 14px; border-bottom: 1px solid var(--line); color: var(--ink2); background: var(--card-bg); vertical-align: top; line-height: 1.5; }
+  .ex-table tr:last-child td { border-bottom: none; }
+  .ex-table .yes { color: var(--accent2); font-weight: 600; }
+  .ex-table .no  { color: var(--ink3); }
+  .ex-table .total td { font-weight: 600; color: var(--ink); background: var(--tag-bg); }
+
+  .bigquote { text-align: center; padding: 48px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 48px 0; }
+  .bigquote p { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 26px); font-style: italic; color: var(--ink); line-height: 1.5; max-width: 560px; margin: 0 auto; }
+
+  .foot-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-top: 1px solid var(--line); background: var(--card-bg); flex-wrap: wrap; gap: 12px; }
+  .foot-nav-left { display: flex; flex-direction: column; gap: 4px; }
+  .foot-nav-left span { font-size: 12px; color: var(--ink3); }
+  .foot-nav-left strong { font-size: 14px; color: var(--ink2); font-weight: 500; }
+  .foot-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--bg); background: var(--ink); padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+  .foot-btn:hover { opacity: 0.85; }
+  .foot-btn-secondary { background: transparent; color: var(--ink2); border: 1px solid var(--line); }
+  .foot-btn-secondary:hover { background: var(--tag-bg); opacity: 1; }
+
+  .divider { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="https://logart33-netizen.github.io/Buxuchet/den1_blok3_punkt1.html">← Пункт 1</a>
+  <span class="topnav-center">День 1 · Блок 3 · Пункт 2</span>
+  <a href="https://logart33-netizen.github.io/Buxuchet/den1_blok3_punkt3.html">Пункт 3 →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">День 1 · Блок 3 · Пункт 2</div>
+  <h1>Расход — компания понесла <em>затраты для получения дохода</em></h1>
+  <p class="hero-sub">Расход — это не «деньги ушли». Расход — это ресурс который использован. Разбираем виды расходов и когда они признаются.</p>
+</div>
+
+<div class="container">
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Что такое расход</div>
+    </div>
+    <p>Расход — это уменьшение экономических выгод компании в результате её деятельности. Проще: компания потратила ресурсы чтобы зарабатывать деньги.</p>
+    <p>Но здесь сразу важный момент:</p>
+    <div class="highlight highlight-warm">
+      <p>Расход — это НЕ то же самое что «деньги ушли». Деньги могут уйти — а расхода ещё нет. Деньги могут ещё не уйти — а расход уже есть.</p>
+    </div>
+    <p>Это принцип начисления который мы разбирали в Блоке 1. Расход признаётся когда ресурс <strong>использован</strong>, а не когда за него заплатили.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Три условия для признания расхода</div>
+    </div>
+    <p>Чтобы что-то стало расходом в бухгалтерии — должны выполняться три условия одновременно:</p>
+    <div class="conditions">
+      <div class="cond-item">
+        <div class="cond-num">1</div>
+        <div class="cond-body">
+          <div class="cond-title">Ресурс реально использован</div>
+          <div class="cond-desc">Не оплачен — а именно использован. Заплатили за аренду на 3 месяца вперёд — расходом становится только та часть которая уже «потреблена». Остальное — актив (расходы будущих периодов).</div>
+        </div>
+      </div>
+      <div class="cond-item">
+        <div class="cond-num">2</div>
+        <div class="cond-body">
+          <div class="cond-title">Сумму можно надёжно измерить</div>
+          <div class="cond-desc">Есть первичный документ — накладная, акт, счёт. Без документа нет оснований для записи в учёт.</div>
+        </div>
+      </div>
+      <div class="cond-item">
+        <div class="cond-num">3</div>
+        <div class="cond-body">
+          <div class="cond-title">Уменьшаются экономические выгоды</div>
+          <div class="cond-desc">Ресурс ушёл безвозвратно или его стоимость снизилась — и за это не получено эквивалентного актива взамен.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Расход vs потеря актива — важное различие</div>
+    </div>
+    <p>Не каждое уменьшение активов является расходом:</p>
+    <div class="yes-no">
+      <div class="yn-card yes">
+        <div class="yn-label">✗ Это расход</div>
+        <ul class="yn-list">
+          <li>Заплатили за аренду → деньги ушли безвозвратно</li>
+          <li>Начислили зарплату → обязательство выполнено</li>
+          <li>Продали товар → себестоимость ушла со склада</li>
+          <li>Начислили амортизацию → стоимость актива снизилась</li>
+        </ul>
+      </div>
+      <div class="yn-card no">
+        <div class="yn-label">✓ Это НЕ расход</div>
+        <ul class="yn-list">
+          <li>Купили товар → деньги превратились в товар (актив)</li>
+          <li>Дали займ → деньги стали дебиторкой (актив)</li>
+          <li>Купили оборудование → деньги стали основным средством (актив)</li>
+          <li>Погасили кредит → уменьшились обязательства, не прибыль</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">Принцип соответствия</div>
+      <p>Расходы признаются в том же периоде в котором они помогли получить доход. Компания купила товар в марте, продала в июне — расход (себестоимость) признаётся в июне вместе с доходом. Прибыль видна целиком в одном периоде.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Виды расходов — классификация</div>
+    </div>
+    <p>Все расходы компании делятся на несколько видов. Эта классификация лежит в основе структуры отчёта о прибылях (P&L):</p>
+    <div class="exp-types">
+
+      <div class="exp-type cogs">
+        <div class="exp-type-header">
+          <span class="exp-type-badge">COGS</span>
+          <span class="exp-type-name">Себестоимость продаж</span>
+        </div>
+        <div class="exp-type-body">
+          <p>Прямые затраты непосредственно связанные с производством или приобретением проданного товара. Это первый вычет из выручки.</p>
+          <p>Для торговой компании: стоимость того товара который был продан. Для производственной: материалы + труд рабочих + амортизация производственного оборудования.</p>
+          <div class="exp-examples">Выручка − Себестоимость = Валовая прибыль</div>
+        </div>
+      </div>
+
+      <div class="exp-type opex">
+        <div class="exp-type-header">
+          <span class="exp-type-badge">OPEX</span>
+          <span class="exp-type-name">Операционные расходы</span>
+        </div>
+        <div class="exp-type-body">
+          <p>Расходы на ведение бизнеса которые не входят в себестоимость конкретного товара. Нужны чтобы бизнес работал — но не привязаны к каждой единице проданного товара.</p>
+          <div class="exp-examples">Аренда офиса · Зарплата администрации · Реклама · Коммунальные услуги · Амортизация офисного оборудования · Юридические и бухгалтерские услуги</div>
+        </div>
+      </div>
+
+      <div class="exp-type fin">
+        <div class="exp-type-header">
+          <span class="exp-type-badge">FIN</span>
+          <span class="exp-type-name">Финансовые расходы</span>
+        </div>
+        <div class="exp-type-body">
+          <p>Проценты по кредитам и займам. Выделяются отдельно потому что зависят от структуры финансирования, а не от операционной эффективности. Компания может быть операционно прибыльной, но с большим долгом — финансовые расходы «съедят» прибыль.</p>
+          <div class="exp-examples">Проценты по банковскому кредиту · Проценты по лизингу · Штрафы и пени банку</div>
+        </div>
+      </div>
+
+      <div class="exp-type tax">
+        <div class="exp-type-header">
+          <span class="exp-type-badge">TAX</span>
+          <span class="exp-type-name">Налог на прибыль</span>
+        </div>
+        <div class="exp-type-body">
+          <p>Последний вычет перед чистой прибылью. Считается от налогооблагаемой прибыли по ставке установленной государством. Выделяется отдельно — его размер зависит от налоговой политики, а не от операционной деятельности.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Постоянные и переменные расходы</div>
+    </div>
+    <p>Ещё одна важная классификация — используется в управленческом учёте для анализа прибыльности:</p>
+    <div class="fix-var">
+      <div class="fv-card fixed">
+        <div class="fv-label">Постоянные расходы</div>
+        <div class="fv-title">Не зависят от объёма продаж</div>
+        <div class="fv-desc">Их нужно платить независимо от того сколько продала компания — ноль единиц или миллион. Если продажи растут — постоянные расходы не растут. Прибыль растёт быстрее выручки.</div>
+        <div class="fv-examples">Аренда офиса · Зарплата директора и бухгалтера · Страховка · Амортизация оборудования</div>
+      </div>
+      <div class="fv-card variable">
+        <div class="fv-label">Переменные расходы</div>
+        <div class="fv-title">Меняются с объёмом продаж</div>
+        <div class="fv-desc">Продал больше — потратил больше. Продал меньше — потратил меньше. Растут пропорционально выручке.</div>
+        <div class="fv-examples">Себестоимость товаров · Комиссия продавцов · Упаковка и доставка · Сырьё для производства</div>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">Смешанные расходы</div>
+      <p>Содержат и постоянную и переменную часть. Например телефонная связь: есть фиксированная абонентская плата (постоянная) + плата за минуты сверх лимита (переменная).</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Как расходы записываются в бухгалтерии</div>
+    </div>
+
+    <div class="posting-block">
+      <div class="posting-step-label">Расход признан и оплачен одновременно (аренда за текущий месяц)</div>
+      <div class="posting">
+        <div class="p-dt"><div class="p-lbl">Дебет</div><div class="p-acc">Расходы на аренду</div><div class="p-cmt">Расход признан</div></div>
+        <div class="p-arrow">→</div>
+        <div class="p-kt"><div class="p-lbl">Кредит</div><div class="p-acc">Расчётный счёт</div><div class="p-cmt">Деньги ушли</div></div>
+        <div class="p-sum"><div class="p-sum-lbl">Сумма</div><div class="p-sum-val">2 000 000 сум</div></div>
+      </div>
+    </div>
+
+    <div class="posting-block">
+      <div class="posting-step-label">Расход начислен, деньги ещё не ушли (зарплата)</div>
+      <div class="posting">
+        <div class="p-dt"><div class="p-lbl">Дебет</div><div class="p-acc">Расходы на зарплату</div><div class="p-cmt">Расход в момент начисления</div></div>
+        <div class="p-arrow">→</div>
+        <div class="p-kt"><div class="p-lbl">Кредит</div><div class="p-acc">Расчёты по зарплате</div><div class="p-cmt">Долг перед сотрудниками</div></div>
+        <div class="p-sum"><div class="p-sum-lbl">Сумма</div><div class="p-sum-val">5 000 000 сум</div></div>
+      </div>
+    </div>
+
+    <div class="posting-block">
+      <div class="posting-step-label">Аренда оплачена за 3 месяца вперёд — сначала актив, потом расход</div>
+      <div class="posting" style="margin-bottom:6px;">
+        <div class="p-dt"><div class="p-lbl">Дебет</div><div class="p-acc">Расходы будущих периодов</div><div class="p-cmt">Актив — ещё не использовано</div></div>
+        <div class="p-arrow">→</div>
+        <div class="p-kt"><div class="p-lbl">Кредит</div><div class="p-acc">Расчётный счёт</div><div class="p-cmt">Деньги ушли</div></div>
+        <div class="p-sum"><div class="p-sum-lbl">Оплата</div><div class="p-sum-val">6 000 000 сум</div></div>
+      </div>
+      <div class="posting">
+        <div class="p-dt"><div class="p-lbl">Дебет</div><div class="p-acc">Расходы на аренду</div><div class="p-cmt">Расход каждый месяц</div></div>
+        <div class="p-arrow">→</div>
+        <div class="p-kt"><div class="p-lbl">Кредит</div><div class="p-acc">Расходы будущих периодов</div><div class="p-cmt">Актив уменьшается</div></div>
+        <div class="p-sum"><div class="p-sum-lbl">Ежемесячно</div><div class="p-sum-val">2 000 000 сум</div></div>
+      </div>
+    </div>
+
+    <div class="posting-block">
+      <div class="posting-step-label">Амортизация оборудования (ежемесячно)</div>
+      <div class="posting">
+        <div class="p-dt"><div class="p-lbl">Дебет</div><div class="p-acc">Амортизация</div><div class="p-cmt">Расход — стоимость актива снижается</div></div>
+        <div class="p-arrow">→</div>
+        <div class="p-kt"><div class="p-lbl">Кредит</div><div class="p-acc">Накопленная амортизация</div><div class="p-cmt">Актив уменьшается постепенно</div></div>
+        <div class="p-sum"><div class="p-sum-lbl">Ежемесячно</div><div class="p-sum-val">сумма в месяц</div></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 7 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-title">Расходы которые НЕ попадают в P&L</div>
+    </div>
+    <div class="not-pl">
+      <div class="not-pl-item">
+        <div class="not-pl-icon">🏭</div>
+        <div class="not-pl-body">
+          <div class="not-pl-title">Покупка основных средств — не расход сразу</div>
+          <div class="not-pl-desc">Оборудование становится активом. Расход появляется постепенно через амортизацию в течение всего срока службы.</div>
+        </div>
+      </div>
+      <div class="not-pl-item">
+        <div class="not-pl-icon">🏦</div>
+        <div class="not-pl-body">
+          <div class="not-pl-title">Погашение тела кредита — не расход</div>
+          <div class="not-pl-desc">Это уменьшение обязательств (пассива). Расходом являются только проценты — плата за пользование кредитом.</div>
+        </div>
+      </div>
+      <div class="not-pl-item">
+        <div class="not-pl-icon">💰</div>
+        <div class="not-pl-body">
+          <div class="not-pl-title">Выплата дивидендов — не расход</div>
+          <div class="not-pl-desc">Это распределение прибыли между владельцами. Уменьшает капитал, но в P&L не попадает.</div>
+        </div>
+      </div>
+      <div class="not-pl-item">
+        <div class="not-pl-icon">📦</div>
+        <div class="not-pl-body">
+          <div class="not-pl-title">Покупка товара — не расход в момент покупки</div>
+          <div class="not-pl-desc">Расходом (себестоимостью) станет только когда товар будет продан и поможет получить доход.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 8 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <div class="section-title">Практический пример — расходы за месяц</div>
+    </div>
+    <p>ООО «Торговля» за март. Определяем что является расходом марта:</p>
+    <table class="ex-table">
+      <thead><tr><th>Операция</th><th>Сумма</th><th>Расход марта?</th></tr></thead>
+      <tbody>
+        <tr><td>Оплатили аренду за март</td><td>3 000 000</td><td class="yes">Да — услуга потреблена в марте</td></tr>
+        <tr><td>Оплатили аренду за апрель-май вперёд</td><td>6 000 000</td><td class="no">Нет — это актив (РБП)</td></tr>
+        <tr><td>Начислили зарплату за март (выплатят в апреле)</td><td>8 000 000</td><td class="yes">Да — сотрудники отработали март</td></tr>
+        <tr><td>Купили новый компьютер</td><td>4 000 000</td><td class="no">Нет — это актив (основное средство)</td></tr>
+        <tr><td>Продали товар (себестоимость)</td><td>15 000 000</td><td class="yes">Да — товар помог получить доход</td></tr>
+        <tr><td>Погасили тело кредита</td><td>5 000 000</td><td class="no">Нет — погашение обязательства</td></tr>
+        <tr><td>Начислили проценты по кредиту</td><td>500 000</td><td class="yes">Да — финансовый расход</td></tr>
+        <tr class="total"><td colspan="2"><strong>Итого расходов марта</strong></td><td><strong>26 500 000 сум</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="bigquote">
+    <p>«Расход — это не деньги ушли. Расход — это ресурс использован для получения дохода. Покупка актива — не расход; расход возникнет позже.»</p>
+  </div>
+
+</div>
+
+<div class="foot-nav">
+  <div class="foot-nav-left">
+    <span>День 1 · Блок 3 · Пункт 2</span>
+    <strong>Следующий: Себестоимость — прямой расход</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="foot-btn foot-btn-secondary" href="https://logart33-netizen.github.io/Buxuchet/den1_blok3_punkt1.html">← Пункт 1</a>
+    <a class="foot-btn" href="https://logart33-netizen.github.io/Buxuchet/den1_blok3_punkt3.html">Пункт 3 →</a>
+  </div>
+</div>
+
+</body>
+</html>
